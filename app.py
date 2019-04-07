@@ -57,5 +57,34 @@ def hello():
     return "Hello World!!!"
 
 
+@app.route('/random/play', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def play_random():
+    if request.method == 'POST':
+        app.logger.info('POST /random/play')
+        data = json.loads(request.data)
+        # data contains:
+        # - player
+        # - trumpColor
+        # - playerCards
+        # - cardsPlayability
+        # - roundCards
+        # - roundColor
+        # - gameHistory
+        # - contract
+        # - contractTeam
+        # - globalScore
+        player = data['player']
+        player_cards = data['playerCards']
+        cards_playability = data['cardsPlayability']
+        playable_cards = [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
+        card = random.choice(playable_cards)
+
+        app.logger.info(f'Returning {card} for player {player}')
+        response = {'card': card}
+
+        return json.dumps(response)
+
+
 if __name__ == '__main__':
     app.run()
