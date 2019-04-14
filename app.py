@@ -156,5 +156,35 @@ def play_highest_card():
         return json.dumps(response)
 
 
+@app.route('/expert/play', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def play_expert():
+    if request.method == 'POST':
+        app.logger.info('POST /expert/play')
+        data = json.loads(request.data)
+        response = play_template(
+            data=data,
+            used_fields=['playerCards', 'cardsPlayability'],
+            strategy=play_random_strategy
+        )
+
+        return json.dumps(response)
+
+
+@app.route('/reinforcement/play', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def play_reinforcement():
+    if request.method == 'POST':
+        app.logger.info('POST /reinforcement/play')
+        data = json.loads(request.data)
+        response = play_template(
+            data=data,
+            used_fields=['playerCards', 'cardsPlayability'],
+            strategy=play_random_strategy
+        )
+
+        return json.dumps(response)
+
+
 if __name__ == '__main__':
     app.run()
