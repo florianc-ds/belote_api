@@ -63,6 +63,7 @@ def play_random():
     if request.method == 'POST':
         app.logger.info('POST /random/play')
         data = json.loads(request.data)
+        app.logger.info(f'data: {data}')
         # data contains:
         # - player
         # - trumpColor
