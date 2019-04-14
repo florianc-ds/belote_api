@@ -6,6 +6,10 @@ from functools import update_wrapper
 
 from flask import Flask
 from flask import make_response, request, current_app
+
+from constants import TRUMP_POINTS, PLAIN_POINTS
+from helpers import extract_color, extract_value
+
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
@@ -80,6 +84,50 @@ def play_random():
         cards_playability = data['cardsPlayability']
         playable_cards = [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
         card = random.choice(playable_cards)
+
+        app.logger.info(f'Returning {card} for player {player}')
+        response = {'card': card}
+
+        return json.dumps(response)
+
+
+def highest_card_sorting_key(card, trump_color):
+    value = extract_value(card)
+    color = extract_color(card)
+    if color == trump_color:
+        return TRUMP_POINTS[value]
+    else:
+        return PLAIN_POINTS[value]
+
+
+@app.route('/highest_card/play', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def play_highest_card():
+    if request.method == 'POST':
+        app.logger.info('POST /highest_card/play')
+        data = json.loads(request.data)
+        app.logger.info(f'data: {data}')
+        # data contains:
+        # - player
+        # - trumpColor
+        # - playerCards
+        # - cardsPlayability
+        # - roundCards
+        # - roundColor
+        # - gameHistory
+        # - contract
+        # - contractTeam
+        # - globalScore
+        player = data['player']
+        trump_color = data['trumpColor']
+        player_cards = data['playerCards']
+        cards_playability = data['cardsPlayability']
+        playable_cards = [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
+        card = sorted(
+            playable_cards,
+            key=lambda x: highest_card_sorting_key(x, trump_color),
+            reverse=True
+        )[0]
 
         app.logger.info(f'Returning {card} for player {player}')
         response = {'card': card}
