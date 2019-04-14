@@ -56,6 +56,71 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
+################
+# PLAY HELPERS #
+################
+
+def play_template(data, used_fields, strategy):
+    app.logger.info(f'data: {data}')
+    # data contains:
+    # - player
+    # - trumpColor
+    # - playerCards
+    # - cardsPlayability
+    # - roundCards
+    # - roundColor
+    # - gameHistory
+    # - contract
+    # - contractTeam
+    # - globalScore
+    player = data['player']
+    used_info = [data[field] for field in used_fields]
+    card = strategy(*used_info)
+
+    app.logger.info(f'Returning {card} for player {player}')
+    return {'card': card}
+
+
+def derive_playable_cards(player_cards, cards_playability):
+    return [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
+
+#######################
+# RANDOM PLAY HELPERS #
+#######################
+
+def play_random_strategy(player_cards, cards_playability):
+    playable_cards = derive_playable_cards(player_cards, cards_playability)
+    card = random.choice(playable_cards)
+    return card
+
+
+#############################
+# HIGHEST CARD PLAY HELPERS #
+#############################
+
+def highest_card_sorting_key(card, trump_color):
+    value = extract_value(card)
+    color = extract_color(card)
+    if color == trump_color:
+        return TRUMP_POINTS[value]
+    else:
+        return PLAIN_POINTS[value]
+
+
+def play_highest_card_strategy(player_cards, cards_playability, trump_color):
+    playable_cards = derive_playable_cards(player_cards, cards_playability)
+    card = sorted(
+        playable_cards,
+        key=lambda x: highest_card_sorting_key(x, trump_color),
+        reverse=True
+    )[0]
+    return card
+
+
+##########
+# ROUTES #
+##########
+
 @app.route('/')
 def hello():
     return "Hello World!!!"
@@ -67,37 +132,13 @@ def play_random():
     if request.method == 'POST':
         app.logger.info('POST /random/play')
         data = json.loads(request.data)
-        app.logger.info(f'data: {data}')
-        # data contains:
-        # - player
-        # - trumpColor
-        # - playerCards
-        # - cardsPlayability
-        # - roundCards
-        # - roundColor
-        # - gameHistory
-        # - contract
-        # - contractTeam
-        # - globalScore
-        player = data['player']
-        player_cards = data['playerCards']
-        cards_playability = data['cardsPlayability']
-        playable_cards = [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
-        card = random.choice(playable_cards)
-
-        app.logger.info(f'Returning {card} for player {player}')
-        response = {'card': card}
+        response = play_template(
+            data=data,
+            used_fields=['playerCards', 'cardsPlayability'],
+            strategy=play_random_strategy
+        )
 
         return json.dumps(response)
-
-
-def highest_card_sorting_key(card, trump_color):
-    value = extract_value(card)
-    color = extract_color(card)
-    if color == trump_color:
-        return TRUMP_POINTS[value]
-    else:
-        return PLAIN_POINTS[value]
 
 
 @app.route('/highest_card/play', methods=['OPTIONS', 'POST'])
@@ -106,31 +147,11 @@ def play_highest_card():
     if request.method == 'POST':
         app.logger.info('POST /highest_card/play')
         data = json.loads(request.data)
-        app.logger.info(f'data: {data}')
-        # data contains:
-        # - player
-        # - trumpColor
-        # - playerCards
-        # - cardsPlayability
-        # - roundCards
-        # - roundColor
-        # - gameHistory
-        # - contract
-        # - contractTeam
-        # - globalScore
-        player = data['player']
-        trump_color = data['trumpColor']
-        player_cards = data['playerCards']
-        cards_playability = data['cardsPlayability']
-        playable_cards = [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
-        card = sorted(
-            playable_cards,
-            key=lambda x: highest_card_sorting_key(x, trump_color),
-            reverse=True
-        )[0]
-
-        app.logger.info(f'Returning {card} for player {player}')
-        response = {'card': card}
+        response = play_template(
+            data=data,
+            used_fields=['playerCards', 'cardsPlayability', 'trumpColor'],
+            strategy=play_highest_card_strategy
+        )
 
         return json.dumps(response)
 
