@@ -19,3 +19,5 @@ PLAIN_POINTS = {
     '8': 0,
     '7': 0
 }
+
+COLORS = ['s', 'h', 'c', 'd']

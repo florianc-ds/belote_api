@@ -6,8 +6,9 @@ from functools import update_wrapper
 
 from flask import Flask
 from flask import make_response, request, current_app
+import numpy as np
 
-from constants import TRUMP_POINTS, PLAIN_POINTS
+from constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers import extract_color, extract_value
 
 app = Flask(__name__)
@@ -83,6 +84,7 @@ def play_template(data, used_fields, strategy):
 
 def derive_playable_cards(player_cards, cards_playability):
     return [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
+
 
 #######################
 # RANDOM PLAY HELPERS #
@@ -182,6 +184,49 @@ def play_reinforcement():
             used_fields=['playerCards', 'cardsPlayability'],
             strategy=play_random_strategy
         )
+
+        return json.dumps(response)
+
+
+@app.route('/random/bet_or_pass', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def bet_or_pass_random():
+    if request.method == 'POST':
+        app.logger.info('POST /reinforcement/play')
+        data = json.loads(request.data)
+        app.logger.info(f'data: {data}')
+        # data contains:
+        # - player
+        # - playerCards
+        # - playersBids
+        # - auctionPassedTurnInRow
+        # - globalScore
+        # - gameFirstPlayer
+        player = data['player']
+        players_bids = data['playersBids']
+
+        RANDOM_BET_PROBABILITY = 0.5
+        RANDOM_COLOR_WEIGHTS = [1, 1, 1, 1]
+        RANDOM_VALUE_NORMAL_MU = 0.
+        RANDOM_VALUE_NORMAL_GAMMA = 2.3
+
+        if random.random() < RANDOM_BET_PROBABILITY:
+            action = 'bet'
+            color = random.choices(population=COLORS, weights=RANDOM_COLOR_WEIGHTS, k=1)[0]
+            value = 80 + 10 * round(abs(np.random.normal(loc=RANDOM_VALUE_NORMAL_MU, scale=RANDOM_VALUE_NORMAL_GAMMA)))
+            placed_bid_values = [bid['value'] for bid in players_bids.values() if bid['value']]
+            if placed_bid_values and (value <= max(placed_bid_values)):
+                action = 'pass'
+        else:
+            action = 'pass'
+
+        response = {'action': action}
+        if action == 'pass':
+            app.logger.info(f'{player} decides to {action}')
+        elif action == 'bet':
+            app.logger.info(f'{player} decides to {action} {value} on {color}')
+            response['value'] = value
+            response['color'] = color
 
         return json.dumps(response)
 
