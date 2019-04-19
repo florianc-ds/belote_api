@@ -146,5 +146,53 @@ def bet_or_pass_random():
         return json.dumps(response)
 
 
+@app.route('/highest_card/bet_or_pass', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def bet_or_pass_highest_card():
+    if request.method == 'POST':
+        app.logger.info('POST /highest_card/bet_or_pass')
+        data = json.loads(request.data)
+        response = bet_or_pass_template(
+            data=data,
+            used_fields=['playersBids'],
+            strategy=bet_or_pass_random_strategy,
+            logger=app.logger,
+        )
+
+        return json.dumps(response)
+
+
+@app.route('/expert/bet_or_pass', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def bet_or_pass_expert():
+    if request.method == 'POST':
+        app.logger.info('POST /expert/bet_or_pass')
+        data = json.loads(request.data)
+        response = bet_or_pass_template(
+            data=data,
+            used_fields=['playersBids'],
+            strategy=bet_or_pass_random_strategy,
+            logger=app.logger,
+        )
+
+        return json.dumps(response)
+
+
+@app.route('/reinforcement/bet_or_pass', methods=['OPTIONS', 'POST'])
+@crossdomain(origin='*')
+def bet_or_pass_reinforcement():
+    if request.method == 'POST':
+        app.logger.info('POST /reinforcement/bet_or_pass')
+        data = json.loads(request.data)
+        response = bet_or_pass_template(
+            data=data,
+            used_fields=['playersBids'],
+            strategy=bet_or_pass_random_strategy,
+            logger=app.logger,
+        )
+
+        return json.dumps(response)
+
+
 if __name__ == '__main__':
     app.run()
