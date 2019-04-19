@@ -1,26 +1,19 @@
 import json
-import random
 import logging
 from datetime import timedelta
 from functools import update_wrapper
 
 from flask import Flask
 from flask import make_response, request, current_app
-import numpy as np
 
-from helpers.bet_or_pass_helpers import bet_or_pass_template, derive_currently_highest_bid_value
-from helpers.constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
+from helpers.bet_or_pass_helpers import bet_or_pass_template
+from helpers.constants import TRUMP_POINTS, PLAIN_POINTS
 from helpers.common_helpers import extract_color, extract_value
 from helpers.play_helpers import play_template, derive_playable_cards
+from random_agent import play_random_strategy, bet_or_pass_random_strategy
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
-
-# RANDOM AGENT CONSTANTS
-RANDOM_BET_PROBABILITY = 0.5
-RANDOM_COLOR_WEIGHTS = [1, 1, 1, 1]
-RANDOM_VALUE_NORMAL_MU = 0.
-RANDOM_VALUE_NORMAL_GAMMA = 2.3
 
 
 def crossdomain(origin=None, methods=None, headers=None,
@@ -65,16 +58,6 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
-#######################
-# RANDOM PLAY HELPERS #
-#######################
-
-def play_random_strategy(player_cards, cards_playability):
-    playable_cards = derive_playable_cards(player_cards, cards_playability)
-    card = random.choice(playable_cards)
-    return card
-
-
 #############################
 # HIGHEST CARD PLAY HELPERS #
 #############################
@@ -96,26 +79,6 @@ def play_highest_card_strategy(player_cards, cards_playability, trump_color):
         reverse=True
     )[0]
     return card
-
-
-##############################
-# RANDOM BET OR PASS HELPERS #
-##############################
-
-def bet_or_pass_random_strategy(players_bids):
-    if random.random() < RANDOM_BET_PROBABILITY:
-        action = 'bet'
-        color = random.choices(population=COLORS, weights=RANDOM_COLOR_WEIGHTS, k=1)[0]
-        value = 80 + 10 * round(abs(np.random.normal(loc=RANDOM_VALUE_NORMAL_MU, scale=RANDOM_VALUE_NORMAL_GAMMA)))
-        currently_highest_bid_value = derive_currently_highest_bid_value(players_bids)
-        if currently_highest_bid_value and (value <= currently_highest_bid_value):
-            action = 'pass'
-    else:
-        action = 'pass'
-        color = None
-        value = None
-
-    return action, color, value
 
 
 ##########
