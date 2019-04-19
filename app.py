@@ -8,8 +8,10 @@ from flask import Flask
 from flask import make_response, request, current_app
 import numpy as np
 
+from helpers.bet_or_pass_helpers import bet_or_pass_template, derive_currently_highest_bid_value
 from helpers.constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.common_helpers import extract_color, extract_value
+from helpers.play_helpers import play_template, derive_playable_cards
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
@@ -63,35 +65,6 @@ def crossdomain(origin=None, methods=None, headers=None,
     return decorator
 
 
-################
-# PLAY HELPERS #
-################
-
-def play_template(data, used_fields, strategy):
-    app.logger.info(f'data: {data}')
-    # data contains:
-    # - player
-    # - trumpColor
-    # - playerCards
-    # - cardsPlayability
-    # - roundCards
-    # - roundColor
-    # - gameHistory
-    # - contract
-    # - contractTeam
-    # - globalScore
-    player = data['player']
-    used_info = [data[field] for field in used_fields]
-    card = strategy(*used_info)
-
-    app.logger.info(f'Returning {card} for player {player}')
-    return {'card': card}
-
-
-def derive_playable_cards(player_cards, cards_playability):
-    return [card for (i, card) in enumerate(player_cards) if cards_playability[i]]
-
-
 #######################
 # RANDOM PLAY HELPERS #
 #######################
@@ -123,40 +96,6 @@ def play_highest_card_strategy(player_cards, cards_playability, trump_color):
         reverse=True
     )[0]
     return card
-
-
-#######################
-# BET OR PASS HELPERS #
-#######################
-
-def bet_or_pass_template(data, used_fields, strategy):
-    app.logger.info(f'data: {data}')
-    # data contains:
-    # - player
-    # - playerCards
-    # - playersBids
-    # - auctionPassedTurnInRow
-    # - globalScore
-    # - gameFirstPlayer
-    player = data['player']
-    used_info = [data[field] for field in used_fields]
-    action, color, value = strategy(*used_info)
-
-    response = {'action': action}
-    if action == 'pass':
-        app.logger.info(f'{player} decides to {action}')
-    elif action == 'bet':
-        app.logger.info(f'{player} decides to {action} {value} on {color}')
-        response['value'] = value
-        response['color'] = color
-
-    return response
-
-
-def derive_currently_highest_bid_value(players_bids):
-    placed_bid_values = [bid['value'] for bid in players_bids.values() if bid['value']]
-    currently_highest_bid_value = max(placed_bid_values) if placed_bid_values else None
-    return currently_highest_bid_value
 
 
 ##############################
@@ -197,7 +136,8 @@ def play_random():
         response = play_template(
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
-            strategy=play_random_strategy
+            strategy=play_random_strategy,
+            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -212,7 +152,8 @@ def play_highest_card():
         response = play_template(
             data=data,
             used_fields=['playerCards', 'cardsPlayability', 'trumpColor'],
-            strategy=play_highest_card_strategy
+            strategy=play_highest_card_strategy,
+            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -227,7 +168,8 @@ def play_expert():
         response = play_template(
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
-            strategy=play_random_strategy
+            strategy=play_random_strategy,
+            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -242,7 +184,8 @@ def play_reinforcement():
         response = play_template(
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
-            strategy=play_random_strategy
+            strategy=play_random_strategy,
+            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -257,7 +200,8 @@ def bet_or_pass_random():
         response = bet_or_pass_template(
             data=data,
             used_fields=['playersBids'],
-            strategy=bet_or_pass_random_strategy
+            strategy=bet_or_pass_random_strategy,
+            logger=app.logger,
         )
 
         return json.dumps(response)
