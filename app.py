@@ -14,6 +14,12 @@ from helpers import extract_color, extract_value
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
 
+# RANDOM AGENT CONSTANTS
+RANDOM_BET_PROBABILITY = 0.5
+RANDOM_COLOR_WEIGHTS = [1, 1, 1, 1]
+RANDOM_VALUE_NORMAL_MU = 0.
+RANDOM_VALUE_NORMAL_GAMMA = 2.3
+
 
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
@@ -119,6 +125,60 @@ def play_highest_card_strategy(player_cards, cards_playability, trump_color):
     return card
 
 
+#######################
+# BET OR PASS HELPERS #
+#######################
+
+def bet_or_pass_template(data, used_fields, strategy):
+    app.logger.info(f'data: {data}')
+    # data contains:
+    # - player
+    # - playerCards
+    # - playersBids
+    # - auctionPassedTurnInRow
+    # - globalScore
+    # - gameFirstPlayer
+    player = data['player']
+    used_info = [data[field] for field in used_fields]
+    action, color, value = strategy(*used_info)
+
+    response = {'action': action}
+    if action == 'pass':
+        app.logger.info(f'{player} decides to {action}')
+    elif action == 'bet':
+        app.logger.info(f'{player} decides to {action} {value} on {color}')
+        response['value'] = value
+        response['color'] = color
+
+    return response
+
+
+def derive_currently_highest_bid_value(players_bids):
+    placed_bid_values = [bid['value'] for bid in players_bids.values() if bid['value']]
+    currently_highest_bid_value = max(placed_bid_values) if placed_bid_values else None
+    return currently_highest_bid_value
+
+
+##############################
+# RANDOM BET OR PASS HELPERS #
+##############################
+
+def bet_or_pass_random_strategy(players_bids):
+    if random.random() < RANDOM_BET_PROBABILITY:
+        action = 'bet'
+        color = random.choices(population=COLORS, weights=RANDOM_COLOR_WEIGHTS, k=1)[0]
+        value = 80 + 10 * round(abs(np.random.normal(loc=RANDOM_VALUE_NORMAL_MU, scale=RANDOM_VALUE_NORMAL_GAMMA)))
+        currently_highest_bid_value = derive_currently_highest_bid_value(players_bids)
+        if currently_highest_bid_value and (value <= currently_highest_bid_value):
+            action = 'pass'
+    else:
+        action = 'pass'
+        color = None
+        value = None
+
+    return action, color, value
+
+
 ##########
 # ROUTES #
 ##########
@@ -192,41 +252,13 @@ def play_reinforcement():
 @crossdomain(origin='*')
 def bet_or_pass_random():
     if request.method == 'POST':
-        app.logger.info('POST /reinforcement/play')
+        app.logger.info('POST /random/bet_or_pass')
         data = json.loads(request.data)
-        app.logger.info(f'data: {data}')
-        # data contains:
-        # - player
-        # - playerCards
-        # - playersBids
-        # - auctionPassedTurnInRow
-        # - globalScore
-        # - gameFirstPlayer
-        player = data['player']
-        players_bids = data['playersBids']
-
-        RANDOM_BET_PROBABILITY = 0.5
-        RANDOM_COLOR_WEIGHTS = [1, 1, 1, 1]
-        RANDOM_VALUE_NORMAL_MU = 0.
-        RANDOM_VALUE_NORMAL_GAMMA = 2.3
-
-        if random.random() < RANDOM_BET_PROBABILITY:
-            action = 'bet'
-            color = random.choices(population=COLORS, weights=RANDOM_COLOR_WEIGHTS, k=1)[0]
-            value = 80 + 10 * round(abs(np.random.normal(loc=RANDOM_VALUE_NORMAL_MU, scale=RANDOM_VALUE_NORMAL_GAMMA)))
-            placed_bid_values = [bid['value'] for bid in players_bids.values() if bid['value']]
-            if placed_bid_values and (value <= max(placed_bid_values)):
-                action = 'pass'
-        else:
-            action = 'pass'
-
-        response = {'action': action}
-        if action == 'pass':
-            app.logger.info(f'{player} decides to {action}')
-        elif action == 'bet':
-            app.logger.info(f'{player} decides to {action} {value} on {color}')
-            response['value'] = value
-            response['color'] = color
+        response = bet_or_pass_template(
+            data=data,
+            used_fields=['playersBids'],
+            strategy=bet_or_pass_random_strategy
+        )
 
         return json.dumps(response)
 
