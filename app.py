@@ -7,9 +7,8 @@ from flask import Flask
 from flask import make_response, request, current_app
 
 from helpers.bet_or_pass_helpers import bet_or_pass_template
-from helpers.constants import TRUMP_POINTS, PLAIN_POINTS
-from helpers.common_helpers import extract_color, extract_value
-from helpers.play_helpers import play_template, derive_playable_cards
+from helpers.play_helpers import play_template
+from highest_card_agent import play_highest_card_strategy
 from random_agent import play_random_strategy, bet_or_pass_random_strategy
 
 app = Flask(__name__)
@@ -56,29 +55,6 @@ def crossdomain(origin=None, methods=None, headers=None,
         f.provide_automatic_options = False
         return update_wrapper(wrapped_function, f)
     return decorator
-
-
-#############################
-# HIGHEST CARD PLAY HELPERS #
-#############################
-
-def highest_card_sorting_key(card, trump_color):
-    value = extract_value(card)
-    color = extract_color(card)
-    if color == trump_color:
-        return TRUMP_POINTS[value]
-    else:
-        return PLAIN_POINTS[value]
-
-
-def play_highest_card_strategy(player_cards, cards_playability, trump_color):
-    playable_cards = derive_playable_cards(player_cards, cards_playability)
-    card = sorted(
-        playable_cards,
-        key=lambda x: highest_card_sorting_key(x, trump_color),
-        reverse=True
-    )[0]
-    return card
 
 
 ##########
