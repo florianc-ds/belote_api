@@ -8,8 +8,8 @@ from flask import Flask
 from flask import make_response, request, current_app
 import numpy as np
 
-from constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
-from helpers import extract_color, extract_value
+from helpers.constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
+from helpers.common_helpers import extract_color, extract_value
 
 app = Flask(__name__)
 app.logger.setLevel(logging.INFO)
