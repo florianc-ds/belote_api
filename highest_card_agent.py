@@ -5,9 +5,13 @@ from helpers.common_helpers import extract_value, extract_color
 from helpers.constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.play_helpers import derive_playable_cards
 
-HIGHEST_CARD_MIN_POINTS = 0
-HIGHEST_CARD_VALUE_SQRT_COEF_A = 1
-HIGHEST_CARD_VALUE_SQRT_COEF_B = 0
+HIGHEST_CARD_MIN_POINTS = 35  # (J, 9, A)
+MAX_POINTS_IN_HAND = 93  # (J, 9, A, 10 (Trump) + A * 3 + 10)
+# raw_value = K * (points) ^ A
+# K * (HIGHEST_CARD_MIN_POINTS) ^ A = 80
+# K * (MAX_POINTS_IN_HAND) ^ A = 160
+HIGHEST_CARD_VALUE_COEF_A = math.log(2) / (math.log(MAX_POINTS_IN_HAND) - math.log(HIGHEST_CARD_MIN_POINTS))
+HIGHEST_CARD_VALUE_COEF_K = 80 / (pow(HIGHEST_CARD_MIN_POINTS, HIGHEST_CARD_VALUE_COEF_A))
 
 
 ########
@@ -64,7 +68,7 @@ def get_points_in_hand(player_cards, trump_color):
 
 
 def get_contract_value_from_points(points):
-    raw_contract_value = math.sqrt(HIGHEST_CARD_VALUE_SQRT_COEF_A * points + HIGHEST_CARD_VALUE_SQRT_COEF_B)
+    raw_contract_value = HIGHEST_CARD_VALUE_COEF_K * pow(points, HIGHEST_CARD_VALUE_COEF_A)
     return int(round(raw_contract_value, -1))
 
 
