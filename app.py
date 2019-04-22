@@ -8,7 +8,7 @@ from flask import make_response, request, current_app
 
 from helpers.bet_or_pass_helpers import bet_or_pass_template
 from helpers.play_helpers import play_template
-from highest_card_agent import play_highest_card_strategy
+from highest_card_agent import play_highest_card_strategy, bet_or_pass_highest_card_strategy
 from random_agent import play_random_strategy, bet_or_pass_random_strategy
 
 app = Flask(__name__)
@@ -154,8 +154,8 @@ def bet_or_pass_highest_card():
         data = json.loads(request.data)
         response = bet_or_pass_template(
             data=data,
-            used_fields=['playersBids'],
-            strategy=bet_or_pass_random_strategy,
+            used_fields=['playerCards', 'playersBids'],
+            strategy=bet_or_pass_highest_card_strategy,
             logger=app.logger,
         )
 
