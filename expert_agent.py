@@ -25,9 +25,12 @@ def play_expert_first_in_round():
     return None
 
 
-def play_expert_second_in_round():
-
-    return None
+def play_expert_second_in_round(trump_asked):
+    # LEVEL 2
+    if trump_asked:
+        return None
+    else:
+        return None
 
 
 def play_expert_third_in_round():
@@ -50,7 +53,7 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     if player_rank_in_round == 0:
         card = play_expert_first_in_round()
     elif player_rank_in_round == 1:
-        card = play_expert_second_in_round()
+        card = play_expert_second_in_round(trump_asked)
     elif player_rank_in_round == 2:
         card = play_expert_third_in_round()
     elif player_rank_in_round == 3:
