@@ -21,3 +21,10 @@ PLAIN_POINTS = {
 }
 
 COLORS = ['s', 'h', 'c', 'd']
+
+NEXT_PLAYER = {
+    'west': 'south',
+    'south': 'east',
+    'east': 'north',
+    'north': 'west'
+}
