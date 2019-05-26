@@ -24,8 +24,8 @@ def is_trump_asked(player, round_cards, trump_color):
     return None
 
 
-def has_trump_in_hand(cards, trump_color):
-    return any([extract_color(card) == trump_color for card in cards])
+def has_color_in_hand(cards, color):
+    return any([extract_color(card) == color for card in cards])
 
 
 def get_lowest_trump_card(cards, trump_color):
@@ -53,7 +53,7 @@ def play_expert_second_in_round(trump_asked, playable_cards, trump_color):
     # LEVEL 2
     if trump_asked:
         # LEVEL 3
-        if has_trump_in_hand(playable_cards, trump_color):
+        if has_color_in_hand(playable_cards, trump_color):
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             return get_lowest_plain_card(playable_cards)

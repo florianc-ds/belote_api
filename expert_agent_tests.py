@@ -1,7 +1,7 @@
 import pytest
 
 from expert_agent import (
-    derive_player_rank_in_round, is_trump_asked, has_trump_in_hand, get_lowest_trump_card,
+    derive_player_rank_in_round, is_trump_asked, has_color_in_hand, get_lowest_trump_card,
     get_lowest_plain_card,
 )
 
@@ -40,8 +40,8 @@ def test_is_trump_asked(round_cards, trump_color, expected):
         ([], 'h', False),
     ]
 )
-def test_has_trump_in_hand(cards, trump_color, expected):
-    assert has_trump_in_hand(cards, trump_color) == expected
+def test_has_color_in_hand(cards, trump_color, expected):
+    assert has_color_in_hand(cards, trump_color) == expected
 
 
 @pytest.mark.parametrize(
