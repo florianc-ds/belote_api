@@ -1,3 +1,5 @@
+import copy
+
 from helpers.common_helpers import extract_color, extract_value
 from helpers.constants import NEXT_PLAYER, TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.play_helpers import derive_playable_cards
@@ -26,6 +28,22 @@ def is_trump_asked(player, round_cards, trump_color):
 
 def has_color_in_hand(cards, color):
     return any([extract_color(card) == color for card in cards])
+
+
+def has_highest_plain_color_card_in_hand(hand_cards, cards_history, color):
+    played_cards = [card for player_cards in cards_history.values() for card in player_cards]
+    played_color_values = [extract_value(card) for card in played_cards if extract_color(card) == color]
+    hand_color_values = [extract_value(card) for card in hand_cards if extract_color(card) == color]
+
+    available_color_points = copy.copy(PLAIN_POINTS)
+    for value in played_color_values:
+        del available_color_points[value]
+
+    if len(available_color_points) == 0:
+        return False
+    else:
+        highest_plain_color_value = max(available_color_points, key=lambda k: (available_color_points[k], k))
+        return highest_plain_color_value in hand_color_values
 
 
 def get_lowest_trump_card(cards, trump_color):

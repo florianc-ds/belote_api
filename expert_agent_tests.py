@@ -3,6 +3,7 @@ import pytest
 from expert_agent import (
     derive_player_rank_in_round, is_trump_asked, has_color_in_hand, get_lowest_trump_card,
     get_lowest_plain_card,
+    has_highest_plain_color_card_in_hand,
 )
 
 
@@ -42,6 +43,24 @@ def test_is_trump_asked(round_cards, trump_color, expected):
 )
 def test_has_color_in_hand(cards, trump_color, expected):
     assert has_color_in_hand(cards, trump_color) == expected
+
+
+@pytest.mark.parametrize(
+    'hand_cards, cards_history, color, expected',
+    [
+        (['Ah'], {'east': ['10d'], 'north': ['7d'], 'west': ['Kd'], 'south': ['Ad']}, 'h', True),
+        (['Qh', 'Kd', 'As'], {'east': ['10h'], 'north': [], 'west': ['Kh'], 'south': ['Ah']}, 'h', True),
+        (['8h'], {'east': ['10h', 'Qh'], 'north': ['Jh'], 'west': ['Kh'], 'south': ['Ah']}, 'h', False),
+        (
+                ['As'],
+                {'east': ['7h', '8h'], 'north': ['9h', '10h'], 'west': ['Jh', 'Qh'], 'south': ['Kh', 'Ah']},
+                'h',
+                False
+        ),
+    ]
+)
+def test_has_highest_plain_color_card_in_hand(hand_cards, cards_history, color, expected):
+    assert has_highest_plain_color_card_in_hand(hand_cards, cards_history, color) == expected
 
 
 @pytest.mark.parametrize(
