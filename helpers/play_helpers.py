@@ -8,6 +8,7 @@ def play_template(data, used_fields, strategy, logger):
     # - roundCards
     # - roundColor
     # - gameHistory
+    # - roundsFirstPlayer
     # - contract
     # - contractTeam
     # - globalScore
