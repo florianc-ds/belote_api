@@ -46,6 +46,15 @@ def has_highest_plain_color_card_in_hand(hand_cards, cards_history, color):
         return highest_plain_color_value in hand_color_values
 
 
+def has_player_cut_color(player, game_history, rounds_first_player, color, trump_color):
+    for round, round_first_player in enumerate(rounds_first_player):
+        asked_color = extract_color(game_history[round_first_player][round])
+        played_color = extract_color(game_history[player][round])
+        if (round_first_player != player) and (asked_color == color) and (played_color == trump_color):
+            return True
+    return False
+
+
 def get_lowest_trump_card(cards, trump_color):
     def _rank_trump_card(card):
         return TRUMP_POINTS[extract_value(card)], extract_value(card)

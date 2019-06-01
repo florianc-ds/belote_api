@@ -4,6 +4,7 @@ from expert_agent import (
     derive_player_rank_in_round, is_trump_asked, has_color_in_hand, get_lowest_trump_card,
     get_lowest_plain_card,
     has_highest_plain_color_card_in_hand,
+    has_player_cut_color,
 )
 
 
@@ -61,6 +62,20 @@ def test_has_color_in_hand(cards, trump_color, expected):
 )
 def test_has_highest_plain_color_card_in_hand(hand_cards, cards_history, color, expected):
     assert has_highest_plain_color_card_in_hand(hand_cards, cards_history, color) == expected
+
+
+@pytest.mark.parametrize(
+    'game_history, rounds_first_player, expected',
+    [
+        ({'west': [], 'east': [], 'north': [], 'south': []}, [], False),
+        ({'west': ['10s', 'Ah'], 'east': [], 'north': ['9s', '10c'], 'south': ['7s']}, ['south', 'west'], True),
+        ({'west': ['10s', 'Ah'], 'east': [], 'north': ['9s', '10h'], 'south': ['7s']}, ['south', 'west'], False),
+        ({'west': [], 'east': [], 'north': ['9h'], 'south': []}, ['north'], False),
+        ({'west': ['10s'], 'east': [], 'north': ['10h'], 'south': []}, ['west'], False),
+    ]
+)
+def test_has_player_cut_color(game_history, rounds_first_player, expected):
+    assert has_player_cut_color('north', game_history, rounds_first_player, color='h', trump_color='c') == expected
 
 
 @pytest.mark.parametrize(
