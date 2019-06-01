@@ -1,4 +1,9 @@
-def bet_or_pass_template(data, used_fields, strategy, logger):
+import logging
+
+logger = logging.getLogger('flask.app')
+
+
+def bet_or_pass_template(data, used_fields, strategy):
     logger.info(f'data: {data}')
     # data contains:
     # - player

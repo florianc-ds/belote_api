@@ -1,5 +1,6 @@
 import json
 import logging
+import sys
 from datetime import timedelta
 from functools import update_wrapper
 
@@ -12,6 +13,9 @@ from highest_card_agent import play_highest_card_strategy, bet_or_pass_highest_c
 from random_agent import play_random_strategy, bet_or_pass_random_strategy
 
 app = Flask(__name__)
+handler = logging.StreamHandler(sys.stdout)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+app.logger.addHandler(handler)
 app.logger.setLevel(logging.INFO)
 
 
@@ -76,7 +80,6 @@ def play_random():
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
             strategy=play_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -92,7 +95,6 @@ def play_highest_card():
             data=data,
             used_fields=['playerCards', 'cardsPlayability', 'trumpColor'],
             strategy=play_highest_card_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -108,7 +110,6 @@ def play_expert():
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
             strategy=play_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -124,7 +125,6 @@ def play_reinforcement():
             data=data,
             used_fields=['playerCards', 'cardsPlayability'],
             strategy=play_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -140,7 +140,6 @@ def bet_or_pass_random():
             data=data,
             used_fields=['playersBids'],
             strategy=bet_or_pass_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -156,7 +155,6 @@ def bet_or_pass_highest_card():
             data=data,
             used_fields=['playerCards', 'playersBids'],
             strategy=bet_or_pass_highest_card_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -172,7 +170,6 @@ def bet_or_pass_expert():
             data=data,
             used_fields=['playersBids'],
             strategy=bet_or_pass_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
@@ -188,7 +185,6 @@ def bet_or_pass_reinforcement():
             data=data,
             used_fields=['playersBids'],
             strategy=bet_or_pass_random_strategy,
-            logger=app.logger,
         )
 
         return json.dumps(response)
