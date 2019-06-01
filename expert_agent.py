@@ -147,7 +147,9 @@ def play_expert_first_in_round():
     return None
 
 
-def play_expert_second_in_round(trump_asked, playable_cards, trump_color):
+def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
+                                rounds_first_player):
+    fourth_player = NEXT_PLAYER[NEXT_PLAYER[player]]
     # LEVEL 2
     if trump_asked:
         # LEVEL 3
@@ -156,7 +158,27 @@ def play_expert_second_in_round(trump_asked, playable_cards, trump_color):
         else:
             return get_lowest_plain_card(playable_cards)
     else:
-        return None
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, round_color):
+            # LEVEL 4
+            if (
+                    has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
+                    and (
+                            not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                                     round_color, trump_color)
+                            or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                             rounds_first_player, trump_color)
+                    )
+            ):
+                return get_highest_color_card(playable_cards, round_color)
+            else:
+                return get_lowest_color_card(playable_cards, round_color)
+        else:
+            # LEVEL 4
+            if has_color_in_hand(playable_cards, trump_color):
+                return get_lowest_trump_card(playable_cards, trump_color)
+            else:
+                return get_lowest_plain_card(playable_cards)
 
 
 def play_expert_third_in_round():
@@ -169,7 +191,8 @@ def play_expert_fourth_in_round():
 
 # LEVEL 0
 
-def play_expert_strategy(player, player_cards, cards_playability, round_cards, trump_color):
+def play_expert_strategy(player, player_cards, cards_playability, round_cards, trump_color, round_color, game_history,
+                         rounds_first_player):
     playable_cards = derive_playable_cards(player_cards, cards_playability)
     # LEVEL 0
     if len(playable_cards) == 1:
@@ -181,7 +204,8 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     if player_rank_in_round == 0:
         card = play_expert_first_in_round()
     elif player_rank_in_round == 1:
-        card = play_expert_second_in_round(trump_asked, playable_cards, trump_color)
+        card = play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
+                                           rounds_first_player)
     elif player_rank_in_round == 2:
         card = play_expert_third_in_round()
     elif player_rank_in_round == 3:
