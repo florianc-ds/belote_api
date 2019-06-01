@@ -118,6 +118,22 @@ def get_lowest_trump_card(cards, trump_color):
     return min(trump_cards, key=_rank_trump_card)
 
 
+def get_lowest_color_card(cards, color):
+    def _rank_color_card(card):
+        return PLAIN_POINTS[extract_value(card)], extract_value(card)
+
+    color_cards = [card for card in cards if extract_color(card) == color]
+    return min(color_cards, key=_rank_color_card)
+
+
+def get_highest_color_card(cards, color):
+    def _rank_color_card(card):
+        return PLAIN_POINTS[extract_value(card)], extract_value(card)
+
+    color_cards = [card for card in cards if extract_color(card) == color]
+    return max(color_cards, key=_rank_color_card)
+
+
 def get_lowest_plain_card(cards):
     def _rank_plain_card(card):
         return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))

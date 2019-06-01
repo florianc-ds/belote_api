@@ -6,6 +6,8 @@ from expert_agent import (
     has_highest_plain_color_card_in_hand,
     has_player_cut_color,
     has_player_already_shown_he_had_no_more_trump,
+    get_lowest_color_card,
+    get_highest_color_card,
 )
 
 
@@ -110,6 +112,38 @@ def test_get_lowest_trump_card(cards, trump_color, expected):
 def test_get_lowest_trump_card_fails():
     with pytest.raises(ValueError):
         get_lowest_trump_card(['10h', 'Kh', '9h', '7s'], 'd')
+
+
+@pytest.mark.parametrize(
+    'cards, color, expected',
+    [
+        (['10h', 'Kh', '9h', '7s'], 'h', '9h'),
+        (['10h', 'Kh', '9h', '7s', '7h', '8h'], 'h', '7h'),
+    ]
+)
+def test_get_lowest_color_card(cards, color, expected):
+    assert get_lowest_color_card(cards, color) == expected
+
+
+def test_get_lowest_color_card_fails():
+    with pytest.raises(ValueError):
+        get_lowest_color_card(['10h', 'Kh', '9h', '7s'], 'd')
+
+
+@pytest.mark.parametrize(
+    'cards, color, expected',
+    [
+        (['10h', 'Kh', '9h', '7s'], 'h', '10h'),
+        (['10h', 'Kh', '9h', '7s', '7h', 'Ah'], 'h', 'Ah'),
+    ]
+)
+def test_get_highest_color_card(cards, color, expected):
+    assert get_highest_color_card(cards, color) == expected
+
+
+def test_get_highest_color_card_fails():
+    with pytest.raises(ValueError):
+        get_highest_color_card(['10h', 'Kh', '9h', '7s'], 'd')
 
 
 @pytest.mark.parametrize(
