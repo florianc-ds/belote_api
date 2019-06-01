@@ -5,6 +5,7 @@ from expert_agent import (
     get_lowest_plain_card,
     has_highest_plain_color_card_in_hand,
     has_player_cut_color,
+    has_player_already_shown_he_had_no_more_trump,
 )
 
 
@@ -76,6 +77,23 @@ def test_has_highest_plain_color_card_in_hand(hand_cards, cards_history, color, 
 )
 def test_has_player_cut_color(game_history, rounds_first_player, expected):
     assert has_player_cut_color('north', game_history, rounds_first_player, color='h', trump_color='c') == expected
+
+
+@pytest.mark.parametrize(
+    'game_history, rounds_first_player, expected',
+    [
+        ({'west': [], 'east': [], 'north': [], 'south': []}, [], False),
+        ({'west': ['10c'], 'east': [], 'north': ['Kd'], 'south': []}, ['west'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7d'], 'south': ['Kd']}, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7c'], 'south': ['Kd']}, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Kd']}, ['west'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, ['east'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['7c']}, ['west'], False),
+    ]
+)
+def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_first_player, expected):
+    assert has_player_already_shown_he_had_no_more_trump('north', game_history, rounds_first_player, 'c') == expected
 
 
 @pytest.mark.parametrize(
