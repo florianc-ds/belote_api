@@ -1,13 +1,7 @@
-[FRONT] Add new state in Game: roundsFirstPlayer
-            -> list of players that played first at each round
-            -> initialized to []
-            -> eg. ['west', 'west', 'north']
-            -> updated at endRound (append winner to the list)
-
-[FRONT] Add roundsFirstPlayer to body sent to API in playCardAutomatically
-
-[BACK] Update play_helpers.play_template doc
-
-[BACK] Use roundsFirstPlayer in expert_agent to implement:
-            -> has_player_cut_color(player, game_history, rounds_first_player, color, trump_color)
-            -> has_player_still_trump(player, game_history, rounds_first_player, color, trump_color)
+[BACK] Integration Tests:
+- Add flask.app logger in expert_agent
+- Add logs to describe which leaf is called (01011), using the flask.app logger
+- for each leaf:
+    - define a realistic game configuration that ends up into the leaf
+    - fill game_configurations.json accordingly
+- Build a test factory into expert_agent_int_tests.py (based on json config & caplog fixture)
