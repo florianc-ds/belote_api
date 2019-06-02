@@ -1,8 +1,11 @@
 import copy
+import logging
 
 from helpers.common_helpers import extract_color, extract_value
 from helpers.constants import NEXT_PLAYER, TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.play_helpers import derive_playable_cards
+
+logger = logging.getLogger('flask.app.expert')
 
 
 ########
@@ -154,8 +157,10 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
     if trump_asked:
         # LEVEL 3
         if has_color_in_hand(playable_cards, trump_color):
+            logger.info('LEAF 0111')
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
+            logger.info('LEAF 0110')
             return get_lowest_plain_card(playable_cards)
     else:
         # LEVEL 3
@@ -170,14 +175,18 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
                                                                              rounds_first_player, trump_color)
                     )
             ):
+                logger.info('LEAF 01011')
                 return get_highest_color_card(playable_cards, round_color)
             else:
+                logger.info('LEAF 01010')
                 return get_lowest_color_card(playable_cards, round_color)
         else:
             # LEVEL 4
             if has_color_in_hand(playable_cards, trump_color):
+                logger.info('LEAF 01001')
                 return get_lowest_trump_card(playable_cards, trump_color)
             else:
+                logger.info('LEAF 01000')
                 return get_lowest_plain_card(playable_cards)
 
 
@@ -196,6 +205,7 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     playable_cards = derive_playable_cards(player_cards, cards_playability)
     # LEVEL 0
     if len(playable_cards) == 1:
+        logger.info('LEAF 1')
         return playable_cards[0]
 
     player_rank_in_round = derive_player_rank_in_round(round_cards)
