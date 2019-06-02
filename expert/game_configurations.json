@@ -1,0 +1,110 @@
+{
+   "TEMPLATE": {
+      "_id": null,
+      "player": null,
+      "player_cards": ["7s"],
+      "cards_playability": [true],
+      "round_cards": {"west": null, "south": null, "east": null, "north": null},
+      "trump_color": null,
+      "round_color": null,
+      "game_history": {"west": [], "south": [], "east": [], "north": []},
+      "rounds_first_player": [],
+      "_expected": null
+   },
+   "YES": {
+      "_id": "1",
+      "player": "south",
+      "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+      "cards_playability": [false, false, false, false, false, false, false, true],
+      "round_cards": {"west": "As", "south": null, "east": null, "north": null},
+      "trump_color": "d",
+      "round_color": "s",
+      "game_history": {"west": [], "south": [], "east": [], "north": []},
+      "rounds_first_player": ["west"],
+      "_expected": "7s"
+   },
+   "NO": {
+      "1": {
+         "YES": {
+            "YES": {
+               "_id": "0111",
+               "player": "south",
+               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+               "cards_playability": [false, false, true, false, true, false, false, false],
+               "round_cards": {"west": "Ah", "south": null, "east": null, "north": null},
+               "trump_color": "h",
+               "round_color": "h",
+               "game_history": {"west": [], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["west"],
+               "_expected": "9h"
+            },
+            "NO": {
+               "_id": "0110",
+               "player": "south",
+               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+               "cards_playability": [true, true, true, true, true, true, true, true],
+               "round_cards": {"west": "Jd", "south": null, "east": null, "north": null},
+               "trump_color": "d",
+               "round_color": "d",
+               "game_history": {"west": [], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["west"],
+               "_expected": "7h"
+            }
+         },
+         "NO": {
+            "YES": {
+               "YES": {
+                  "_id": "01011",
+                  "player": "south",
+                  "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
+                  "trump_color": "d",
+                  "round_color": "h",
+                  "game_history": {"west": ["Jd"], "south": ["7d"], "east": ["Ah"], "north": ["8d"]},
+                  "rounds_first_player": ["west"],
+                  "_expected": "10h"
+               },
+               "NO": {
+                  "_id": "01010",
+                  "player": "south",
+                  "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s", "7c"],
+                  "cards_playability": [true, true, true, true, true, true, false, false],
+                  "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
+                  "trump_color": "d",
+                  "round_color": "h",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "8h"
+               }
+            },
+            "NO": {
+               "YES": {
+                  "_id": "01001",
+                  "player": "west",
+                  "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
+                  "trump_color": "h",
+                  "round_color": "d",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "7h"
+               },
+               "NO": {
+                  "_id": "01000",
+                  "player": "west",
+                  "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
+                  "trump_color": "c",
+                  "round_color": "d",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "7h"
+               }
+            }
+         }
+      }
+   }
+}
