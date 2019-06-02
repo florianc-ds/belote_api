@@ -196,7 +196,7 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     playable_cards = derive_playable_cards(player_cards, cards_playability)
     # LEVEL 0
     if len(playable_cards) == 1:
-        return player_cards[0]
+        return playable_cards[0]
 
     player_rank_in_round = derive_player_rank_in_round(round_cards)
     trump_asked = is_trump_asked(player, round_cards, trump_color)
