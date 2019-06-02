@@ -1,7 +1,9 @@
-[BACK] Integration Tests:
-- Add flask.app logger in expert_agent
-- Add logs to describe which leaf is called (01011), using the flask.app logger
-- for each leaf:
-    - define a realistic game configuration that ends up into the leaf
-    - fill game_configurations.json accordingly
-- Build a test factory into expert_agent_int_tests.py (based on json config & caplog fixture)
+[BACK] Implement can_win_round(hand_cards, round_cards, asked_color, trump_color)
+
+[BACK] Implement is_partner_leading(...) ==> inspire and factorize with has_player_already_shown_he_had_no_more_trump._partner_leads_in_color_round
+
+[BACK] Update get_lowest_plain_card by filtering plain cards only (trumps out)
+
+[BACK] Implement get_highest_plain_card, based on get_lowest_plain_card, with a parameter exclude_aces (False by default)
+
+[BACK] Implement NO-3-...
