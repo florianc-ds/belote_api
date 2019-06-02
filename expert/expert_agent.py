@@ -149,7 +149,7 @@ def play_expert_first_in_round():
 
 def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
                                 rounds_first_player):
-    fourth_player = NEXT_PLAYER[NEXT_PLAYER[player]]
+    third_player = NEXT_PLAYER[player]
     # LEVEL 2
     if trump_asked:
         # LEVEL 3
@@ -164,9 +164,9 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
             if (
                     has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
                     and (
-                            not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                            not has_player_cut_color(third_player, game_history, rounds_first_player,
                                                      round_color, trump_color)
-                            or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                            or has_player_already_shown_he_had_no_more_trump(third_player, game_history,
                                                                              rounds_first_player, trump_color)
                     )
             ):
