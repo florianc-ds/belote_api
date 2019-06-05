@@ -113,6 +113,49 @@ def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_f
     return False
 
 
+def can_win_round(hand_cards, round_cards, asked_color, trump_color):
+    def _rank_trump_card(card):
+        return TRUMP_POINTS[extract_value(card)], extract_value(card)
+
+    def _rank_color_card(card):
+        return PLAIN_POINTS[extract_value(card)], extract_value(card)
+
+    real_round_cards = [card for card in round_cards.values() if card is not None]
+    # not the 4th player, can not win for sure...
+    if len(real_round_cards) != 3:
+        return False
+    played_trumps = [card for card in real_round_cards if extract_color(card) == trump_color]
+    played_asked_color_cards = [card for card in real_round_cards if extract_color(card) == asked_color]
+    player_trumps = [card for card in hand_cards if extract_color(card) == trump_color]
+    player_asked_color_cards = [card for card in hand_cards if extract_color(card) == asked_color]
+    if asked_color != trump_color:
+        if len(played_trumps) == 0:
+            if len(player_asked_color_cards) != 0:
+                return (
+                        max([_rank_color_card(card) for card in player_asked_color_cards])
+                        > max([_rank_color_card(card) for card in played_asked_color_cards])
+                )
+            elif len(player_trumps) > 0:
+                return True
+            else:
+                return False
+        elif (len(player_asked_color_cards) == 0) and (len(player_trumps) != 0):
+                return (
+                        max([_rank_trump_card(card) for card in player_trumps])
+                        > max([_rank_trump_card(card) for card in played_trumps])
+                )
+        else:
+            return False
+    else:
+        if len(player_trumps) == 0:
+            return False
+        else:
+            return (
+                    max([_rank_trump_card(card) for card in player_trumps])
+                    > max([_rank_trump_card(card) for card in played_trumps])
+            )
+
+
 def get_lowest_trump_card(cards, trump_color):
     def _rank_trump_card(card):
         return TRUMP_POINTS[extract_value(card)], extract_value(card)

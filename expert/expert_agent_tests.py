@@ -8,6 +8,7 @@ from expert.expert_agent import (
     has_player_already_shown_he_had_no_more_trump,
     get_lowest_color_card,
     get_highest_color_card,
+    can_win_round,
 )
 
 
@@ -96,6 +97,25 @@ def test_has_player_cut_color(game_history, rounds_first_player, expected):
 )
 def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_first_player, expected):
     assert has_player_already_shown_he_had_no_more_trump('north', game_history, rounds_first_player, 'c') == expected
+
+
+@pytest.mark.parametrize(
+    'hand_cards, round_cards, asked_color, expected',
+    [
+        (['Ah'], {'west': '8h', 'east': None, 'north': '7h', 'south': None}, 'h', False),
+        (['Ah'], {'west': '8h', 'east': '9h', 'north': '7h', 'south': None}, 'h', True),
+        (['Kh'], {'west': 'Ah', 'east': '9h', 'north': '7h', 'south': None}, 'h', False),
+        (['7s'], {'west': 'Ah', 'east': '9h', 'north': '7h', 'south': None}, 'h', True),
+        (['Ah'], {'west': '7s', 'east': '9h', 'north': '7h', 'south': None}, 'h', False),
+        (['Ah', '8s'], {'west': '7s', 'east': '9h', 'north': '7h', 'south': None}, 'h', False),
+        (['Ad', '8s'], {'west': '7s', 'east': '9h', 'north': '7h', 'south': None}, 'h', True),
+        (['Ah'], {'west': 'Ks', 'east': '7s', 'north': '8s', 'south': None}, 's', False),
+        (['Qs'], {'west': 'Ks', 'east': '7s', 'north': '8s', 'south': None}, 's', False),
+        (['As'], {'west': 'Ks', 'east': '7s', 'north': '8s', 'south': None}, 's', True),
+    ]
+)
+def test_can_win_round(hand_cards, round_cards, asked_color, expected):
+    assert can_win_round(hand_cards, round_cards, asked_color, 's') == expected
 
 
 @pytest.mark.parametrize(
