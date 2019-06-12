@@ -15,6 +15,14 @@ logger = logging.getLogger('flask.app.expert')
 
 # HELPERS
 
+def _rank_trump_card(card):
+    return TRUMP_POINTS[extract_value(card)], extract_value(card)
+
+
+def _rank_color_card(card):
+    return PLAIN_POINTS[extract_value(card)], extract_value(card)
+
+
 def derive_player_rank_in_round(round_cards):
     return len([card for card in round_cards.values() if card is not None])
 
@@ -86,12 +94,6 @@ def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_f
 
 
 def can_win_round(hand_cards, round_cards, round_color, trump_color):
-    def _rank_trump_card(card):
-        return TRUMP_POINTS[extract_value(card)], extract_value(card)
-
-    def _rank_color_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card)
-
     real_round_cards = [card for card in round_cards.values() if card is not None]
     # not the 4th player, can not win for sure...
     if len(real_round_cards) != 3:
@@ -129,12 +131,6 @@ def can_win_round(hand_cards, round_cards, round_color, trump_color):
 
 
 def is_partner_leading(player, round_cards, round_color, trump_color):
-    def _rank_trump_card(card):
-        return TRUMP_POINTS[extract_value(card)], extract_value(card)
-
-    def _rank_color_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card)
-
     partner = NEXT_PLAYER[NEXT_PLAYER[player]]
     partner_card = round_cards[partner]
     # partner did not play yet...
@@ -153,25 +149,16 @@ def is_partner_leading(player, round_cards, round_color, trump_color):
 
 
 def get_lowest_trump_card(cards, trump_color):
-    def _rank_trump_card(card):
-        return TRUMP_POINTS[extract_value(card)], extract_value(card)
-
     trump_cards = [card for card in cards if extract_color(card) == trump_color]
     return min(trump_cards, key=_rank_trump_card)
 
 
 def get_lowest_color_card(cards, color):
-    def _rank_color_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card)
-
     color_cards = [card for card in cards if extract_color(card) == color]
     return min(color_cards, key=_rank_color_card)
 
 
 def get_highest_color_card(cards, color):
-    def _rank_color_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card)
-
     color_cards = [card for card in cards if extract_color(card) == color]
     return max(color_cards, key=_rank_color_card)
 
