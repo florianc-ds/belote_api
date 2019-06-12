@@ -59,44 +59,16 @@ def has_player_cut_color(player, game_history, rounds_first_player, color, trump
 
 
 def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_first_player, trump_color):
-    def _partner_leads_in_color_round(round, round_first_player, asked_color):
-        partner = NEXT_PLAYER[NEXT_PLAYER[player]]
-        partner_card = game_history[partner][round]
-        # partner did not play yet...
-        if (round_first_player == NEXT_PLAYER[partner]) or (rounds_first_player == player):
-            return False
-        elif round_first_player == partner:
-            opponent_cards = [game_history[NEXT_PLAYER[partner]][round]]
-        elif round_first_player == NEXT_PLAYER[player]:
-            opponent_cards = [game_history[NEXT_PLAYER[player]][round], game_history[NEXT_PLAYER[partner]][round]]
-
-        if extract_color(partner_card) == asked_color:
-            if any([extract_color(card) == trump_color for card in opponent_cards]):
-                return False
-            asked_color_opponent_cards = [card for card in opponent_cards if extract_color(card) == asked_color]
-            if len(asked_color_opponent_cards) == 0:
-                return True
-            else:
-                return (
-                        PLAIN_POINTS[extract_value(partner_card)]
-                        > max([PLAIN_POINTS[extract_value(card)] for card in asked_color_opponent_cards])
-                )
-        elif extract_color(partner_card) == trump_color:
-            trump_opponent_cards = [card for card in opponent_cards if extract_color(card) == trump_color]
-            if len(trump_opponent_cards) == 0:
-                return True
-            else:
-                return (
-                        TRUMP_POINTS[extract_value(partner_card)]
-                        > max([TRUMP_POINTS[extract_value(card)] for card in trump_opponent_cards])
-                )
-        # partner cannot lead when he plays neither asked color nor trump
-        else:
-            return False
-
     for round, round_first_player in enumerate(rounds_first_player):
         round_color = extract_color(game_history[round_first_player][round])
         played_color = extract_color(game_history[player][round])
+
+        # build round_cards state before player has to play
+        round_cards_before_player = {p: None for p in NEXT_PLAYER.keys()}
+        tmp_player = round_first_player
+        while tmp_player != player:
+            round_cards_before_player[tmp_player] = game_history[tmp_player][round]
+            tmp_player = NEXT_PLAYER[tmp_player]
 
         # trump asked but player did not supply
         if (round_first_player != player) and (played_color != trump_color) and (round_color == trump_color):
@@ -107,7 +79,7 @@ def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_f
                 and (played_color != trump_color)
                 and (round_color != trump_color)
                 and (played_color != round_color)
-                and not _partner_leads_in_color_round(round, round_first_player, round_color)
+                and not is_partner_leading(player, round_cards_before_player, round_color, trump_color)
         ):
             return True
     return False

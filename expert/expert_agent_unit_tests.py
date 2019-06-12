@@ -87,7 +87,7 @@ def test_has_player_cut_color(game_history, rounds_first_player, expected):
     'game_history, rounds_first_player, expected',
     [
         ({'west': [], 'east': [], 'north': [], 'south': []}, [], False),
-        ({'west': ['10c'], 'east': [], 'north': ['Kd'], 'south': []}, ['west'], True),
+        ({'west': [], 'east': ['10c'], 'north': ['Kd'], 'south': []}, ['east'], True),
         ({'west': ['Jd'], 'east': ['10d'], 'north': ['7d'], 'south': ['Kd']}, ['west'], False),
         ({'west': ['Jd'], 'east': ['10d'], 'north': ['7c'], 'south': ['Kd']}, ['west'], False),
         ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Kd']}, ['west'], True),
