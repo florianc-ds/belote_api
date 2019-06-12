@@ -9,6 +9,7 @@ from expert.expert_agent import (
     get_lowest_color_card,
     get_highest_color_card,
     can_win_round,
+    is_partner_leading,
 )
 
 
@@ -116,6 +117,21 @@ def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_firs
 )
 def test_can_win_round(hand_cards, round_cards, round_color, expected):
     assert can_win_round(hand_cards, round_cards, round_color, 's') == expected
+
+
+@pytest.mark.parametrize(
+    'round_cards, round_color, expected',
+    [
+        ({'west': 'Jh', 'east': None, 'north': None, 'south': None}, 'h', False),
+        ({'west': 'Jh', 'east': '7h', 'north': 'Ah', 'south': None}, 'h', True),
+        ({'west': 'Jh', 'east': '7h', 'north': '8h', 'south': None}, 'h', False),
+        ({'west': '7s', 'east': '7h', 'north': 'Ah', 'south': None}, 'h', False),
+        ({'west': '10s', 'east': '7s', 'north': 'As', 'south': None}, 's', True),
+        ({'west': '10s', 'east': '7s', 'north': '8s', 'south': None}, 's', False),
+    ]
+)
+def test_is_partner_leading(round_cards, round_color, expected):
+    assert is_partner_leading('south', round_cards, round_color, 's') == expected
 
 
 @pytest.mark.parametrize(

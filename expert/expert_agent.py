@@ -156,6 +156,30 @@ def can_win_round(hand_cards, round_cards, round_color, trump_color):
             )
 
 
+def is_partner_leading(player, round_cards, round_color, trump_color):
+    def _rank_trump_card(card):
+        return TRUMP_POINTS[extract_value(card)], extract_value(card)
+
+    def _rank_color_card(card):
+        return PLAIN_POINTS[extract_value(card)], extract_value(card)
+
+    partner = NEXT_PLAYER[NEXT_PLAYER[player]]
+    partner_card = round_cards[partner]
+    # partner did not play yet...
+    if partner_card is None:
+        return False
+    real_round_cards = [card for card in round_cards.values() if card is not None]
+    played_trumps = [card for card in real_round_cards if extract_color(card) == trump_color]
+    played_round_color_cards = [card for card in real_round_cards if extract_color(card) == round_color]
+    if round_color != trump_color:
+        if len(played_trumps) != 0:
+            return max(played_trumps, key=_rank_trump_card) == partner_card
+        else:
+            return max(played_round_color_cards, key=_rank_color_card) == partner_card
+    else:
+        return max(played_trumps, key=_rank_trump_card) == partner_card
+
+
 def get_lowest_trump_card(cards, trump_color):
     def _rank_trump_card(card):
         return TRUMP_POINTS[extract_value(card)], extract_value(card)
