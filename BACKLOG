@@ -1,5 +1,3 @@
-[BACK] Implement is_partner_leading(...) ==> inspire and factorize with has_player_already_shown_he_had_no_more_trump._partner_leads_in_color_round
-
 [BACK] Update get_lowest_plain_card by filtering plain cards only (trumps out)
 
 [BACK] Implement get_highest_plain_card, based on get_lowest_plain_card, with a parameter exclude_aces (False by default)
