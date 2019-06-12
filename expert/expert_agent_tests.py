@@ -100,7 +100,7 @@ def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_firs
 
 
 @pytest.mark.parametrize(
-    'hand_cards, round_cards, asked_color, expected',
+    'hand_cards, round_cards, round_color, expected',
     [
         (['Ah'], {'west': '8h', 'east': None, 'north': '7h', 'south': None}, 'h', False),
         (['Ah'], {'west': '8h', 'east': '9h', 'north': '7h', 'south': None}, 'h', True),
@@ -114,8 +114,8 @@ def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_firs
         (['As'], {'west': 'Ks', 'east': '7s', 'north': '8s', 'south': None}, 's', True),
     ]
 )
-def test_can_win_round(hand_cards, round_cards, asked_color, expected):
-    assert can_win_round(hand_cards, round_cards, asked_color, 's') == expected
+def test_can_win_round(hand_cards, round_cards, round_color, expected):
+    assert can_win_round(hand_cards, round_cards, round_color, 's') == expected
 
 
 @pytest.mark.parametrize(

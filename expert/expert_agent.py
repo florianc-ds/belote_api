@@ -95,25 +95,25 @@ def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_f
             return False
 
     for round, round_first_player in enumerate(rounds_first_player):
-        asked_color = extract_color(game_history[round_first_player][round])
+        round_color = extract_color(game_history[round_first_player][round])
         played_color = extract_color(game_history[player][round])
 
         # trump asked but player did not supply
-        if (round_first_player != player) and (played_color != trump_color) and (asked_color == trump_color):
+        if (round_first_player != player) and (played_color != trump_color) and (round_color == trump_color):
             return True
         # color asked, player should have cut but did not
         elif (
                 (round_first_player != player)
                 and (played_color != trump_color)
-                and (asked_color != trump_color)
-                and (played_color != asked_color)
-                and not _partner_leads_in_color_round(round, round_first_player, asked_color)
+                and (round_color != trump_color)
+                and (played_color != round_color)
+                and not _partner_leads_in_color_round(round, round_first_player, round_color)
         ):
             return True
     return False
 
 
-def can_win_round(hand_cards, round_cards, asked_color, trump_color):
+def can_win_round(hand_cards, round_cards, round_color, trump_color):
     def _rank_trump_card(card):
         return TRUMP_POINTS[extract_value(card)], extract_value(card)
 
@@ -125,21 +125,21 @@ def can_win_round(hand_cards, round_cards, asked_color, trump_color):
     if len(real_round_cards) != 3:
         return False
     played_trumps = [card for card in real_round_cards if extract_color(card) == trump_color]
-    played_asked_color_cards = [card for card in real_round_cards if extract_color(card) == asked_color]
+    played_round_color_cards = [card for card in real_round_cards if extract_color(card) == round_color]
     player_trumps = [card for card in hand_cards if extract_color(card) == trump_color]
-    player_asked_color_cards = [card for card in hand_cards if extract_color(card) == asked_color]
-    if asked_color != trump_color:
+    player_round_color_cards = [card for card in hand_cards if extract_color(card) == round_color]
+    if round_color != trump_color:
         if len(played_trumps) == 0:
-            if len(player_asked_color_cards) != 0:
+            if len(player_round_color_cards) != 0:
                 return (
-                        max([_rank_color_card(card) for card in player_asked_color_cards])
-                        > max([_rank_color_card(card) for card in played_asked_color_cards])
+                        max([_rank_color_card(card) for card in player_round_color_cards])
+                        > max([_rank_color_card(card) for card in played_round_color_cards])
                 )
             elif len(player_trumps) > 0:
                 return True
             else:
                 return False
-        elif (len(player_asked_color_cards) == 0) and (len(player_trumps) != 0):
+        elif (len(player_round_color_cards) == 0) and (len(player_trumps) != 0):
                 return (
                         max([_rank_trump_card(card) for card in player_trumps])
                         > max([_rank_trump_card(card) for card in played_trumps])
