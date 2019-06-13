@@ -187,12 +187,13 @@ def test_get_highest_color_card_fails():
     [
         (['10h', 'Kh', '9h', '7s'], '7s'),
         (['10h', 'Kh', '9h', '7s', '7h', '8d'], '7h'),
+        (['7c', '8h', '9d'], '8h'),
     ]
 )
 def test_get_lowest_plain_card(cards, expected):
-    assert get_lowest_plain_card(cards) == expected
+    assert get_lowest_plain_card(cards, trump_color='c') == expected
 
 
 def test_get_lowest_plain_card_fails():
     with pytest.raises(ValueError):
-        get_lowest_plain_card([])
+        get_lowest_plain_card(['7c', '8c', '9c'], trump_color='c')

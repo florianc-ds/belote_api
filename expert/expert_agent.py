@@ -163,11 +163,12 @@ def get_highest_color_card(cards, color):
     return max(color_cards, key=_rank_color_card)
 
 
-def get_lowest_plain_card(cards):
+def get_lowest_plain_card(cards, trump_color):
     def _rank_plain_card(card):
         return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))
 
-    return min(cards, key=_rank_plain_card)
+    plain_cards = [card for card in cards if extract_color(card) != trump_color]
+    return min(plain_cards, key=_rank_plain_card)
 
 
 # LEVEL 1
@@ -187,7 +188,7 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             logger.info('LEAF 0110')
-            return get_lowest_plain_card(playable_cards)
+            return get_lowest_plain_card(playable_cards, trump_color)
     else:
         # LEVEL 3
         if has_color_in_hand(playable_cards, round_color):
@@ -213,7 +214,7 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
                 return get_lowest_trump_card(playable_cards, trump_color)
             else:
                 logger.info('LEAF 01000')
-                return get_lowest_plain_card(playable_cards)
+                return get_lowest_plain_card(playable_cards, trump_color)
 
 
 def play_expert_third_in_round():
