@@ -19,8 +19,8 @@ def _rank_trump_card(card):
     return TRUMP_POINTS[extract_value(card)], extract_value(card)
 
 
-def _rank_color_card(card):
-    return PLAIN_POINTS[extract_value(card)], extract_value(card)
+def _rank_plain_card(card):
+    return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))
 
 
 def derive_player_rank_in_round(round_cards):
@@ -106,8 +106,8 @@ def can_win_round(hand_cards, round_cards, round_color, trump_color):
         if len(played_trumps) == 0:
             if len(player_round_color_cards) != 0:
                 return (
-                        max([_rank_color_card(card) for card in player_round_color_cards])
-                        > max([_rank_color_card(card) for card in played_round_color_cards])
+                        max([_rank_plain_card(card) for card in player_round_color_cards])
+                        > max([_rank_plain_card(card) for card in played_round_color_cards])
                 )
             elif len(player_trumps) > 0:
                 return True
@@ -143,7 +143,7 @@ def is_partner_leading(player, round_cards, round_color, trump_color):
         if len(played_trumps) != 0:
             return max(played_trumps, key=_rank_trump_card) == partner_card
         else:
-            return max(played_round_color_cards, key=_rank_color_card) == partner_card
+            return max(played_round_color_cards, key=_rank_plain_card) == partner_card
     else:
         return max(played_trumps, key=_rank_trump_card) == partner_card
 
@@ -155,26 +155,20 @@ def get_lowest_trump_card(cards, trump_color):
 
 def get_lowest_color_card(cards, color):
     color_cards = [card for card in cards if extract_color(card) == color]
-    return min(color_cards, key=_rank_color_card)
+    return min(color_cards, key=_rank_plain_card)
 
 
 def get_highest_color_card(cards, color):
     color_cards = [card for card in cards if extract_color(card) == color]
-    return max(color_cards, key=_rank_color_card)
+    return max(color_cards, key=_rank_plain_card)
 
 
 def get_lowest_plain_card(cards, trump_color):
-    def _rank_plain_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))
-
     plain_cards = [card for card in cards if extract_color(card) != trump_color]
     return min(plain_cards, key=_rank_plain_card)
 
 
 def get_highest_plain_card(cards, trump_color, exclude_aces=False):
-    def _rank_plain_card(card):
-        return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))
-
     plain_cards = [card for card in cards if extract_color(card) != trump_color]
     plain_cards_without_aces = [card for card in plain_cards if extract_value(card) != 'A']
     if exclude_aces and len(plain_cards_without_aces) != 0:
