@@ -10,6 +10,7 @@ from expert.expert_agent import (
     get_highest_color_card,
     can_win_round,
     is_partner_leading,
+    get_highest_plain_card,
 )
 
 
@@ -197,3 +198,22 @@ def test_get_lowest_plain_card(cards, expected):
 def test_get_lowest_plain_card_fails():
     with pytest.raises(ValueError):
         get_lowest_plain_card(['7c', '8c', '9c'], trump_color='c')
+
+
+@pytest.mark.parametrize(
+    'cards, exclude_aces, expected',
+    [
+        (['10h', 'Kh', '9h', 'As'], False, 'As'),
+        (['10h', 'Kh', '9h', 'As', 'Ah', '8d'], False, 'As'),
+        (['7d', '8h', '9c'], False, '8h'),
+        (['7h', 'Jh', 'As'], True, 'Jh'),
+        (['Kc', 'Ah', 'As'], True, 'As'),
+    ]
+)
+def test_get_highest_plain_card(cards, exclude_aces, expected):
+    assert get_highest_plain_card(cards, trump_color='c', exclude_aces=exclude_aces) == expected
+
+
+def test_get_highest_plain_card_fails():
+    with pytest.raises(ValueError):
+        get_highest_plain_card(['7c', '8c', '9c'], trump_color='c')

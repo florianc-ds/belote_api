@@ -171,6 +171,18 @@ def get_lowest_plain_card(cards, trump_color):
     return min(plain_cards, key=_rank_plain_card)
 
 
+def get_highest_plain_card(cards, trump_color, exclude_aces=False):
+    def _rank_plain_card(card):
+        return PLAIN_POINTS[extract_value(card)], extract_value(card), -COLORS.index(extract_color(card))
+
+    plain_cards = [card for card in cards if extract_color(card) != trump_color]
+    plain_cards_without_aces = [card for card in plain_cards if extract_value(card) != 'A']
+    if exclude_aces and len(plain_cards_without_aces) != 0:
+        return max(plain_cards_without_aces, key=_rank_plain_card)
+    else:
+        return max(plain_cards, key=_rank_plain_card)
+
+
 # LEVEL 1
 
 def play_expert_first_in_round():
