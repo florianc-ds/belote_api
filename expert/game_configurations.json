@@ -105,6 +105,130 @@
                }
             }
          }
+      },
+      "3": {
+         "YES": {
+            "YES": {
+               "_id": "0311",
+               "player": "south",
+               "player_cards": ["7s", "8s", "Kh", "10h", "7d", "10d", "9d", "Ac"],
+               "cards_playability": [false, false, false, false, false, true, true, false],
+               "round_cards": {"west": "Kd", "south": null, "east": "8d", "north": "Qd"},
+               "trump_color": "d",
+               "round_color": "d",
+               "game_history": {"west": [], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["east"],
+               "_expected": "10d"
+            },
+            "NO": {
+               "YES": {
+                  "_id": "03101",
+                  "player": "south",
+                  "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "8c", "south": null, "east": "7c", "north": "10c"},
+                  "trump_color": "c",
+                  "round_color": "c",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["east"],
+                  "_expected": "10h"
+               },
+               "NO": {
+                  "_id": "03100",
+                  "player": "south",
+                  "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "8c", "south": null, "east": "Jc", "north": "10c"},
+                  "trump_color": "c",
+                  "round_color": "c",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["east"],
+                  "_expected": "7d"
+               }
+            }
+         },
+         "NO": {
+            "YES": {
+               "YES": {
+                  "_id": "03011",
+                  "player": "south",
+                  "player_cards": ["7s", "10s", "As", "8h", "Kh", "Qd", "Ad", "8c"],
+                  "cards_playability": [true, true, true, false, false, false, false, false],
+                  "round_cards": {"west": "Ks", "south": null, "east": "8s", "north": "Js"},
+                  "trump_color": "d",
+                  "round_color": "s",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["east"],
+                  "_expected": "As"
+               },
+               "NO": {
+                  "YES": {
+                     "_id": "030101",
+                     "player": "south",
+                     "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
+                     "cards_playability": [true, true, true, false, false, false, false, false],
+                     "round_cards": {"west": "Js", "south": null, "east": "8s", "north": "As"},
+                     "trump_color": "d",
+                     "round_color": "s",
+                     "game_history": {"west": [], "south": [], "east": [], "north": []},
+                     "rounds_first_player": ["east"],
+                     "_expected": "10s"
+                  },
+                  "NO": {
+                     "_id": "030100",
+                     "player": "south",
+                     "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
+                     "cards_playability": [true, true, true, false, false, false, false, false],
+                     "round_cards": {"west": "As", "south": null, "east": "8s", "north": "Js"},
+                     "trump_color": "d",
+                     "round_color": "s",
+                     "game_history": {"west": [], "south": [], "east": [], "north": []},
+                     "rounds_first_player": ["east"],
+                     "_expected": "7s"
+                  }
+               }
+            },
+            "NO": {
+               "YES": {
+                  "_id": "03001",
+                  "player": "south",
+                  "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                  "trump_color": "c",
+                  "round_color": "d",
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["east"],
+                  "_expected": "10h"
+               },
+               "NO": {
+                  "YES": {
+                     "_id": "030001",
+                     "player": "south",
+                     "player_cards": ["7s", "As", "Jh", "Qh", "10h", "7c", "10c", "Jc"],
+                     "cards_playability": [false, false, false, false, false, false, true, true],
+                     "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "c",
+                     "round_color": "d",
+                     "game_history": {"west": [], "south": [], "east": [], "north": []},
+                     "rounds_first_player": ["east"],
+                     "_expected": "10c"
+                  },
+                  "NO": {
+                     "_id": "030000",
+                     "player": "south",
+                     "player_cards": ["7s", "8s", "Ks", "As", "8h", "Jh", "Qh", "10h"],
+                     "cards_playability": [true, true, true, true, true, true, true, true],
+                     "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "c",
+                     "round_color": "d",
+                     "game_history": {"west": [], "south": [], "east": [], "north": []},
+                     "rounds_first_player": ["east"],
+                     "_expected": "7s"
+                  }
+               }
+            }
+         }
       }
    }
 }
