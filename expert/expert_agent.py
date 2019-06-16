@@ -232,34 +232,43 @@ def play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards
     if trump_asked:
         # LEVEL 3
         if has_color_in_hand(playable_cards, trump_color):
+            logger.info('LEAF 0311')
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             # LEVEL 4
             if is_partner_leading(player, round_cards, round_color, trump_color):
+                logger.info('LEAF 03101')
                 return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
+                logger.info('LEAF 03100')
                 return get_lowest_plain_card(playable_cards, trump_color)
     else:
         # LEVEL 3
         if has_color_in_hand(playable_cards, round_color):
             # LEVEL 4
             if can_win_round(playable_cards, round_cards, round_color, trump_color):
+                logger.info('LEAF 03011')
                 return get_highest_color_card(playable_cards, round_color)
             else:
                 # LEVEL 5
                 if is_partner_leading(player, round_cards, round_color, trump_color):
+                    logger.info('LEAF 030101')
                     return get_highest_color_card(playable_cards, round_color)
                 else:
+                    logger.info('LEAF 030100')
                     return get_lowest_color_card(playable_cards, round_color)
         else:
             # LEVEL 4
             if is_partner_leading(player, round_cards, round_color, trump_color):
+                logger.info('LEAF 03001')
                 return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
                 # LEVEL 5
                 if has_color_in_hand(playable_cards, trump_color):
+                    logger.info('LEAF 030001')
                     return get_lowest_trump_card(playable_cards, trump_color)
                 else:
+                    logger.info('LEAF 030000')
                     return get_lowest_plain_card(playable_cards, trump_color)
 
 
