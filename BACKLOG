@@ -1,1 +1,13 @@
-[BACK] Implement NO-3-...
+[BACK] Implement get_highest_color_card_remaining(game_history, trump_color)
+    Inspire from and factorize has_highest_plain_color_card_in_hand
+
+[BACK] Implement get_highest_trump_remaining(game_history, trump_color)
+
+[BACK] Implement count_round_points(round_cards, trump_color)
+
+[BACK] Implement must_cut(playable_cards) (only trumps...)
+
+[BACK] Implement play_expert_third_in_round(...)
+    As rules are a bit more complex than those in play_expert_fourth_in_round:
+        define constants such as partner, opponent,...
+        don't hesitate to make comparison directly in if/else rather than creating a specific function with ugly name
