@@ -227,8 +227,40 @@ def play_expert_third_in_round():
     return None
 
 
-def play_expert_fourth_in_round():
-    return None
+def play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color):
+    # LEVEL 2
+    if trump_asked:
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, trump_color):
+            return get_lowest_trump_card(playable_cards, trump_color)
+        else:
+            # LEVEL 4
+            if is_partner_leading(player, round_cards, round_color, trump_color):
+                return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
+            else:
+                return get_lowest_plain_card(playable_cards, trump_color)
+    else:
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, round_color):
+            # LEVEL 4
+            if can_win_round(playable_cards, round_cards, round_color, trump_color):
+                return get_highest_color_card(playable_cards, round_color)
+            else:
+                # LEVEL 5
+                if is_partner_leading(player, round_cards, round_color, trump_color):
+                    return get_highest_color_card(playable_cards, round_color)
+                else:
+                    return get_lowest_color_card(playable_cards, round_color)
+        else:
+            # LEVEL 4
+            if is_partner_leading(player, round_cards, round_color, trump_color):
+                return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
+            else:
+                # LEVEL 5
+                if has_color_in_hand(playable_cards, trump_color):
+                    return get_lowest_trump_card(playable_cards, trump_color)
+                else:
+                    return get_lowest_plain_card(playable_cards, trump_color)
 
 
 # LEVEL 0
@@ -252,6 +284,6 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     elif player_rank_in_round == 2:
         card = play_expert_third_in_round()
     elif player_rank_in_round == 3:
-        card = play_expert_fourth_in_round()
+        card = play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color)
 
     return card
