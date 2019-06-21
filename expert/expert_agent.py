@@ -51,6 +51,16 @@ def get_highest_color_card_remaining(cards_history, color):
             return create_card(value, color)
 
 
+def get_highest_trump_remaining(cards_history, trump_color):
+    played_trump_cards = [card for player_cards in cards_history.values()
+                          for card in player_cards
+                          if extract_color(card) == trump_color]
+    played_trump_values = [extract_value(card) for card in played_trump_cards]
+    for value, _ in sorted(TRUMP_POINTS.items(), key=lambda kv: -kv[1]):
+        if value not in played_trump_values:
+            return create_card(value, trump_color)
+
+
 def has_highest_plain_color_card_in_hand(hand_cards, cards_history, color):
     hand_color_cards = [card for card in hand_cards if extract_color(card) == color]
     if len(hand_color_cards) == 0:
