@@ -161,6 +161,18 @@ def is_partner_leading(player, round_cards, round_color, trump_color):
         return max(played_trumps, key=_rank_trump_card) == partner_card
 
 
+def count_round_points(round_cards, trump_color, round):
+    # Automatically 10 points for last round
+    points = 0 if round != 7 else 10
+    real_round_cards = [card for card in round_cards.values() if card is not None]
+    for card in real_round_cards:
+        if extract_color(card) == trump_color:
+            points += TRUMP_POINTS[extract_value(card)]
+        else:
+            points += PLAIN_POINTS[extract_value(card)]
+    return points
+
+
 def get_lowest_trump_card(cards, trump_color):
     trump_cards = [card for card in cards if extract_color(card) == trump_color]
     return min(trump_cards, key=_rank_trump_card)

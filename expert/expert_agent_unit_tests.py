@@ -13,6 +13,7 @@ from expert.expert_agent import (
     get_highest_plain_card,
     get_highest_color_card_remaining,
     get_highest_trump_remaining,
+    count_round_points,
 )
 
 
@@ -162,6 +163,18 @@ def test_can_win_round(hand_cards, round_cards, round_color, expected):
 def test_is_partner_leading(round_cards, round_color, expected):
     assert is_partner_leading('south', round_cards, round_color, 's') == expected
 
+
+@pytest.mark.parametrize(
+    'round_cards, round, expected',
+    [
+        ({'west': None, 'east': None, 'north': None, 'south': None}, 0, 0),
+        ({'west': 'As', 'east': 'Js', 'north': 'Ks', 'south': '7h'}, 0, 17),
+        ({'west': 'As', 'east': 'Js', 'north': 'Ks', 'south': '7h'}, 7, 27),
+        ({'west': 'As', 'east': 'Js', 'north': 'Ks', 'south': '9h'}, 0, 31),
+    ]
+)
+def test_count_round_points(round_cards, round, expected):
+    assert count_round_points(round_cards, 'h', round) == expected
 
 @pytest.mark.parametrize(
     'cards, trump_color, expected',
