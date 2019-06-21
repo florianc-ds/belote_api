@@ -1,7 +1,7 @@
 import copy
 import logging
 
-from helpers.common_helpers import extract_color, extract_value
+from helpers.common_helpers import extract_color, extract_value, create_card
 from helpers.constants import NEXT_PLAYER, TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.play_helpers import derive_playable_cards
 
@@ -41,20 +41,23 @@ def has_color_in_hand(cards, color):
     return any([extract_color(card) == color for card in cards])
 
 
+def get_highest_color_card_remaining(cards_history, color):
+    played_color_cards = [card for player_cards in cards_history.values()
+                          for card in player_cards
+                          if extract_color(card) == color]
+    played_color_values = [extract_value(card) for card in played_color_cards]
+    for value, _ in sorted(PLAIN_POINTS.items(), key=lambda kv: -kv[1]):
+        if value not in played_color_values:
+            return create_card(value, color)
+
+
 def has_highest_plain_color_card_in_hand(hand_cards, cards_history, color):
-    played_cards = [card for player_cards in cards_history.values() for card in player_cards]
-    played_color_values = [extract_value(card) for card in played_cards if extract_color(card) == color]
-    hand_color_values = [extract_value(card) for card in hand_cards if extract_color(card) == color]
-
-    available_color_points = copy.copy(PLAIN_POINTS)
-    for value in played_color_values:
-        del available_color_points[value]
-
-    if len(available_color_points) == 0:
+    hand_color_cards = [card for card in hand_cards if extract_color(card) == color]
+    if len(hand_color_cards) == 0:
         return False
     else:
-        highest_plain_color_value = max(available_color_points, key=lambda k: (available_color_points[k], k))
-        return highest_plain_color_value in hand_color_values
+        highest_color_card_remaining = get_highest_color_card_remaining(cards_history, color)
+        return highest_color_card_remaining in hand_color_cards
 
 
 def has_player_cut_color(player, game_history, rounds_first_player, color, trump_color):

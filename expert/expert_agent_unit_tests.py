@@ -11,6 +11,7 @@ from expert.expert_agent import (
     can_win_round,
     is_partner_leading,
     get_highest_plain_card,
+    get_highest_color_card_remaining,
 )
 
 
@@ -50,6 +51,19 @@ def test_is_trump_asked(round_cards, trump_color, expected):
 )
 def test_has_color_in_hand(cards, trump_color, expected):
     assert has_color_in_hand(cards, trump_color) == expected
+
+
+@pytest.mark.parametrize(
+    'cards_history, expected',
+    [
+        ({'east': [], 'north': [], 'west': [], 'south': []}, 'Ah'),
+        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10h']}, 'Qh'),
+        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10s']}, '10h'),
+        ({'east': ['Ah', 'Jh'], 'north': ['Kh', '8h'], 'west': ['7h', '9h'], 'south': ['10h', 'Qh']}, None),
+    ]
+)
+def test_get_highest_color_card_remaining(cards_history, expected):
+    assert get_highest_color_card_remaining(cards_history, 'h') == expected
 
 
 @pytest.mark.parametrize(
