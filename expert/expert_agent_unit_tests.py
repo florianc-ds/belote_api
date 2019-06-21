@@ -14,6 +14,7 @@ from expert.expert_agent import (
     get_highest_color_card_remaining,
     get_highest_trump_remaining,
     count_round_points,
+    must_cut,
 )
 
 
@@ -175,6 +176,20 @@ def test_is_partner_leading(round_cards, round_color, expected):
 )
 def test_count_round_points(round_cards, round, expected):
     assert count_round_points(round_cards, 'h', round) == expected
+
+
+@pytest.mark.parametrize(
+    'playable_cards, expected',
+    [
+        ([], False),
+        (['7h', '8h'], True),
+        (['7s', '8s'], False),
+        (['7s', '8h'], False),
+    ]
+)
+def test_must_cut(playable_cards, expected):
+    return must_cut(playable_cards, 'h') == expected
+
 
 @pytest.mark.parametrize(
     'cards, trump_color, expected',
