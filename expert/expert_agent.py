@@ -3,6 +3,7 @@ import logging
 
 from helpers.common_helpers import extract_color, extract_value, create_card
 from helpers.constants import NEXT_PLAYER, TRUMP_POINTS, PLAIN_POINTS, COLORS
+from helpers.exceptions import UnhandledPlayCaseException
 from helpers.play_helpers import derive_playable_cards
 
 logger = logging.getLogger('flask.app.expert')
@@ -420,5 +421,9 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
         card = play_expert_third_in_round()
     elif player_rank_in_round == 3:
         card = play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color)
+    else:
+        # @TODO: Add test for this exception
+        raise UnhandledPlayCaseException(f'player_rank_in_round has unhandled value: {player_rank_in_round}. '
+                                            f'Ill-shaped round_cards: {round_cards}')
 
     return card

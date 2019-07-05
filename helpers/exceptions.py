@@ -1,0 +1,2 @@
+class UnhandledPlayCaseException(Exception):
+    pass
