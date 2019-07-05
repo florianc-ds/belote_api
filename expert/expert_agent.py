@@ -7,6 +7,7 @@ from helpers.play_helpers import derive_playable_cards
 
 logger = logging.getLogger('flask.app.expert')
 
+IMPORTANT_ROUND_LIMIT = 10
 
 ########
 # PLAY #
@@ -252,8 +253,104 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
                 return get_lowest_plain_card(playable_cards, trump_color)
 
 
-def play_expert_third_in_round():
-    return None
+def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color, round,
+                               game_history, rounds_first_player):
+    partner = NEXT_PLAYER[NEXT_PLAYER[player]]
+    partner_card = round_cards[partner]
+    opponent = NEXT_PLAYER[partner]
+    opponent_card = round_cards[opponent]
+    fourth_player = NEXT_PLAYER[player]
+    # LEVEL 2
+    if trump_asked:
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, trump_color):
+            return get_lowest_trump_card(playable_cards, trump_color)
+        else:
+            # LEVEL 4
+            if get_highest_trump_remaining(game_history, trump_color) == partner_card:
+                return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
+            else:
+                return get_lowest_plain_card(playable_cards, trump_color)
+    else:
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, round_color):
+            # LEVEL 4
+            if (
+                    (extract_color(opponent_card) == trump_color)
+                    or (opponent_card == get_highest_color_card_remaining(game_history, round_color))
+            ):
+                return get_lowest_color_card(playable_cards, round_color)
+            else:
+                # LEVEL 5
+                if (
+                        has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
+                        and
+                        (
+                             has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color,
+                                                  trump_color)
+                             or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                              rounds_first_player, trump_color)
+                        )
+                ):
+                    get_lowest_color_card(playable_cards, round_color)
+                else:
+                    # LEVEL 6
+                    if (
+                            (
+                                 is_partner_leading(player, round_cards, round_color, trump_color)
+                                 and ((get_highest_color_card_remaining(game_history, round_color) == partner_card)
+                                      or (extract_color(partner_card) == trump_color))
+                            )
+                            and (
+                                    has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color,
+                                                         trump_color)
+                                    or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                                      round_color, trump_color))
+                            )
+                    ):
+                        return get_highest_color_card(playable_cards, round_color)
+                    else:
+                        return get_lowest_color_card(playable_cards, round_color)
+        else:
+            # LEVEL 4
+            if (
+                    (
+                        is_partner_leading(player, round_cards, round_color, trump_color)
+                        and ((get_highest_color_card_remaining(game_history, round_color) == partner_card)
+                             or (extract_color(partner_card) == trump_color))
+                    )
+                    and (
+                        has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color, trump_color)
+                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round_color,
+                                                                      trump_color))
+                    )
+            ):
+                # WARNING: WHAT IF ONLY TRUMPS IN HAND..?
+                return "ERROR..."
+                # return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
+            else:
+                # LEVEL 5
+                if (
+                        (
+                            is_partner_leading(player, round_cards, round_color, trump_color)
+                            and ((get_highest_color_card_remaining(game_history, round_color) != partner_card)
+                                 and extract_color(partner_card) != trump_color)
+                        )
+                        and (count_round_points(round_cards, trump_color, round) >= IMPORTANT_ROUND_LIMIT)
+                        and (
+                            has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color, trump_color)
+                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round_color,
+                                                                              trump_color))
+                        )
+                        and has_color_in_hand(playable_cards, trump_color)
+                ):
+                    return get_lowest_trump_card(playable_cards, trump_color)
+                else:
+                    # LEVEL 6
+                    if has_color_in_hand(playable_cards, trump_color) and must_cut(playable_cards, trump_color):
+                        return get_lowest_trump_card(playable_cards, trump_color)
+                    else:
+                        return get_lowest_plain_card(playable_cards, trump_color)
 
 
 def play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color):
