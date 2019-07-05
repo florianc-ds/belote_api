@@ -326,7 +326,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                                                                       trump_color))
                     )
             ):
-                # WARNING: WHAT IF ONLY TRUMPS IN HAND..?
+                # @TODO: WARNING: WHAT IF ONLY TRUMPS IN HAND..?
                 return "ERROR..."
                 # return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
