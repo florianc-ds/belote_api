@@ -1,4 +1,7 @@
-[BACK] Implement play_expert_third_in_round(...)
-    As rules are a bit more complex than those in play_expert_fourth_in_round:
-        define constants such as partner, opponent,...
-        don't hesitate to make comparison directly in if/else rather than creating a specific function with ugly name
+[DESIGN] Update schema to fix 02001
+
+[BACK] Add round in play_expert_strategy (& update tests)
+
+[BACK] Add LEAF logs for play_expert_third_in_round
+
+[BACK] Add func tests for play_expert_third_in_round
