@@ -15,6 +15,7 @@ from expert.expert_agent import (
     get_highest_trump_remaining,
     count_round_points,
     must_cut,
+    has_only_trumps_and_aces,
 )
 
 
@@ -189,6 +190,19 @@ def test_count_round_points(round_cards, round, expected):
 )
 def test_must_cut(playable_cards, expected):
     return must_cut(playable_cards, 'h') == expected
+
+
+@pytest.mark.parametrize(
+    'playable_cards, expected',
+    [
+        ([], False),
+        (['7h', 'As'], True),
+        (['7s', 'As'], False),
+        (['7s', '8h'], False),
+    ]
+)
+def test_has_only_trumps_and_aces(playable_cards, expected):
+    return has_only_trumps_and_aces(playable_cards, 'h') == expected
 
 
 @pytest.mark.parametrize(

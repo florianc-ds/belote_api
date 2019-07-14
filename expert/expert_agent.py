@@ -167,6 +167,10 @@ def must_cut(playable_cards, trump_color):
     return all([extract_color(card) == trump_color for card in playable_cards])
 
 
+def has_only_trumps_and_aces(playable_cards, trump_color):
+    return all([(extract_color(card) == trump_color) or (extract_value(card) == 'A') for card in playable_cards])
+
+
 def count_round_points(round_cards, trump_color, round):
     # Automatically add 10 points for last round
     points = 0 if round != 7 else 10
