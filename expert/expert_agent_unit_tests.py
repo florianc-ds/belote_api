@@ -58,47 +58,50 @@ def test_has_color_in_hand(cards, trump_color, expected):
 
 
 @pytest.mark.parametrize(
-    'cards_history, expected',
+    'cards_history, current_round, expected',
     [
-        ({'east': [], 'north': [], 'west': [], 'south': []}, 'Ah'),
-        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10h']}, 'Qh'),
-        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10s']}, '10h'),
-        ({'east': ['Ah', 'Jh'], 'north': ['Kh', '8h'], 'west': ['7h', '9h'], 'south': ['10h', 'Qh']}, None),
+        ({'east': [], 'north': [], 'west': [], 'south': []}, 0, 'Ah'),
+        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10h']}, 1, 'Qh'),
+        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h'], 'south': ['10s']}, 1, '10h'),
+        ({'east': ['Ah', 'Jh'], 'north': ['Kh', '8h'], 'west': ['7h', '9h'], 'south': ['10h', 'Qh']}, 2, None),
+        ({'east': ['Ah'], 'north': ['Kh'], 'west': ['7h', '10h'], 'south': ['10s']}, 1, '10h'),
     ]
 )
-def test_get_highest_color_card_remaining(cards_history, expected):
-    assert get_highest_color_card_remaining(cards_history, 'h') == expected
+def test_get_highest_color_card_remaining(cards_history, current_round, expected):
+    assert get_highest_color_card_remaining(cards_history, current_round, 'h') == expected
 
 
 @pytest.mark.parametrize(
-    'cards_history, expected',
+    'cards_history, current_round, expected',
     [
-        ({'east': [], 'north': [], 'west': [], 'south': []}, 'Jh'),
-        ({'east': ['Jh'], 'north': ['Ah'], 'west': ['7h'], 'south': ['9h']}, '10h'),
-        ({'east': ['Jh'], 'north': ['Ah'], 'west': ['7h'], 'south': ['9s']}, '9h'),
-        ({'east': ['Ah', 'Jh'], 'north': ['Kh', '8h'], 'west': ['7h', '9h'], 'south': ['10h', 'Qh']}, None),
+        ({'east': [], 'north': [], 'west': [], 'south': []}, 0, 'Jh'),
+        ({'east': ['Jh'], 'north': ['Ah'], 'west': ['7h'], 'south': ['9h']}, 1, '10h'),
+        ({'east': ['Jh'], 'north': ['Ah'], 'west': ['7h'], 'south': ['9s']}, 1, '9h'),
+        ({'east': ['Ah', 'Jh'], 'north': ['Kh', '8h'], 'west': ['7h', '9h'], 'south': ['10h', 'Qh']}, 2, None),
+        ({'east': ['Jh'], 'north': ['Ah'], 'west': ['7h', '10h'], 'south': ['9h']}, 1, '10h'),
     ]
 )
-def test_get_highest_trump_remaining(cards_history, expected):
-    assert get_highest_trump_remaining(cards_history, 'h') == expected
+def test_get_highest_trump_remaining(cards_history, current_round, expected):
+    assert get_highest_trump_remaining(cards_history, current_round, 'h') == expected
 
 
 @pytest.mark.parametrize(
-    'hand_cards, cards_history, color, expected',
+    'hand_cards, current_round, cards_history, color, expected',
     [
-        (['Ah'], {'east': ['10d'], 'north': ['7d'], 'west': ['Kd'], 'south': ['Ad']}, 'h', True),
-        (['Qh', 'Kd', 'As'], {'east': ['10h'], 'north': [], 'west': ['Kh'], 'south': ['Ah']}, 'h', True),
-        (['8h'], {'east': ['10h', 'Qh'], 'north': ['Jh'], 'west': ['Kh'], 'south': ['Ah']}, 'h', False),
+        (['Ah'], 1, {'east': ['10d'], 'north': ['7d'], 'west': ['Kd'], 'south': ['Ad']}, 'h', True),
+        (['Qh', 'Kd', 'As'], 1, {'east': ['10h'], 'north': ['7h'], 'west': ['Kh'], 'south': ['Ah']}, 'h', True),
+        (['8h'], 1, {'east': ['10h', 'Qh'], 'north': ['Jh'], 'west': ['Kh'], 'south': ['Ah']}, 'h', False),
         (
-                ['As'],
-                {'east': ['7h', '8h'], 'north': ['9h', '10h'], 'west': ['Jh', 'Qh'], 'south': ['Kh', 'Ah']},
-                'h',
-                False
+            ['As'],
+            2,
+            {'east': ['7h', '8h'], 'north': ['9h', '10h'], 'west': ['Jh', 'Qh'], 'south': ['Kh', 'Ah']},
+            'h',
+            False
         ),
     ]
 )
-def test_has_highest_plain_color_card_in_hand(hand_cards, cards_history, color, expected):
-    assert has_highest_plain_color_card_in_hand(hand_cards, cards_history, color) == expected
+def test_has_highest_plain_color_card_in_hand(hand_cards, current_round, cards_history, color, expected):
+    assert has_highest_plain_color_card_in_hand(hand_cards, current_round, cards_history, color) == expected
 
 
 @pytest.mark.parametrize(

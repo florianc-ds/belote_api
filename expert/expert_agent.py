@@ -43,9 +43,10 @@ def has_color_in_hand(cards, color):
     return any([extract_color(card) == color for card in cards])
 
 
-def get_highest_color_card_remaining(cards_history, color):
+# Highest color card remaining at the end of previous round (whatever cards have been played during current round)
+def get_highest_color_card_remaining(cards_history, current_round, color):
     played_color_cards = [card for player_cards in cards_history.values()
-                          for card in player_cards
+                          for card in player_cards[:current_round]
                           if extract_color(card) == color]
     played_color_values = [extract_value(card) for card in played_color_cards]
     for value, _ in sorted(PLAIN_POINTS.items(), key=lambda kv: -kv[1]):
@@ -53,9 +54,10 @@ def get_highest_color_card_remaining(cards_history, color):
             return create_card(value, color)
 
 
-def get_highest_trump_remaining(cards_history, trump_color):
+# Highest trump remaining at the end of previous round (whatever cards have been played during current round)
+def get_highest_trump_remaining(cards_history, current_round, trump_color):
     played_trump_cards = [card for player_cards in cards_history.values()
-                          for card in player_cards
+                          for card in player_cards[:current_round]
                           if extract_color(card) == trump_color]
     played_trump_values = [extract_value(card) for card in played_trump_cards]
     for value, _ in sorted(TRUMP_POINTS.items(), key=lambda kv: -kv[1]):
@@ -63,12 +65,12 @@ def get_highest_trump_remaining(cards_history, trump_color):
             return create_card(value, trump_color)
 
 
-def has_highest_plain_color_card_in_hand(hand_cards, cards_history, color):
+def has_highest_plain_color_card_in_hand(hand_cards, current_round, cards_history, color):
     hand_color_cards = [card for card in hand_cards if extract_color(card) == color]
     if len(hand_color_cards) == 0:
         return False
     else:
-        highest_color_card_remaining = get_highest_color_card_remaining(cards_history, color)
+        highest_color_card_remaining = get_highest_color_card_remaining(cards_history, current_round, color)
         return highest_color_card_remaining in hand_color_cards
 
 
@@ -218,8 +220,8 @@ def play_expert_first_in_round():
     return None
 
 
-def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
-                                rounds_first_player):
+def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, round,
+                                game_history, rounds_first_player):
     third_player = NEXT_PLAYER[player]
     # LEVEL 2
     if trump_asked:
@@ -235,7 +237,7 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
         if has_color_in_hand(playable_cards, round_color):
             # LEVEL 4
             if (
-                    has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
+                    has_highest_plain_color_card_in_hand(playable_cards, round, game_history, round_color)
                     and (
                             not has_player_cut_color(third_player, game_history, rounds_first_player,
                                                      round_color, trump_color)
@@ -273,7 +275,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             # LEVEL 4
-            if get_highest_trump_remaining(game_history, trump_color) == partner_card:
+            if get_highest_trump_remaining(game_history, round, trump_color) == partner_card:
                 logger.info('LEAF 02101')
                 return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
@@ -285,14 +287,14 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
             # LEVEL 4
             if (
                     (extract_color(opponent_card) == trump_color)
-                    or (opponent_card == get_highest_color_card_remaining(game_history, round_color))
+                    or (opponent_card == get_highest_color_card_remaining(game_history, round, round_color))
             ):
                 logger.info('LEAF 02011')
                 return get_lowest_color_card(playable_cards, round_color)
             else:
                 # LEVEL 5
                 if (
-                        has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
+                        has_highest_plain_color_card_in_hand(playable_cards, round, game_history, round_color)
                         and
                         (
                              not has_player_cut_color(fourth_player, game_history, rounds_first_player,
@@ -307,8 +309,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                     # LEVEL 6
                     if (
                             (
-                                 is_partner_leading(player, round_cards, round_color, trump_color)
-                                 and (get_highest_color_card_remaining(game_history, round_color) == partner_card)
+                                 is_partner_leading(player, round_cards, round_color, trump_color) and
+                                 (get_highest_color_card_remaining(game_history, round, round_color) == partner_card)
                             )
                             and (
                                     not has_player_cut_color(fourth_player, game_history, rounds_first_player,
@@ -327,7 +329,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
             if (
                     (
                         is_partner_leading(player, round_cards, round_color, trump_color)
-                        and (get_highest_color_card_remaining(game_history, round_color) == partner_card)
+                        and (get_highest_color_card_remaining(game_history, round, round_color) == partner_card)
 
                     )
                     and (
@@ -349,7 +351,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                 if (
                         (
                             is_partner_leading(player, round_cards, round_color, trump_color)
-                            and ((get_highest_color_card_remaining(game_history, round_color) != partner_card)
+                            and ((get_highest_color_card_remaining(game_history, round, round_color) != partner_card)
                                  and extract_color(partner_card) != trump_color)
                         )
                         and (count_round_points(round_cards, trump_color, round) >= IMPORTANT_ROUND_LIMIT)
@@ -434,8 +436,8 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     if player_rank_in_round == 0:
         card = play_expert_first_in_round()
     elif player_rank_in_round == 1:
-        card = play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
-                                           rounds_first_player)
+        card = play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, round,
+                                           game_history, rounds_first_player)
     elif player_rank_in_round == 2:
         card = play_expert_third_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color,
                                           round, game_history, rounds_first_player)
