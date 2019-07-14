@@ -265,12 +265,15 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
     if trump_asked:
         # LEVEL 3
         if has_color_in_hand(playable_cards, trump_color):
+            logger.info('LEAF 0211')
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             # LEVEL 4
             if get_highest_trump_remaining(game_history, trump_color) == partner_card:
+                logger.info('LEAF 02101')
                 return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
+                logger.info('LEAF 02100')
                 return get_lowest_plain_card(playable_cards, trump_color)
     else:
         # LEVEL 3
@@ -280,6 +283,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                     (extract_color(opponent_card) == trump_color)
                     or (opponent_card == get_highest_color_card_remaining(game_history, round_color))
             ):
+                logger.info('LEAF 02011')
                 return get_lowest_color_card(playable_cards, round_color)
             else:
                 # LEVEL 5
@@ -293,7 +297,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                                                                               rounds_first_player, trump_color)
                         )
                 ):
-                    get_lowest_color_card(playable_cards, round_color)
+                    logger.info('LEAF 020101')
+                    return get_lowest_color_card(playable_cards, round_color)
                 else:
                     # LEVEL 6
                     if (
@@ -309,8 +314,10 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                                                                                       round_color, trump_color))
                             )
                     ):
+                        logger.info('LEAF 0201001')
                         return get_highest_color_card(playable_cards, round_color)
                     else:
+                        logger.info('LEAF 0201000')
                         return get_lowest_color_card(playable_cards, round_color)
         else:
             # LEVEL 4
@@ -328,8 +335,10 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
             ):
                 # LEVEL 5
                 if must_cut(playable_cards, trump_color):
+                    logger.info('LEAF 020011')
                     return get_lowest_trump_card(playable_cards, trump_color)
                 else:
+                    logger.info('LEAF 020010')
                     return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
             else:
                 # LEVEL 5
@@ -347,12 +356,15 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         )
                         and has_color_in_hand(playable_cards, trump_color)
                 ):
+                    logger.info('LEAF 020001')
                     return get_lowest_trump_card(playable_cards, trump_color)
                 else:
                     # LEVEL 6
                     if has_color_in_hand(playable_cards, trump_color) and must_cut(playable_cards, trump_color):
+                        logger.info('LEAF 0200001')
                         return get_lowest_trump_card(playable_cards, trump_color)
                     else:
+                        logger.info('LEAF 0200000')
                         return get_lowest_plain_card(playable_cards, trump_color)
 
 
