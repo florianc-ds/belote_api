@@ -1,7 +1,7 @@
-[DESIGN] Update schema to fix 02001
-
-[BACK] Add round in play_expert_strategy (& update tests)
-
-[BACK] Add LEAF logs for play_expert_third_in_round
-
-[BACK] Add func tests for play_expert_third_in_round
+[BACK] Implement play_expert_first_in_round...
+    - List helper functions to implement
+    - Implement helper functions & corresponding unit tests
+    - Think about Re-Loop
+    - Implement play_expert_first_in_round
+    - Add LEAF logs
+    - Add func tests by adding corresponding game configurations
