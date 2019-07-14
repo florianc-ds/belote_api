@@ -74,8 +74,9 @@ def has_highest_plain_color_card_in_hand(hand_cards, current_round, cards_histor
         return highest_color_card_remaining in hand_color_cards
 
 
-def has_player_cut_color(player, game_history, rounds_first_player, color, trump_color):
-    for round, round_first_player in enumerate(rounds_first_player):
+# Only take into account past rounds
+def has_player_cut_color(player, game_history, current_round, rounds_first_player, color, trump_color):
+    for round, round_first_player in enumerate(rounds_first_player[:current_round]):
         asked_color = extract_color(game_history[round_first_player][round])
         played_color = extract_color(game_history[player][round])
         if (round_first_player != player) and (asked_color == color) and (played_color == trump_color):
@@ -83,8 +84,9 @@ def has_player_cut_color(player, game_history, rounds_first_player, color, trump
     return False
 
 
-def has_player_already_shown_he_had_no_more_trump(player, game_history, rounds_first_player, trump_color):
-    for round, round_first_player in enumerate(rounds_first_player):
+# Only take into account past rounds
+def has_player_already_shown_he_had_no_more_trump(player, game_history, current_round, rounds_first_player, trump_color):
+    for round, round_first_player in enumerate(rounds_first_player[:current_round]):
         round_color = extract_color(game_history[round_first_player][round])
         played_color = extract_color(game_history[player][round])
 
@@ -239,9 +241,9 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
             if (
                     has_highest_plain_color_card_in_hand(playable_cards, round, game_history, round_color)
                     and (
-                            not has_player_cut_color(third_player, game_history, rounds_first_player,
+                            not has_player_cut_color(third_player, game_history, round, rounds_first_player,
                                                      round_color, trump_color)
-                            or has_player_already_shown_he_had_no_more_trump(third_player, game_history,
+                            or has_player_already_shown_he_had_no_more_trump(third_player, game_history, round,
                                                                              rounds_first_player, trump_color)
                     )
             ):
@@ -297,9 +299,9 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         has_highest_plain_color_card_in_hand(playable_cards, round, game_history, round_color)
                         and
                         (
-                             not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                             not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                       round_color, trump_color)
-                             or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                             or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
                                                                               rounds_first_player, trump_color)
                         )
                 ):
@@ -313,9 +315,9 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                                  (get_highest_color_card_remaining(game_history, round, round_color) == partner_card)
                             )
                             and (
-                                    not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                    not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                              round_color, trump_color)
-                                    or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                    or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
                                                                                      rounds_first_player, trump_color)
                             )
                     ):
@@ -333,9 +335,9 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
 
                     )
                     and (
-                        not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                        not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                  round_color, trump_color)
-                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
                                                                           rounds_first_player, trump_color))
                     )
             ):
@@ -356,9 +358,9 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         )
                         and (count_round_points(round_cards, trump_color, round) >= IMPORTANT_ROUND_LIMIT)
                         and (
-                            not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                            not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                      round_color, trump_color)
-                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
                                                                               rounds_first_player, trump_color))
                         )
                         and has_color_in_hand(playable_cards, trump_color)

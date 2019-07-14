@@ -105,34 +105,50 @@ def test_has_highest_plain_color_card_in_hand(hand_cards, current_round, cards_h
 
 
 @pytest.mark.parametrize(
-    'game_history, rounds_first_player, expected',
+    'game_history, current_round, rounds_first_player, expected',
     [
-        ({'west': [], 'east': [], 'north': [], 'south': []}, [], False),
-        ({'west': ['10s', 'Ah'], 'east': [], 'north': ['9s', '10c'], 'south': ['7s']}, ['south', 'west'], True),
-        ({'west': ['10s', 'Ah'], 'east': [], 'north': ['9s', '10h'], 'south': ['7s']}, ['south', 'west'], False),
-        ({'west': [], 'east': [], 'north': ['9h'], 'south': []}, ['north'], False),
-        ({'west': ['10s'], 'east': [], 'north': ['10h'], 'south': []}, ['west'], False),
+        ({'west': [], 'east': [], 'north': [], 'south': []}, 0, [], False),
+        (
+            {'west': ['10s', 'Ah'], 'east': ['8s', '9h'], 'north': ['9s', '10c'], 'south': ['7s', '7h']},
+            2,
+            ['south', 'west', 'north'],
+            True
+        ),
+        (
+            {'west': ['10s', 'Ah'], 'east': ['8s', '9h'], 'north': ['9s', '10h'], 'south': ['7s', '7h']},
+            2,
+            ['south', 'west', 'west'],
+            False
+        ),
+        ({'west': [], 'east': [], 'north': ['9h'], 'south': []}, 0, ['north'], False),
+        ({'west': ['10s'], 'east': ['7s'], 'north': ['10h'], 'south': ['8s']}, 1, ['west', 'west'], False),
+        ({'west': [], 'east': ['7s'], 'north': ['10c'], 'south': ['8s']}, 0, ['south'], False),
     ]
 )
-def test_has_player_cut_color(game_history, rounds_first_player, expected):
-    assert has_player_cut_color('north', game_history, rounds_first_player, color='h', trump_color='c') == expected
+def test_has_player_cut_color(game_history, current_round, rounds_first_player, expected):
+    assert has_player_cut_color(
+        'north', game_history, current_round, rounds_first_player, color='h', trump_color='c'
+    ) == expected
 
 
 @pytest.mark.parametrize(
-    'game_history, rounds_first_player, expected',
+    'game_history, current_round, rounds_first_player, expected',
     [
-        ({'west': [], 'east': [], 'north': [], 'south': []}, [], False),
-        ({'west': [], 'east': ['10c'], 'north': ['Kd'], 'south': []}, ['east'], True),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7d'], 'south': ['Kd']}, ['west'], False),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7c'], 'south': ['Kd']}, ['west'], False),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Kd']}, ['west'], True),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, ['west'], False),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, ['east'], True),
-        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['7c']}, ['west'], False),
+        ({'west': [], 'east': [], 'north': [], 'south': []}, 0, [], False),
+        ({'west': ['7h'], 'east': ['Ah', '10c'], 'north': ['8h', 'Kd'], 'south': ['9h']}, 2, ['east', 'east'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7d'], 'south': ['Kd']}, 1, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7c'], 'south': ['Kd']}, 1, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Kd']}, 1, ['west'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, 1, ['west'], False),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['Ad']}, 1, ['east'], True),
+        ({'west': ['Jd'], 'east': ['10d'], 'north': ['7h'], 'south': ['7c']}, 1, ['west'], False),
+        ({'west': [], 'east': ['10c'], 'north': ['Kd'], 'south': []}, 0, ['east'], False),
     ]
 )
-def test_has_player_already_shown_he_had_no_more_trump(game_history, rounds_first_player, expected):
-    assert has_player_already_shown_he_had_no_more_trump('north', game_history, rounds_first_player, 'c') == expected
+def test_has_player_already_shown_he_had_no_more_trump(game_history, current_round, rounds_first_player, expected):
+    assert has_player_already_shown_he_had_no_more_trump(
+        'north', game_history, current_round, rounds_first_player, 'c'
+    ) == expected
 
 
 @pytest.mark.parametrize(

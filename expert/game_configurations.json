@@ -67,7 +67,7 @@
                   "round_color": "h",
                   "round": 1,
                   "game_history": {"west": ["Jd", "7h"], "south": ["7d"], "east": ["Ah"], "north": ["8d"]},
-                  "rounds_first_player": ["west"],
+                  "rounds_first_player": ["west", "west"],
                   "_expected": "10h"
                },
                "NO": {
@@ -126,7 +126,7 @@
                "round_color": "d",
                "round": 0,
                "game_history": {"west": ["Qd"], "south": [], "east": [], "north": ["7d"]},
-               "rounds_first_player": [],
+               "rounds_first_player": ["north"],
                "_expected": "Ad"
             },
             "NO": {
@@ -140,7 +140,7 @@
                   "round_color": "h",
                   "round": 0,
                   "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["Jh"]},
-                  "rounds_first_player": [],
+                  "rounds_first_player": ["north"],
                   "_expected": "10c"
                },
                "NO": {
@@ -153,7 +153,7 @@
                   "round_color": "h",
                   "round": 0,
                   "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["7h"]},
-                  "rounds_first_player": [],
+                  "rounds_first_player": ["north"],
                   "_expected": "7c"
                }
             }
@@ -170,7 +170,7 @@
                   "round_color": "s",
                   "round": 0,
                   "game_history": {"west": ["As"], "south": [], "east": [], "north": ["8s"]},
-                  "rounds_first_player": [],
+                  "rounds_first_player": ["north"],
                   "_expected": "7s"
                },
                "NO": {
@@ -184,7 +184,7 @@
                      "round_color": "s",
                      "round": 1,
                      "game_history": {"west": ["8d", "10s"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "Qs"]},
-                     "rounds_first_player": ["north"],
+                     "rounds_first_player": ["north", "north"],
                      "_expected": "As"
                   },
                   "NO": {
@@ -198,7 +198,7 @@
                         "round_color": "s",
                         "round": 1,
                         "game_history": {"west": ["8d", "Js"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "As"]},
-                        "rounds_first_player": ["north"],
+                        "rounds_first_player": ["north", "north"],
                         "_expected": "10s"
                      },
                      "NO": {
@@ -216,7 +216,7 @@
                            "east": ["7d", "7c"],
                            "north": ["Qs", "Ac", "As"]
                         },
-                        "rounds_first_player": ["north", "east"],
+                        "rounds_first_player": ["north", "east", "north"],
                         "_expected": "7s"
                      }
                   }
@@ -239,7 +239,7 @@
                         "east": ["8c", "Kc", "8h"],
                         "north": ["9c", "9d", "Ah", "Ad"]
                      },
-                     "rounds_first_player": ["west", "west", "north"],
+                     "rounds_first_player": ["west", "west", "north", "north"],
                      "_expected": "7s"
                   },
                   "NO": {
@@ -252,7 +252,7 @@
                      "round_color": "d",
                      "round": 1,
                      "game_history": {"west": ["7s", "Jd"], "south": ["8s"], "east": ["7h"], "north": ["Js", "Ad"]},
-                     "rounds_first_player": ["north"],
+                     "rounds_first_player": ["north", "north"],
                      "_expected": "10h"
                   }
                },
@@ -267,7 +267,7 @@
                      "round_color": "d",
                      "round": 0,
                      "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["10d"]},
-                     "rounds_first_player": [],
+                     "rounds_first_player": ["north"],
                      "_expected": "7s"
                   },
                   "NO": {
@@ -281,7 +281,7 @@
                         "round_color": "d",
                         "round": 0,
                         "game_history": {"west": ["Ad"], "south": [], "east": [], "north": ["Kd"]},
-                        "rounds_first_player": [],
+                        "rounds_first_player": ["north"],
                         "_expected": "7s"
                      },
                      "NO": {
@@ -294,7 +294,7 @@
                         "round_color": "d",
                         "round": 0,
                         "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["Kd"]},
-                        "rounds_first_player": [],
+                        "rounds_first_player": ["north"],
                         "_expected": "7c"
                      }
                   }
