@@ -295,27 +295,26 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         has_highest_plain_color_card_in_hand(playable_cards, game_history, round_color)
                         and
                         (
-                             has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color,
-                                                  trump_color)
+                             not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                                      round_color, trump_color)
                              or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
                                                                               rounds_first_player, trump_color)
                         )
                 ):
                     logger.info('LEAF 020101')
-                    return get_lowest_color_card(playable_cards, round_color)
+                    return get_highest_color_card(playable_cards, round_color)
                 else:
                     # LEVEL 6
                     if (
                             (
                                  is_partner_leading(player, round_cards, round_color, trump_color)
-                                 and ((get_highest_color_card_remaining(game_history, round_color) == partner_card)
-                                      or (extract_color(partner_card) == trump_color))
+                                 and (get_highest_color_card_remaining(game_history, round_color) == partner_card)
                             )
                             and (
-                                    has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color,
-                                                         trump_color)
-                                    or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
-                                                                                      round_color, trump_color))
+                                    not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                                             round_color, trump_color)
+                                    or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                                     rounds_first_player, trump_color)
                             )
                     ):
                         logger.info('LEAF 0201001')
@@ -328,17 +327,18 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
             if (
                     (
                         is_partner_leading(player, round_cards, round_color, trump_color)
-                        and ((get_highest_color_card_remaining(game_history, round_color) == partner_card)
-                             or (extract_color(partner_card) == trump_color))
+                        and (get_highest_color_card_remaining(game_history, round_color) == partner_card)
+
                     )
                     and (
-                        has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color, trump_color)
-                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round_color,
-                                                                          trump_color))
+                        not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                                 round_color, trump_color)
+                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                          rounds_first_player, trump_color))
                     )
             ):
                 # LEVEL 5
-                if must_cut(playable_cards, trump_color):
+                if has_only_trumps_and_aces(playable_cards, trump_color):
                     logger.info('LEAF 020011')
                     return get_lowest_trump_card(playable_cards, trump_color)
                 else:
@@ -354,9 +354,10 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         )
                         and (count_round_points(round_cards, trump_color, round) >= IMPORTANT_ROUND_LIMIT)
                         and (
-                            has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color, trump_color)
-                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round_color,
-                                                                              trump_color))
+                            not has_player_cut_color(fourth_player, game_history, rounds_first_player,
+                                                     round_color, trump_color)
+                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history,
+                                                                              rounds_first_player, trump_color))
                         )
                         and has_color_in_hand(playable_cards, trump_color)
                 ):
