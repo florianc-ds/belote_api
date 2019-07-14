@@ -168,7 +168,7 @@ def must_cut(playable_cards, trump_color):
 
 
 def count_round_points(round_cards, trump_color, round):
-    # Automatically 10 points for last round
+    # Automatically add 10 points for last round
     points = 0 if round != 7 else 10
     real_round_cards = [card for card in round_cards.values() if card is not None]
     for card in real_round_cards:
@@ -323,7 +323,7 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                     and (
                         has_player_cut_color(fourth_player, game_history, rounds_first_player, round_color, trump_color)
                         or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round_color,
-                                                                      trump_color))
+                                                                          trump_color))
                     )
             ):
                 # LEVEL 5
@@ -403,8 +403,8 @@ def play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards
 
 # LEVEL 0
 
-def play_expert_strategy(player, player_cards, cards_playability, round_cards, trump_color, round_color, game_history,
-                         rounds_first_player):
+def play_expert_strategy(player, player_cards, cards_playability, round_cards, trump_color, round_color, round,
+                         game_history, rounds_first_player):
     playable_cards = derive_playable_cards(player_cards, cards_playability)
     # LEVEL 0
     if len(playable_cards) == 1:
@@ -420,7 +420,8 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
         card = play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, game_history,
                                            rounds_first_player)
     elif player_rank_in_round == 2:
-        card = play_expert_third_in_round()
+        card = play_expert_third_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color,
+                                          round, game_history, rounds_first_player)
     elif player_rank_in_round == 3:
         card = play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color)
     else:
