@@ -446,8 +446,7 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     elif player_rank_in_round == 3:
         card = play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color)
     else:
-        # @TODO: Add test for this exception
         raise UnhandledPlayCaseException(f'player_rank_in_round has unhandled value: {player_rank_in_round}. '
-                                            f'Ill-shaped round_cards: {round_cards}')
+                                         f'Ill-shaped round_cards: {round_cards}')
 
     return card

@@ -16,7 +16,9 @@ from expert.expert_agent import (
     count_round_points,
     must_cut,
     has_only_trumps_and_aces,
+    play_expert_strategy,
 )
+from helpers.exceptions import UnhandledPlayCaseException
 
 
 @pytest.mark.parametrize(
@@ -306,3 +308,18 @@ def test_get_highest_plain_card(cards, exclude_aces, expected):
 def test_get_highest_plain_card_fails():
     with pytest.raises(ValueError):
         get_highest_plain_card(['7c', '8c', '9c'], trump_color='c')
+
+
+def test_play_expert_strategy_unhandled_case_exception():
+    with pytest.raises(UnhandledPlayCaseException):
+        play_expert_strategy(
+            player='north',
+            player_cards=['7s', '8s'],
+            cards_playability=[True, True],
+            round_cards={'west': '7h', 'south': '8h', 'east': '9h', 'north': '10h'},
+            trump_color='c',
+            round_color='h',
+            round=0,
+            game_history={'west': [], 'south': [], 'east': [], 'north': []},
+            rounds_first_player=['north']
+        )
