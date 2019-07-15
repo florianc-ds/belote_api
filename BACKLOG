@@ -1,7 +1,29 @@
-[BACK] Implement play_expert_first_in_round...
-    - List helper functions to implement
-    - Implement helper functions & corresponding unit tests
-    - Think about Re-Loop
-    - Implement play_expert_first_in_round
-    - Add LEAF logs
-    - Add func tests by adding corresponding game configurations
+[BACK] Update has_player_already_shown_he_had_no_more_trump by looking at already played trumps and trumps in player hand
+
+[BACK] Define helper functions:
+    - is_player_in_contract_team(player, contract_team)
+    - has_only_trumps(hand_cards, trump_color)
+    - get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color)
+        -> list Aces in hand (except for trump)
+        -> for each Ace of color C, loop over round colors to see if any is equal to C
+    - get_colors_to_be_cut(hand_cards, game_history, current_round, rounds_first_player, trump_color)
+        -> for each plain color:
+            -> check whether card (no 10 nor Ace) in hand
+            -> check 1 opponent cut
+            -> check NOT has_player_already_shown_he_had_no_more_trump for this opponent
+    - get_winning_cards(hand_cards, game_history, trump_color)
+        -> get highest card (plain & trump) for each color (if any in hand)
+        -> for each color, use get_highest_[color_card|trump]_remaining to check whether it is the highest
+    - can_opponents_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color)
+        -> check there other trumps than in hand_cards
+        -> extract opponents from player
+        -> for each opponent check NOT has_player_already_shown_he_had_no_more_trump
+    - has_several_trumps(hand_cards, trump_color)
+
+[BACK] Think about the Re-Loop code design
+
+[BACK] Implement play_expert_first_in_round
+
+[BACK] Add LEAF logs
+
+[BACK] Add func tests by adding corresponding game configurations
