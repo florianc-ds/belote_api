@@ -17,6 +17,7 @@ from expert.expert_agent import (
     must_cut,
     has_only_trumps_and_aces,
     play_expert_strategy,
+    are_there_remaining_trumps_in_other_hands,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -151,6 +152,21 @@ def test_has_player_already_shown_he_had_no_more_trump(game_history, current_rou
     assert has_player_already_shown_he_had_no_more_trump(
         'north', game_history, current_round, rounds_first_player, 'c'
     ) == expected
+
+
+@pytest.mark.parametrize(
+    'hand_cards, game_history, expected',
+    [
+        ([], {'west': [], 'east': [], 'north': [], 'south': []}, True),
+        (['7h', '8h', '9h', '10h', 'Jh', 'Qh', 'Kh', 'Ah'], {'west': [], 'east': [], 'north': [], 'south': []}, False),
+        (['7h', '8h', '9s', '10s', 'Js', 'Qs'],
+         {'west': ['9h', '10h'], 'east': ['Jh', 'Qh'], 'north': ['Kh', 'Ah'], 'south': ['Kd', 'Ad']}, False),
+        (['7h', '8s', '9s', '10s', 'Js', 'Qs'],
+         {'west': ['9h', '10h'], 'east': ['Jh', 'Qh'], 'north': ['Kh', 'Ah'], 'south': ['Kd', 'Ad']}, True),
+    ]
+)
+def test_are_there_remaining_trumps_in_other_hands(hand_cards, game_history, expected):
+    assert are_there_remaining_trumps_in_other_hands(hand_cards, game_history, 'h') == expected
 
 
 @pytest.mark.parametrize(

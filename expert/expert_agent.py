@@ -112,6 +112,13 @@ def has_player_already_shown_he_had_no_more_trump(player, game_history, current_
     return False
 
 
+# Take into account all played cards (previous and current rounds)
+def are_there_remaining_trumps_in_other_hands(hand_cards, game_history, trump_color):
+    hand_trumps = [c for c in hand_cards if extract_color(c) == trump_color]
+    played_trumps = [c for p_cards in game_history.values() for c in p_cards if extract_color(c) == trump_color]
+    return (len(hand_trumps) + len(played_trumps)) < len(TRUMP_POINTS)
+
+
 def can_win_round(hand_cards, round_cards, round_color, trump_color):
     real_round_cards = [card for card in round_cards.values() if card is not None]
     # not the 4th player, can not win for sure...
