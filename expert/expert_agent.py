@@ -195,6 +195,10 @@ def is_player_in_contract_team(player, contract_team):
     return player in contract_team
 
 
+def has_only_trumps(hand_cards, trump_color):
+    return (len(hand_cards) > 0) and all([extract_color(card) == trump_color for card in hand_cards])
+
+
 def count_round_points(round_cards, trump_color, round):
     # Automatically add 10 points for last round
     points = 0 if round != 7 else 10
