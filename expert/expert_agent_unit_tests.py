@@ -25,6 +25,7 @@ from expert.expert_agent import (
     get_highest_trump_card,
     get_winning_cards,
     can_opponents_cut,
+    has_several_trumps,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -270,6 +271,18 @@ def test_is_player_in_contract_team(player, contract_team, expected):
 )
 def test_has_only_trumps(hand_cards, expected):
     assert has_only_trumps(hand_cards, 'd') == expected
+
+
+@pytest.mark.parametrize(
+    'hand_cards, expected',
+    [
+        ([], False),
+        (['7h', '8d'], False),
+        (['7h', '8h', '7d', '8d'], True),
+    ]
+)
+def test_has_several_trumps(hand_cards, expected):
+    assert has_several_trumps(hand_cards, 'd') == expected
 
 
 @pytest.mark.parametrize(

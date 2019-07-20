@@ -199,6 +199,10 @@ def has_only_trumps(hand_cards, trump_color):
     return (len(hand_cards) > 0) and all([extract_color(card) == trump_color for card in hand_cards])
 
 
+def has_several_trumps(hand_cards, trump_color):
+    return len([card for card in hand_cards if extract_color(card) == trump_color]) > 1
+
+
 def can_opponents_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color):
     if are_there_remaining_trumps_in_other_hands(hand_cards, game_history, trump_color):
         opponents = [NEXT_PLAYER[player], NEXT_PLAYER[NEXT_PLAYER[NEXT_PLAYER[player]]]]
