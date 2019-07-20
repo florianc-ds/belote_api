@@ -252,6 +252,11 @@ def get_lowest_trump_card(cards, trump_color):
     return min(trump_cards, key=_rank_trump_card)
 
 
+def get_highest_trump_card(cards, trump_color):
+    trump_cards = [card for card in cards if extract_color(card) == trump_color]
+    return max(trump_cards, key=_rank_trump_card)
+
+
 def get_lowest_color_card(cards, color):
     color_cards = [card for card in cards if extract_color(card) == color]
     return min(color_cards, key=_rank_plain_card)

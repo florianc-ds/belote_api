@@ -22,6 +22,7 @@ from expert.expert_agent import (
     has_only_trumps,
     get_fresh_aces,
     get_colors_to_make_opponent_cut,
+    get_highest_trump_card,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -325,6 +326,22 @@ def test_get_lowest_trump_card(cards, trump_color, expected):
 def test_get_lowest_trump_card_fails():
     with pytest.raises(ValueError):
         get_lowest_trump_card(['10h', 'Kh', '9h', '7s'], 'd')
+
+
+@pytest.mark.parametrize(
+    'cards, trump_color, expected',
+    [
+        (['10h', 'Kh', '9h', '7s'], 'h', '9h'),
+        (['10h', 'Kh', '9h', '7s', 'Jh', '8h'], 'h', 'Jh'),
+    ]
+)
+def test_get_highest_trump_card(cards, trump_color, expected):
+    assert get_highest_trump_card(cards, trump_color) == expected
+
+
+def test_get_highest_trump_card_fails():
+    with pytest.raises(ValueError):
+        get_highest_trump_card(['10h', 'Kh', '9h', '7s'], 'd')
 
 
 @pytest.mark.parametrize(
