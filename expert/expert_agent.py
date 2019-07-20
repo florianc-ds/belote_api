@@ -247,6 +247,21 @@ def get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_ro
     return candidate_colors
 
 
+def get_winning_cards(hand_cards, game_history, current_round, trump_color):
+    hand_colors = set([extract_color(card) for card in hand_cards])
+    winning_cards = []
+    for color in hand_colors:
+        if color == trump_color:
+            highest_card = get_highest_trump_card(hand_cards, color)
+            highest_card_remaining = get_highest_trump_remaining(game_history, current_round, color)
+        else:
+            highest_card = get_highest_color_card(hand_cards, color)
+            highest_card_remaining = get_highest_color_card_remaining(game_history, current_round, color)
+        if highest_card == highest_card_remaining:
+            winning_cards.append(highest_card)
+    return winning_cards
+
+
 def get_lowest_trump_card(cards, trump_color):
     trump_cards = [card for card in cards if extract_color(card) == trump_color]
     return min(trump_cards, key=_rank_trump_card)

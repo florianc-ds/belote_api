@@ -23,6 +23,7 @@ from expert.expert_agent import (
     get_fresh_aces,
     get_colors_to_make_opponent_cut,
     get_highest_trump_card,
+    get_winning_cards,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -311,6 +312,31 @@ def test_get_colors_to_make_opponent_cut(player, hand_cards, game_history,
                                          current_round, rounds_first_player, trump_color, expected):
     output = get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_round,
                                              rounds_first_player, trump_color)
+    assert sorted(output) == sorted(expected)
+
+
+@pytest.mark.parametrize(
+    'hand_cards, game_history, current_round, trump_color, expected',
+    [
+        ([], {'west': [], 'east': [], 'north': [], 'south': []}, 0, 'c', []),
+        (
+            ['7h', 'Ah', '10d', '7s', '10s', 'As', '9c', 'Kc'],
+            {'west': [], 'east': [], 'north': [], 'south': []}, 0, 'c', ['Ah', 'As']
+        ),
+        (
+            ['7h', '9c', 'Kc'],
+            {
+                'west': ['7c', '8h', '9h'],
+                'east': ['8c', 'Jh', '10h'],
+                'north': ['10c', 'Qh', 'Kh'],
+                'south': ['Jc', 'Ah', '7d']
+            },
+            3, 'c', ['9c', '7h']
+        ),
+    ]
+)
+def test_get_winning_cards(hand_cards, game_history, current_round, trump_color, expected):
+    output = get_winning_cards(hand_cards, game_history, current_round, trump_color)
     assert sorted(output) == sorted(expected)
 
 
