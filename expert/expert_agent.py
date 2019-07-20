@@ -199,6 +199,17 @@ def has_only_trumps(hand_cards, trump_color):
     return (len(hand_cards) > 0) and all([extract_color(card) == trump_color for card in hand_cards])
 
 
+def can_opponents_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color):
+    if are_there_remaining_trumps_in_other_hands(hand_cards, game_history, trump_color):
+        opponents = [NEXT_PLAYER[player], NEXT_PLAYER[NEXT_PLAYER[NEXT_PLAYER[player]]]]
+        for opponent in opponents:
+            if not has_player_already_shown_he_had_no_more_trump(opponent, game_history, current_round,
+                                                                 rounds_first_player, trump_color):
+                return True
+
+    return False
+
+
 def count_round_points(round_cards, trump_color, round):
     # Automatically add 10 points for last round
     points = 0 if round != 7 else 10

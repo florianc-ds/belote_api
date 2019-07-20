@@ -24,6 +24,7 @@ from expert.expert_agent import (
     get_colors_to_make_opponent_cut,
     get_highest_trump_card,
     get_winning_cards,
+    can_opponents_cut,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -269,6 +270,25 @@ def test_is_player_in_contract_team(player, contract_team, expected):
 )
 def test_has_only_trumps(hand_cards, expected):
     assert has_only_trumps(hand_cards, 'd') == expected
+
+
+@pytest.mark.parametrize(
+    'player, hand_cards, game_history, current_round, rounds_first_player, trump_color, expected',
+    [
+        ('south', [], {'west': [], 'east': [], 'north': [], 'south': []}, 0, ['south'], 'd', True),
+        (
+            'south', ['7d', '8d', '9d', 'Jd', 'Qd', 'Kd', '10d', 'Ad'],
+            {'west': [], 'east': [], 'north': [], 'south': []}, 0, ['south'], 'd', False
+        ),
+        (
+            'south', ['Kh', '10h', 'Ah', 'Qd', 'Kd', 'Ad', 'Ks'],
+            {'west': ['7h'], 'east': ['7c'], 'north': ['7d'], 'south': ['Jd']}, 1, ['south', 'south'], 'd', False
+        ),
+    ]
+)
+def test_can_opponents_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color, expected):
+    assert can_opponents_cut(player, hand_cards, game_history,
+                             current_round, rounds_first_player, trump_color) == expected
 
 
 @pytest.mark.parametrize(
