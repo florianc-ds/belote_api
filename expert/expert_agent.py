@@ -119,6 +119,15 @@ def are_there_remaining_trumps_in_other_hands(hand_cards, game_history, trump_co
     return (len(hand_trumps) + len(played_trumps)) < len(TRUMP_POINTS)
 
 
+def has_player_definitely_no_more_trump(player, visible_cards, game_history,
+                                        current_round, rounds_first_player, trump_color):
+    return (
+            not are_there_remaining_trumps_in_other_hands(visible_cards, game_history, trump_color)
+            or has_player_already_shown_he_had_no_more_trump(player, game_history, current_round, rounds_first_player,
+                                                             trump_color)
+    )
+
+
 def can_win_round(hand_cards, round_cards, round_color, trump_color):
     real_round_cards = [card for card in round_cards.values() if card is not None]
     # not the 4th player, can not win for sure...
@@ -229,7 +238,7 @@ def play_expert_first_in_round():
     return None
 
 
-def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, round,
+def play_expert_second_in_round(player, player_cards, trump_asked, playable_cards, trump_color, round_color, round,
                                 game_history, rounds_first_player):
     third_player = NEXT_PLAYER[player]
     # LEVEL 2
@@ -250,8 +259,8 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
                     and (
                             not has_player_cut_color(third_player, game_history, round, rounds_first_player,
                                                      round_color, trump_color)
-                            or has_player_already_shown_he_had_no_more_trump(third_player, game_history, round,
-                                                                             rounds_first_player, trump_color)
+                            or has_player_definitely_no_more_trump(third_player, player_cards, game_history, round,
+                                                                   rounds_first_player, trump_color)
                     )
             ):
                 logger.info('LEAF 01011')
@@ -269,8 +278,8 @@ def play_expert_second_in_round(player, trump_asked, playable_cards, trump_color
                 return get_lowest_plain_card(playable_cards, trump_color)
 
 
-def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color, round,
-                               game_history, rounds_first_player):
+def play_expert_third_in_round(player, player_cards, trump_asked, playable_cards, round_cards, trump_color, round_color,
+                               round, game_history, rounds_first_player):
     partner = NEXT_PLAYER[NEXT_PLAYER[player]]
     partner_card = round_cards[partner]
     opponent = NEXT_PLAYER[partner]
@@ -308,8 +317,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         (
                              not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                       round_color, trump_color)
-                             or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
-                                                                              rounds_first_player, trump_color)
+                             or has_player_definitely_no_more_trump(fourth_player, player_cards, game_history, round,
+                                                                    rounds_first_player, trump_color)
                         )
                 ):
                     logger.info('LEAF 020101')
@@ -324,8 +333,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                             and (
                                     not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                              round_color, trump_color)
-                                    or has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
-                                                                                     rounds_first_player, trump_color)
+                                    or has_player_definitely_no_more_trump(fourth_player, player_cards, game_history, round,
+                                                                           rounds_first_player, trump_color)
                             )
                     ):
                         logger.info('LEAF 0201001')
@@ -344,8 +353,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                     and (
                         not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                  round_color, trump_color)
-                        or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
-                                                                          rounds_first_player, trump_color))
+                        or has_player_definitely_no_more_trump(fourth_player, player_cards, game_history, round,
+                                                               rounds_first_player, trump_color)
                     )
             ):
                 # LEVEL 5
@@ -367,8 +376,8 @@ def play_expert_third_in_round(player, trump_asked, playable_cards, round_cards,
                         and (
                             not has_player_cut_color(fourth_player, game_history, round, rounds_first_player,
                                                      round_color, trump_color)
-                            or (has_player_already_shown_he_had_no_more_trump(fourth_player, game_history, round,
-                                                                              rounds_first_player, trump_color))
+                            or has_player_definitely_no_more_trump(fourth_player, player_cards, game_history, round,
+                                                                   rounds_first_player, trump_color)
                         )
                         and has_color_in_hand(playable_cards, trump_color)
                 ):
@@ -445,11 +454,11 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     if player_rank_in_round == 0:
         card = play_expert_first_in_round()
     elif player_rank_in_round == 1:
-        card = play_expert_second_in_round(player, trump_asked, playable_cards, trump_color, round_color, round,
-                                           game_history, rounds_first_player)
+        card = play_expert_second_in_round(player, player_cards, trump_asked, playable_cards, trump_color, round_color,
+                                           round, game_history, rounds_first_player)
     elif player_rank_in_round == 2:
-        card = play_expert_third_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color,
-                                          round, game_history, rounds_first_player)
+        card = play_expert_third_in_round(player, player_cards, trump_asked, playable_cards, round_cards, trump_color,
+                                          round_color, round, game_history, rounds_first_player)
     elif player_rank_in_round == 3:
         card = play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards, trump_color, round_color)
     else:
