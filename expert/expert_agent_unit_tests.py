@@ -21,6 +21,7 @@ from expert.expert_agent import (
     is_player_in_contract_team,
     has_only_trumps,
     get_fresh_aces,
+    get_colors_to_make_opponent_cut,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -288,6 +289,26 @@ def test_has_only_trumps(hand_cards, expected):
 )
 def test_get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color, expected):
     assert get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color) == expected
+
+
+@pytest.mark.parametrize(
+    'player, hand_cards, game_history, current_round, rounds_first_player, trump_color, expected',
+    [
+        ('south', [], {'west': [], 'east': [], 'north': [], 'south': []}, 0, ['south'], 'c', []),
+        (
+            'south', ['Ah', '10d', 'Ad', '10s', 'As', '7c', '8c'],
+            {'west': ['7h'], 'east': ['Qc'], 'north': ['8h'], 'south': ['10h']}, 1, ['west', 'south'], 'c', []
+        ),
+        (
+            'south', ['Jh', '10d', 'Ad', '10s', 'As', '7c', '8c'],
+            {'west': ['7h'], 'east': ['Qc'], 'north': ['8h'], 'south': ['10h']}, 1, ['west', 'south'], 'c', ['h']
+        ),
+    ]
+)
+def test_get_colors_to_make_opponent_cut(player, hand_cards, game_history,
+                                         current_round, rounds_first_player, trump_color, expected):
+    assert get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_round,
+                                           rounds_first_player, trump_color) == expected
 
 
 @pytest.mark.parametrize(

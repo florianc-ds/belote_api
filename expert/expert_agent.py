@@ -225,6 +225,28 @@ def get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player,
         return fresh_aces
 
 
+def get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color):
+    playable_plain_colors = set(
+        [
+            extract_color(card) for card in hand_cards
+            if (extract_color(card) != trump_color) and (extract_value(card) not in ['10', 'A'])
+        ]
+    )
+    candidate_colors = []
+    opponents = [NEXT_PLAYER[player], NEXT_PLAYER[NEXT_PLAYER[NEXT_PLAYER[player]]]]
+    for color in playable_plain_colors:
+        for opponent in opponents:
+            if (
+                    has_player_cut_color(opponent, game_history, current_round, rounds_first_player, color, trump_color)
+                    and not has_player_definitely_no_more_trump(player, hand_cards, game_history,
+                                                                current_round, rounds_first_player, trump_color)
+            ):
+                candidate_colors.append(color)
+                break
+
+    return candidate_colors
+
+
 def get_lowest_trump_card(cards, trump_color):
     trump_cards = [card for card in cards if extract_color(card) == trump_color]
     return min(trump_cards, key=_rank_trump_card)
