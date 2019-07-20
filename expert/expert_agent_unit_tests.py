@@ -289,7 +289,8 @@ def test_has_only_trumps(hand_cards, expected):
     ]
 )
 def test_get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color, expected):
-    assert get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color) == expected
+    output = get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color)
+    assert sorted(output) == sorted(expected)
 
 
 @pytest.mark.parametrize(
@@ -308,8 +309,9 @@ def test_get_fresh_aces(hand_cards, game_history, current_round, rounds_first_pl
 )
 def test_get_colors_to_make_opponent_cut(player, hand_cards, game_history,
                                          current_round, rounds_first_player, trump_color, expected):
-    assert get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_round,
-                                           rounds_first_player, trump_color) == expected
+    output = get_colors_to_make_opponent_cut(player, hand_cards, game_history, current_round,
+                                             rounds_first_player, trump_color)
+    assert sorted(output) == sorted(expected)
 
 
 @pytest.mark.parametrize(
