@@ -211,6 +211,20 @@ def count_round_points(round_cards, trump_color, round):
     return points
 
 
+def get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color):
+    candidate_aces = [card for card in hand_cards if extract_value(card) == 'A' and extract_color(card) != trump_color]
+    if len(candidate_aces) == 0:
+        return []
+    else:
+        fresh_aces = [ace for ace in candidate_aces]
+        for round, round_first_player in enumerate(rounds_first_player[:current_round]):
+            asked_color = extract_color(game_history[round_first_player][round])
+            asked_color_ace = create_card('A', asked_color)
+            if asked_color_ace in fresh_aces:
+                fresh_aces.remove(asked_color_ace)
+        return fresh_aces
+
+
 def get_lowest_trump_card(cards, trump_color):
     trump_cards = [card for card in cards if extract_color(card) == trump_color]
     return min(trump_cards, key=_rank_trump_card)

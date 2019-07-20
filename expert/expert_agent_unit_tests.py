@@ -20,6 +20,7 @@ from expert.expert_agent import (
     are_there_remaining_trumps_in_other_hands,
     is_player_in_contract_team,
     has_only_trumps,
+    get_fresh_aces,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -265,6 +266,28 @@ def test_is_player_in_contract_team(player, contract_team, expected):
 )
 def test_has_only_trumps(hand_cards, expected):
     assert has_only_trumps(hand_cards, 'd') == expected
+
+
+@pytest.mark.parametrize(
+    'hand_cards, game_history, current_round, rounds_first_player, trump_color, expected',
+    [
+        (['7h', 'Ad'], {'west': [], 'east': [], 'north': [], 'south': []}, 0, ['west'], 'd', []),
+        (['7h', 'Ad'], {'west': [], 'east': [], 'north': [], 'south': []}, 0, ['west'], 's', ['Ad']),
+        (
+            ['Ah', 'Ad', 'Ac', 'As'],
+            {
+                'west': ['10h', 'Kh', '10c'], 'east': ['8h', 'Qh', '8c'],
+                'north': ['9h', 'Jh', '9c'], 'south': ['7h', '7d', 'Jc']
+            },
+            3,
+            ['west', 'west', 'west', 'west'],
+            's',
+            ['Ad']
+        ),
+    ]
+)
+def test_get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color, expected):
+    assert get_fresh_aces(hand_cards, game_history, current_round, rounds_first_player, trump_color) == expected
 
 
 @pytest.mark.parametrize(
