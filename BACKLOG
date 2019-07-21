@@ -1,7 +1,10 @@
-[BACK] Think about the Re-Loop code design
+[BACK] Update play_expert_strategy
+        --> add contract_team as an argument
+        --> feed play_expert_first_in_round necessary arguments
+        --> update game_configurations by adding contract_team to each config
 
-[BACK] Implement play_expert_first_in_round
-
-[BACK] Add LEAF logs
+[BACK] Add LEAF logs in play_expert_first_in_round
 
 [BACK] Add func tests by adding corresponding game configurations
+        --> update test generator by authorizing 2 logs (in the case of the re-loop)
+        --> add new configurations in game_configurations
