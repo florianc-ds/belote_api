@@ -311,10 +311,72 @@ def get_highest_plain_card(cards, trump_color, exclude_aces=False):
         return max(plain_cards, key=_rank_plain_card)
 
 
+def _sub_flow_0010(playable_cards, trump_color, round, game_history, rounds_first_player):
+    # LEVEL 4
+    fresh_aces = get_fresh_aces(playable_cards, game_history, round, rounds_first_player, trump_color)
+    if len(fresh_aces) > 0:
+        return fresh_aces[0]
+    else:
+        # LEVEL 5
+        winning_cards = get_winning_cards(playable_cards, game_history, round, trump_color)
+        if len(winning_cards) > 0:
+            return sorted(winning_cards, key=lambda c: -1 if extract_color(c) != trump_color else 1)[0]
+        else:
+            return get_lowest_plain_card(playable_cards, trump_color)
+
+
 # LEVEL 1
 
-def play_expert_first_in_round():
-    return None
+def play_expert_first_in_round(player, contract_team, player_cards, playable_cards, trump_color, round,
+                               game_history, rounds_first_player):
+    # LEVEL 2
+    if is_player_in_contract_team(player, contract_team):
+        # LEVEL 3
+        if has_color_in_hand(playable_cards, trump_color):
+            # LEVEL 4
+            if can_opponents_cut(player, player_cards, game_history, round, rounds_first_player, trump_color):
+                # LEVEL 5
+                if get_highest_trump_remaining(game_history, round, trump_color) in playable_cards:
+                    return get_highest_trump_card(playable_cards, trump_color)
+                else:
+                    # LEVEL 6
+                    if has_several_trumps(playable_cards, trump_color):
+                        return get_lowest_trump_card(playable_cards, trump_color)
+                    else:
+                        plain_playable_cards = [card for card in playable_cards if extract_color(card) != trump_color]
+                        return _sub_flow_0010(plain_playable_cards, trump_color, round,
+                                              game_history, rounds_first_player)
+            else:
+                # LEVEL 5
+                if not has_only_trumps(playable_cards, trump_color):
+                    plain_playable_cards = [card for card in playable_cards if extract_color(card) != trump_color]
+                    return _sub_flow_0010(plain_playable_cards, trump_color, round, game_history, rounds_first_player)
+                else:
+                    return get_lowest_trump_card(playable_cards, trump_color)
+        else:
+            return _sub_flow_0010(playable_cards, trump_color, round, game_history, rounds_first_player)
+    else:
+        # LEVEL 3
+        if has_only_trumps(playable_cards, trump_color):
+            return get_lowest_trump_card(playable_cards, trump_color)
+        else:
+            # LEVEL 4
+            fresh_aces = get_fresh_aces(playable_cards, game_history, round, rounds_first_player, trump_color)
+            if len(fresh_aces) > 0:
+                return fresh_aces[0]
+            else:
+                # LEVEL 5
+                cuttable_colors = get_colors_to_make_opponent_cut(player, playable_cards, game_history, round,
+                                                                  rounds_first_player, trump_color)
+                if len(cuttable_colors) > 0:
+                    return get_lowest_color_card(playable_cards, cuttable_colors[0])
+                else:
+                    # LEVEL 6
+                    winning_cards = get_winning_cards(playable_cards, game_history, round, trump_color)
+                    if len(winning_cards) > 0:
+                        return sorted(winning_cards, key=lambda c: -1 if extract_color(c) != trump_color else 1)[0]
+                    else:
+                        return get_lowest_plain_card(playable_cards, trump_color)
 
 
 def play_expert_second_in_round(player, player_cards, trump_asked, playable_cards, trump_color, round_color, round,
