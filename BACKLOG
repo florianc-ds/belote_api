@@ -1,8 +1,3 @@
-[BACK] Update play_expert_strategy
-        --> add contract_team as an argument
-        --> feed play_expert_first_in_round necessary arguments
-        --> update game_configurations by adding contract_team to each config
-
 [BACK] Add LEAF logs in play_expert_first_in_round
 
 [BACK] Add func tests by adding corresponding game configurations
