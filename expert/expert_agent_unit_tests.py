@@ -477,6 +477,7 @@ def test_play_expert_strategy_unhandled_case_exception():
     with pytest.raises(UnhandledPlayCaseException):
         play_expert_strategy(
             player='north',
+            contract_team="north/south",
             player_cards=['7s', '8s'],
             cards_playability=[True, True],
             round_cards={'west': '7h', 'south': '8h', 'east': '9h', 'north': '10h'},

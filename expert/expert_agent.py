@@ -581,8 +581,8 @@ def play_expert_fourth_in_round(player, trump_asked, playable_cards, round_cards
 
 # LEVEL 0
 
-def play_expert_strategy(player, player_cards, cards_playability, round_cards, trump_color, round_color, round,
-                         game_history, rounds_first_player):
+def play_expert_strategy(player, contract_team, player_cards, cards_playability, round_cards, trump_color, round_color,
+                         round, game_history, rounds_first_player):
     playable_cards = derive_playable_cards(player_cards, cards_playability)
     # LEVEL 0
     if len(playable_cards) == 1:
@@ -593,7 +593,8 @@ def play_expert_strategy(player, player_cards, cards_playability, round_cards, t
     trump_asked = is_trump_asked(player, round_cards, trump_color)
     # LEVEL 1
     if player_rank_in_round == 0:
-        card = play_expert_first_in_round()
+        card = play_expert_first_in_round(player, contract_team, player_cards, playable_cards, trump_color, round,
+                                          game_history, rounds_first_player)
     elif player_rank_in_round == 1:
         card = play_expert_second_in_round(player, player_cards, trump_asked, playable_cards, trump_color, round_color,
                                            round, game_history, rounds_first_player)

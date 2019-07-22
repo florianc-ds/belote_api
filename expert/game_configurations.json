@@ -2,6 +2,7 @@
    "TEMPLATE": {
       "_id": null,
       "player": null,
+      "contract_team": null,
       "player_cards": ["7s"],
       "cards_playability": [true],
       "round_cards": {"west": null, "south": null, "east": null, "north": null},
@@ -15,6 +16,7 @@
    "YES": {
       "_id": "1",
       "player": "south",
+      "contract_team": "north/south",
       "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
       "cards_playability": [false, false, false, false, false, false, false, true],
       "round_cards": {"west": "As", "south": null, "east": null, "north": null},
@@ -31,6 +33,7 @@
             "YES": {
                "_id": "0111",
                "player": "south",
+               "contract_team": "north/south",
                "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
                "cards_playability": [false, false, true, false, true, false, false, false],
                "round_cards": {"west": "Ah", "south": null, "east": null, "north": null},
@@ -44,6 +47,7 @@
             "NO": {
                "_id": "0110",
                "player": "south",
+               "contract_team": "north/south",
                "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
                "cards_playability": [true, true, true, true, true, true, true, true],
                "round_cards": {"west": "Jd", "south": null, "east": null, "north": null},
@@ -60,6 +64,7 @@
                "YES": {
                   "_id": "01011",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
                   "cards_playability": [true, true, true, true, true, true, false],
                   "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
@@ -73,6 +78,7 @@
                "NO": {
                   "_id": "01010",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s", "7c"],
                   "cards_playability": [true, true, true, true, true, true, false, false],
                   "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
@@ -88,6 +94,7 @@
                "YES": {
                   "_id": "01001",
                   "player": "west",
+                  "contract_team": "north/south",
                   "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
                   "cards_playability": [true, true, true, true, true, true, true, false],
                   "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
@@ -101,6 +108,7 @@
                "NO": {
                   "_id": "01000",
                   "player": "west",
+                  "contract_team": "north/south",
                   "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
                   "cards_playability": [true, true, true, true, true, true, true, false],
                   "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
@@ -119,6 +127,7 @@
             "YES": {
                "_id": "0211",
                "player": "south",
+               "contract_team": "north/south",
                "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "9c"],
                "cards_playability": [false, false, false, true, true, false, false, false],
                "round_cards": {"west": "Qd", "south": null, "east": null, "north": "7d"},
@@ -133,6 +142,7 @@
                "YES": {
                   "_id": "02101",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
                   "round_cards": {"west": "8h", "south": null, "east": null, "north": "Jh"},
@@ -146,6 +156,7 @@
                "NO": {
                   "_id": "02100",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
                   "round_cards": {"west": "8h", "south": null, "east": null, "north": "7h"},
@@ -163,6 +174,7 @@
                "YES": {
                   "_id": "02011",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "Ks", "10s", "Ad", "Jc", "Qc", "8h", "10h"],
                   "cards_playability": [true, true, true, false, false, false, false, false],
                   "round_cards": {"west": "As", "south": null, "east": null, "north": "8s"},
@@ -177,6 +189,7 @@
                   "YES": {
                      "_id": "020101",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "Ks", "As", "Kd", "10h", "Ah", "9c"],
                      "cards_playability": [true, true, true, false, false, false, false],
                      "round_cards": {"west": "10s", "south": null, "east": null, "north": "Qs"},
@@ -191,6 +204,7 @@
                      "YES": {
                         "_id": "0201001",
                         "player": "south",
+                        "contract_team": "north/south",
                         "player_cards": ["7s", "Ks", "10s", "Kd", "10h", "Ah", "9c"],
                         "cards_playability": [true, true, true, false, false, false, false],
                         "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
@@ -204,6 +218,7 @@
                      "NO": {
                         "_id": "0201000",
                         "player": "south",
+                        "contract_team": "north/south",
                         "player_cards": ["7s", "Ks", "10s", "Kd", "Ah", "9c"],
                         "cards_playability": [true, true, true, false, false, false],
                         "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
@@ -227,6 +242,7 @@
                   "YES": {
                      "_id": "020011",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "8s", "9s", "Qs", "Ks"],
                      "cards_playability": [true, true, true, true, true],
                      "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
@@ -245,6 +261,7 @@
                   "NO": {
                      "_id": "020010",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["8h", "10h", "Ah", "9s", "Ks", "Kc", "10c"],
                      "cards_playability": [true, true, true, true, true, true, true],
                      "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
@@ -260,6 +277,7 @@
                   "YES": {
                      "_id": "020001",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
                      "cards_playability": [true, true, true, true, true, true, true, true],
                      "round_cards": {"west": "7d", "south": null, "east": null, "north": "10d"},
@@ -274,6 +292,7 @@
                      "YES": {
                         "_id": "0200001",
                         "player": "south",
+                        "contract_team": "north/south",
                         "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
                         "cards_playability": [true, true, true, false, false, false, false, false],
                         "round_cards": {"west": "Ad", "south": null, "east": null, "north": "Kd"},
@@ -287,6 +306,7 @@
                      "NO": {
                         "_id": "0200000",
                         "player": "south",
+                        "contract_team": "north/south",
                         "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
                         "cards_playability": [true, true, true, true, true, true, true, true],
                         "round_cards": {"west": "7d", "south": null, "east": null, "north": "Kd"},
@@ -307,6 +327,7 @@
             "YES": {
                "_id": "0311",
                "player": "south",
+               "contract_team": "north/south",
                "player_cards": ["7s", "8s", "Kh", "10h", "7d", "10d", "9d", "Ac"],
                "cards_playability": [false, false, false, false, false, true, true, false],
                "round_cards": {"west": "Kd", "south": null, "east": "8d", "north": "Qd"},
@@ -321,6 +342,7 @@
                "YES": {
                   "_id": "03101",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
                   "round_cards": {"west": "8c", "south": null, "east": "7c", "north": "10c"},
@@ -334,6 +356,7 @@
                "NO": {
                   "_id": "03100",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
                   "round_cards": {"west": "8c", "south": null, "east": "Jc", "north": "10c"},
@@ -351,6 +374,7 @@
                "YES": {
                   "_id": "03011",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "10s", "As", "8h", "Kh", "Qd", "Ad", "8c"],
                   "cards_playability": [true, true, true, false, false, false, false, false],
                   "round_cards": {"west": "Ks", "south": null, "east": "8s", "north": "Js"},
@@ -365,6 +389,7 @@
                   "YES": {
                      "_id": "030101",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
                      "cards_playability": [true, true, true, false, false, false, false, false],
                      "round_cards": {"west": "Js", "south": null, "east": "8s", "north": "As"},
@@ -378,6 +403,7 @@
                   "NO": {
                      "_id": "030100",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
                      "cards_playability": [true, true, true, false, false, false, false, false],
                      "round_cards": {"west": "As", "south": null, "east": "8s", "north": "Js"},
@@ -394,6 +420,7 @@
                "YES": {
                   "_id": "03001",
                   "player": "south",
+                  "contract_team": "north/south",
                   "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
                   "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
@@ -408,6 +435,7 @@
                   "YES": {
                      "_id": "030001",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "As", "Jh", "Qh", "10h", "7c", "10c", "Jc"],
                      "cards_playability": [false, false, false, false, false, false, true, true],
                      "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
@@ -421,6 +449,7 @@
                   "NO": {
                      "_id": "030000",
                      "player": "south",
+                     "contract_team": "north/south",
                      "player_cards": ["7s", "8s", "Ks", "As", "8h", "Jh", "Qh", "10h"],
                      "cards_playability": [true, true, true, true, true, true, true, true],
                      "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
