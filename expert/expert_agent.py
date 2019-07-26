@@ -315,13 +315,16 @@ def _sub_flow_0010(playable_cards, trump_color, round, game_history, rounds_firs
     # LEVEL 4
     fresh_aces = get_fresh_aces(playable_cards, game_history, round, rounds_first_player, trump_color)
     if len(fresh_aces) > 0:
+        logger.info('LEAF 00101')
         return fresh_aces[0]
     else:
         # LEVEL 5
         winning_cards = get_winning_cards(playable_cards, game_history, round, trump_color)
         if len(winning_cards) > 0:
+            logger.info('LEAF 001001')
             return sorted(winning_cards, key=lambda c: -1 if extract_color(c) != trump_color else 1)[0]
         else:
+            logger.info('LEAF 001000')
             return get_lowest_plain_card(playable_cards, trump_color)
 
 
@@ -337,45 +340,55 @@ def play_expert_first_in_round(player, contract_team, player_cards, playable_car
             if can_opponents_cut(player, player_cards, game_history, round, rounds_first_player, trump_color):
                 # LEVEL 5
                 if get_highest_trump_remaining(game_history, round, trump_color) in playable_cards:
+                    logger.info('LEAF 001111')
                     return get_highest_trump_card(playable_cards, trump_color)
                 else:
                     # LEVEL 6
                     if has_several_trumps(playable_cards, trump_color):
+                        logger.info('LEAF 0011101')
                         return get_lowest_trump_card(playable_cards, trump_color)
                     else:
                         plain_playable_cards = [card for card in playable_cards if extract_color(card) != trump_color]
+                        logger.info('LEAF 0011100')
                         return _sub_flow_0010(plain_playable_cards, trump_color, round,
                                               game_history, rounds_first_player)
             else:
                 # LEVEL 5
                 if not has_only_trumps(playable_cards, trump_color):
                     plain_playable_cards = [card for card in playable_cards if extract_color(card) != trump_color]
+                    logger.info('LEAF 001101')
                     return _sub_flow_0010(plain_playable_cards, trump_color, round, game_history, rounds_first_player)
                 else:
+                    logger.info('LEAF 001100')
                     return get_lowest_trump_card(playable_cards, trump_color)
         else:
             return _sub_flow_0010(playable_cards, trump_color, round, game_history, rounds_first_player)
     else:
         # LEVEL 3
         if has_only_trumps(playable_cards, trump_color):
+            logger.info('LEAF 0001')
             return get_lowest_trump_card(playable_cards, trump_color)
         else:
             # LEVEL 4
             fresh_aces = get_fresh_aces(playable_cards, game_history, round, rounds_first_player, trump_color)
             if len(fresh_aces) > 0:
+                logger.info('LEAF 00001')
                 return fresh_aces[0]
             else:
                 # LEVEL 5
                 cuttable_colors = get_colors_to_make_opponent_cut(player, playable_cards, game_history, round,
                                                                   rounds_first_player, trump_color)
                 if len(cuttable_colors) > 0:
+                    logger.info('LEAF 000001')
                     return get_lowest_color_card(playable_cards, cuttable_colors[0])
                 else:
                     # LEVEL 6
                     winning_cards = get_winning_cards(playable_cards, game_history, round, trump_color)
                     if len(winning_cards) > 0:
+                        logger.info('LEAF 0000001')
                         return sorted(winning_cards, key=lambda c: -1 if extract_color(c) != trump_color else 1)[0]
                     else:
+                        logger.info('LEAF 0000000')
                         return get_lowest_plain_card(playable_cards, trump_color)
 
 
