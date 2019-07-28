@@ -1,6 +1,6 @@
 import pytest
 
-from expert.expert_agent import (
+from expert.play.strategy import (
     derive_player_rank_in_round, is_trump_asked, has_color_in_hand, get_lowest_trump_card,
     get_lowest_plain_card,
     has_highest_plain_color_card_in_hand,

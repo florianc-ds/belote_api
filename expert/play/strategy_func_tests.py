@@ -4,10 +4,10 @@ import re
 import pytest
 import logging
 
-from expert.expert_agent import play_expert_strategy
+from expert.play.strategy import play_expert_strategy
 
 logger = logging.getLogger('flask.app')
-GAME_CONFIGS_PATH = 'expert/game_configurations.json'
+GAME_CONFIGS_PATH = 'expert/play/game_configurations.json'
 LEAF_LOG_PATTERN = r'^LEAF (.+)$'
 
 
