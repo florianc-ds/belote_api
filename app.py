@@ -7,6 +7,7 @@ from functools import update_wrapper
 from flask import Flask
 from flask import make_response, request, current_app
 
+from expert.play.strategy import play_expert_strategy
 from helpers.bet_or_pass_helpers import bet_or_pass_template
 from helpers.play_helpers import play_template
 from highest_card_agent import play_highest_card_strategy, bet_or_pass_highest_card_strategy
@@ -108,8 +109,9 @@ def play_expert():
         data = json.loads(request.data)
         response = play_template(
             data=data,
-            used_fields=['playerCards', 'cardsPlayability'],
-            strategy=play_random_strategy,
+            used_fields=['player', 'contractTeam', 'playerCards', 'cardsPlayability', 'roundCards', 'trumpColor',
+                         'roundColor', 'round', 'gameHistory', 'roundsFirstPlayer'],
+            strategy=play_expert_strategy,
         )
 
         return json.dumps(response)
