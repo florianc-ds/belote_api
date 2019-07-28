@@ -1,5 +1,26 @@
-[BACK] Add LEAF logs in play_expert_first_in_round
+[FRONT] Try new route /expert/play and search for
+            - bugs (fix them)
+            - expert play strategy oddities
 
-[BACK] Add func tests by adding corresponding game configurations
-        --> update test generator by authorizing 2 logs (in the case of the re-loop)
-        --> add new configurations in game_configurations
+[BACK] expert.bet_or_pass.strategy.compute_best_color_bet(player_hand, combinations)
+            --> implement it
+            --> find/implement a structure to store combinations
+            --> unit test each combination (31...)
+
+[BACK] expert.bet_or_pass.strategy.compute_support_score(player_hand, color, combinations)
+            --> implement it
+            --> implement a structure to store combinations
+            --> unit test each combination (4)
+
+[BACK] expert.bet_or_pass.strategy.compute_aggressive_support_score(player_hand, color, combinations)
+            --> implement it
+            --> implement a structure to store combinations
+            --> unit test each combination (4)
+
+[BACK] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy(...)
+            --> list and plan helper functions to be implemented
+            --> implement bet_or_pass_expert_strategy
+
+
+[IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
+            --> what if first to play? (it should be an asset...)
