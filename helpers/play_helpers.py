@@ -10,6 +10,7 @@ def play_template(data, used_fields, strategy):
     # - trumpColor
     # - playerCards
     # - cardsPlayability
+    # - round
     # - roundCards
     # - roundColor
     # - gameHistory
