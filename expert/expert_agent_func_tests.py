@@ -34,23 +34,27 @@ real_test_cases = {tree_path: test_case for tree_path, test_case in test_cases.i
 
 
 @pytest.mark.parametrize(
-    '_id, data, expected',
+    '_id, data, expected, extras',
     [
-        [test_case['_id'], {k: v for k, v in test_case.items() if not k.startswith('_')}, test_case['_expected']]
+        [
+            test_case['_id'],
+            {k: v for k, v in test_case.items() if not k.startswith('_')},
+            test_case['_expected'],
+            {k: v for k, v in test_case.items() if k.startswith('_')},
+        ]
         for tree_path, test_case in sorted(real_test_cases.items(), key=lambda t: t[0])
     ],
     ids=sorted(real_test_cases.keys()),
 )
-def test_play_expert_strategy(_id, data, expected, caplog):
+def test_play_expert_strategy(_id, data, expected, extras, caplog):
     caplog.set_level(logging.INFO)
+
     # check output
     assert play_expert_strategy(**data) == expected
 
-    # check 1 log was outputted for a single leaf
+    # check log(s) correspond(s) to the usecase
     logs = caplog.record_tuples
     leaf_logs_message = [msg for (logger_instance, lvl, msg) in logs if re.match(LEAF_LOG_PATTERN, msg)]
-    assert len(leaf_logs_message) == 1
-
-    # check log corresponds to the usecase
-    output_leaf_id = re.match(LEAF_LOG_PATTERN, leaf_logs_message[0]).group(1)
-    assert output_leaf_id == _id
+    output_leaf_ids = [re.match(LEAF_LOG_PATTERN, log).group(1) for log in leaf_logs_message]
+    expected_leaf_ids = [_id, extras['_final_leaf_id']] if '_final_leaf_id' in extras else [_id]
+    assert output_leaf_ids == expected_leaf_ids
