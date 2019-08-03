@@ -2,25 +2,20 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK] expert.bet_or_pass.strategy.compute_best_color_bet(player_hand, combinations)
-            --> implement it
-            --> find/implement a structure to store combinations
-            --> unit test each combination (31...)
+[BACK] Implement bet_or_pass_expert_strategy helper functions:
+            - extract_speakers(players_bids)
+            - have_player_and_partner_spoken_over_same_color(player, players_bids)
+            - extract_leader(players_bids)
 
-[BACK] expert.bet_or_pass.strategy.compute_support_score(player_hand, color, combinations)
-            --> implement it
-            --> implement a structure to store combinations
-            --> unit test each combination (4)
+[BACK] Implement expert.bet_or_pass.strategy.bet_or_pass_expert_strategy(...)
+            --> start with player, partner, opponent distinction
+            --> write 1 method per if/elif block
+            --> factorize last elif by "every one spoke"
 
-[BACK] expert.bet_or_pass.strategy.compute_aggressive_support_score(player_hand, color, combinations)
-            --> implement it
-            --> implement a structure to store combinations
-            --> unit test each combination (4)
-
-[BACK] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy(...)
-            --> list and plan helper functions to be implemented
-            --> implement bet_or_pass_expert_strategy
-
+[BACK] Add an else block to bet_or_pass_expert_strategy that raises an exception
+            --> create UnhandledBetOrPassCaseException exception
+            --> raise UnhandledBetOrPassCaseException in bet_or_pass_expert_strategy
 
 [IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
             --> what if first to play? (it should be an asset...)
+            --> what if last to speak and no one spoke? (it should be an asset...)
