@@ -6,6 +6,7 @@ from expert.bet_or_pass.strategy import (
     derive_score,
     extract_speakers,
     have_player_and_partner_spoken_over_same_color,
+    extract_leader,
 )
 
 
@@ -107,6 +108,36 @@ def test_extract_speakers(players_bids, expected):
 )
 def test_have_player_and_partner_spoken_over_same_color(players_bids, expected):
     assert have_player_and_partner_spoken_over_same_color('south', players_bids) == expected
+
+
+@pytest.mark.parametrize(
+    'players_bids, expected',
+    [
+        (
+            {
+                'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None},
+                'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None},
+            },
+            None  # none spoke
+        ),
+        (
+            {
+                'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None},
+                'north': {'value': 80, 'color': 's'}, 'south': {'value': None, 'color': None},
+            },
+            'north'  # one spoke
+        ),
+        (
+            {
+                'west': {'value': 80, 'color': 's'}, 'east': {'value': 100, 'color': 'd'},
+                'north': {'value': 110, 'color': 'h'}, 'south': {'value': 90, 'color': 'c'},
+            },
+            'north'  # all spoke
+        ),
+    ]
+)
+def test_extract_leader(players_bids, expected):
+    assert extract_leader(players_bids) == expected
 
 
 @pytest.mark.parametrize(

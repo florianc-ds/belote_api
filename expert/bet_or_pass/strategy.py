@@ -51,6 +51,17 @@ def have_player_and_partner_spoken_over_same_color(player, players_bids):
     )
 
 
+def extract_leader(players_bids):
+    leader = None
+    leading_value = -1
+    speakers = extract_speakers(players_bids)
+    for speaker in speakers:
+        if players_bids[speaker]['value'] > leading_value:
+            leader = speaker
+            leading_value = players_bids[speaker]['value']
+    return leader
+
+
 # COMPUTATION METHODS
 def compute_best_color_bet(player_cards, main_combinations):
     best_color = None
