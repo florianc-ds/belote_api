@@ -1,7 +1,10 @@
 import pytest
 
 from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATIONS
-from expert.bet_or_pass.strategy import detect_combination_in_hand, compute_best_color_bet, compute_support_score
+from expert.bet_or_pass.strategy import (
+    detect_combination_in_hand, compute_best_color_bet, compute_support_score,
+    derive_score,
+)
 
 
 @pytest.mark.parametrize(
@@ -21,6 +24,22 @@ def test_detect_combination_in_hand(combination, cards, trump_color, only_trump,
     assert detect_combination_in_hand(combination, cards, trump_color, only_trump) == expected
 
 
+def test_derive_score_dict():
+    assert derive_score(1, {1: 10, 2: 20}, None) == 10
+
+
+def test_derive_score_dict_unknown_key():
+    assert derive_score(3, {1: 10, 2: 20}, None) == 0
+
+
+def test_derive_score_std_value():
+    assert derive_score(1, 10, None) == 10
+
+
+def test_derive_score_max():
+    assert derive_score(3, 10, 20) == 20
+
+
 @pytest.mark.parametrize(
     'player_cards, expected',
     [
@@ -38,6 +57,16 @@ def test_detect_combination_in_hand(combination, cards, trump_color, only_trump,
 )
 def test_compute_best_color_bet(player_cards, expected):
     assert compute_best_color_bet(player_cards, MAIN_COMBINATIONS) == expected
+
+
+def test_compute_best_color_bet_without_trigger_info():
+    with pytest.raises(KeyError):
+        compute_best_color_bet([], [{'not_trigger': 'X'}])
+
+
+def test_compute_best_color_bet_without_value_info():
+    with pytest.raises(KeyError):
+        compute_best_color_bet(['Xs'], [{'trigger': 'X', 'bonus': [{'pattern': 'Y', 'not_value': None}]}])
 
 
 @pytest.mark.parametrize(

@@ -28,6 +28,15 @@ def detect_combination_in_hand(pattern, hand_cards, trump_color, only_trump=True
     return nb_detections
 
 
+def derive_score(nb_detections, unit_value, max_value):
+    if isinstance(unit_value, dict):
+        return unit_value.get(nb_detections, 0)
+    elif max_value is not None:
+        return min(nb_detections * unit_value, max_value)
+    else:
+        return nb_detections * unit_value
+
+
 def compute_best_color_bet(player_cards, main_combinations):
     best_color = None
     best_score = -1
@@ -42,12 +51,7 @@ def compute_best_color_bet(player_cards, main_combinations):
                         color,
                         bonus_combination['trump']
                     )
-                    if isinstance(bonus_combination['value'], dict):
-                        tmp_score += bonus_combination['value'].get(nb_detections, 0)
-                    elif 'max' in bonus_combination.keys():
-                        tmp_score += min(nb_detections * bonus_combination['value'], bonus_combination['max'])
-                    else:
-                        tmp_score += nb_detections * bonus_combination['value']
+                    tmp_score += derive_score(nb_detections, bonus_combination['value'], bonus_combination.get('max'))
                 if tmp_score > best_score:
                     best_score = tmp_score
                     best_color = color
@@ -59,10 +63,5 @@ def compute_support_score(player_cards, color, support_combinations):
     support_score = 0
     for combination in support_combinations:
         nb_detections = detect_combination_in_hand(combination['pattern'], player_cards, color, combination['trump'])
-        if isinstance(combination['value'], dict):
-            support_score += combination['value'].get(nb_detections, 0)
-        elif 'max' in combination.keys():
-            support_score += min(nb_detections * combination['value'], combination['max'])
-        else:
-            support_score += nb_detections * combination['value']
+        support_score += derive_score(nb_detections, combination['value'], combination.get('max'))
     return support_score
