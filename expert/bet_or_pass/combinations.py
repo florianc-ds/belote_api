@@ -235,3 +235,26 @@ SUPPORT_COMBINATIONS = [
         'value': {2: 10, 3: 20},
     },
 ]
+
+AGGRESSIVE_SUPPORT_COMBINATIONS = [
+    {
+        'pattern': 'J',
+        'trump': True,
+        'value': 20,
+    },
+    {
+        'pattern': '9/10/A',
+        'trump': True,
+        'value': 10,
+    },
+    {
+        'pattern': 'Q+K',
+        'trump': True,
+        'value': 20,
+    },
+    {
+        'pattern': 'A',
+        'trump': False,
+        'value': 10,
+    },
+]
