@@ -4,6 +4,7 @@ from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATI
 from expert.bet_or_pass.strategy import (
     detect_combination_in_hand, compute_best_color_bet, compute_support_score,
     derive_score,
+    extract_speakers,
 )
 
 
@@ -38,6 +39,36 @@ def test_derive_score_std_value():
 
 def test_derive_score_max():
     assert derive_score(3, 10, 20) == 20
+
+
+@pytest.mark.parametrize(
+    'players_bids, expected',
+    [
+        (
+            {
+                'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None},
+                'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None},
+            },
+            []  # none spoke
+        ),
+        (
+            {
+                'west': {'value': None, 'color': None}, 'east': {'value': 80, 'color': 's'},
+                'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None},
+            },
+            ['east']  # one spoke
+        ),
+        (
+            {
+                'west': {'value': 80, 'color': 's'}, 'east': {'value': 100, 'color': 'd'},
+                'north': {'value': 110, 'color': 'h'}, 'south': {'value': 90, 'color': 'c'},
+            },
+            ['west', 'south', 'east', 'north']  # all spoke
+        ),
+    ]
+)
+def test_extract_speakers(players_bids, expected):
+    assert sorted(extract_speakers(players_bids)) == sorted(expected)
 
 
 @pytest.mark.parametrize(

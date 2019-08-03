@@ -2,6 +2,7 @@ from helpers.common_helpers import create_card
 from helpers.constants import COLORS
 
 
+# COMBINATION RELATED HELPERS
 def detect_combination_in_hand(pattern, hand_cards, trump_color, only_trump=True):
     def _and_pattern_detection(pat, cards, col):
         return int(all([create_card(val, col) in cards for val in pat.split('+')]))
@@ -37,6 +38,12 @@ def derive_score(nb_detections, unit_value, max_value):
         return nb_detections * unit_value
 
 
+# STRATEGY HELPERS
+def extract_speakers(players_bids):
+    return [player for (player, bid) in players_bids.items() if bid['value'] is not None]
+
+
+# COMPUTATION METHODS
 def compute_best_color_bet(player_cards, main_combinations):
     best_color = None
     best_score = -1
