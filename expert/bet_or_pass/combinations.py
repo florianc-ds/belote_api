@@ -212,3 +212,26 @@ MAIN_COMBINATIONS = [
         ]
     },
 ]
+
+SUPPORT_COMBINATIONS = [
+    {
+        'pattern': 'J',
+        'trump': True,
+        'value': 20,
+    },
+    {
+        'pattern': '9',
+        'trump': True,
+        'value': 10,
+    },
+    {
+        'pattern': 'Q+K',
+        'trump': True,
+        'value': 20,
+    },
+    {
+        'pattern': 'A',
+        'trump': False,
+        'value': {2: 10, 3: 20},
+    },
+]

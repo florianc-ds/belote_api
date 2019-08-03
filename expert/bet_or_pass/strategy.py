@@ -53,3 +53,16 @@ def compute_best_color_bet(player_cards, main_combinations):
                     best_color = color
                     break
     return best_color, best_score
+
+
+def compute_support_score(player_cards, color, support_combinations):
+    support_score = 0
+    for combination in support_combinations:
+        nb_detections = detect_combination_in_hand(combination['pattern'], player_cards, color, combination['trump'])
+        if isinstance(combination['value'], dict):
+            support_score += combination['value'].get(nb_detections, 0)
+        elif 'max' in combination.keys():
+            support_score += min(nb_detections * combination['value'], combination['max'])
+        else:
+            support_score += nb_detections * combination['value']
+    return support_score

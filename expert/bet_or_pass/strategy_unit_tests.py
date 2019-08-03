@@ -1,7 +1,7 @@
 import pytest
 
-from expert.bet_or_pass.combinations import MAIN_COMBINATIONS
-from expert.bet_or_pass.strategy import detect_combination_in_hand, compute_best_color_bet
+from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATIONS
+from expert.bet_or_pass.strategy import detect_combination_in_hand, compute_best_color_bet, compute_support_score
 
 
 @pytest.mark.parametrize(
@@ -38,3 +38,20 @@ def test_detect_combination_in_hand(combination, cards, trump_color, only_trump,
 )
 def test_compute_best_color_bet(player_cards, expected):
     assert compute_best_color_bet(player_cards, MAIN_COMBINATIONS) == expected
+
+
+@pytest.mark.parametrize(
+    'player_cards, expected',
+    [
+        ([], 0),  # empty
+        (['7s', '10s', '8d', '10d', 'Kc', '10c', '7h', '8h'], 0),  # nothing
+        (['7s', 'Js', '8d', '10d', 'Kc', '10c', '7h', '8h'], 20),  # J
+        (['7s', '9s', '8d', '10d', 'Kc', '10c', '7h', '8h'], 10),  # 9
+        (['Qs', 'Ks', '8d', '10d', 'Kc', '10c', '7h', '8h'], 20),  # Q+K
+        (['As', '7d', '8d', 'Ad', 'Jc', 'Ac', '9h', 'Ah'], 20),  # enough A
+        (['7d', '8d', 'Ad', 'Jc', 'Qc', '9h', '10h'], 0),  # not enough A
+        (['9s', 'Js', 'Qs', 'Ks', 'Jc', 'Ac', '9h', 'Ah'], 60),  # all
+    ]
+)
+def test_compute_support_score(player_cards, expected):
+    assert compute_support_score(player_cards, 's', SUPPORT_COMBINATIONS) == expected
