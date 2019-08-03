@@ -1,5 +1,5 @@
 from helpers.common_helpers import create_card
-from helpers.constants import COLORS
+from helpers.constants import COLORS, NEXT_PLAYER
 
 
 # COMBINATION RELATED HELPERS
@@ -41,6 +41,14 @@ def derive_score(nb_detections, unit_value, max_value):
 # STRATEGY HELPERS
 def extract_speakers(players_bids):
     return [player for (player, bid) in players_bids.items() if bid['value'] is not None]
+
+
+def have_player_and_partner_spoken_over_same_color(player, players_bids):
+    partner = NEXT_PLAYER[NEXT_PLAYER[player]]
+    return (
+            (players_bids[player]['color'] is not None)
+            and (players_bids[player]['color'] == players_bids[partner]['color'])
+    )
 
 
 # COMPUTATION METHODS
