@@ -40,7 +40,7 @@ def derive_score(nb_detections, unit_value, max_value):
 
 # STRATEGY HELPERS
 def extract_speakers(players_bids):
-    return [player for (player, bid) in players_bids.items() if bid['value'] is not None]
+    return set([player for (player, bid) in players_bids.items() if bid['value'] is not None])
 
 
 def have_player_and_partner_spoken_over_same_color(player, players_bids):
