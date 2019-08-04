@@ -2,20 +2,27 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK] Implement bet_or_pass_expert_strategy helper functions:
-            - extract_speakers(players_bids)
-            - have_player_and_partner_spoken_over_same_color(player, players_bids)
-            - extract_leader(players_bids)
+[BACK] Implement bet_or_pass_... blocks
+            --> implement according to doc
+            --> add test(s)
 
-[BACK] Implement expert.bet_or_pass.strategy.bet_or_pass_expert_strategy(...)
-            --> start with player, partner, opponent distinction
-            --> write 1 method per if/elif block
-            --> factorize last elif by "every one spoke"
-
-[BACK] Add an else block to bet_or_pass_expert_strategy that raises an exception
+[BACK] Manage unhandled cases in bet_or_pass_expert_strategy
             --> create UnhandledBetOrPassCaseException exception
             --> raise UnhandledBetOrPassCaseException in bet_or_pass_expert_strategy
+            --> test exceptions are raised
+
+[BACK] Bind bet_or_pass_expert_strategy to API
+            --> update bet_or_pass_expert_strategy parameters
+            --> call bet_or_pass_expert_strategy in app.py
+
 
 [IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
-            --> what if first to play? (it should be an asset...)
+            --> what if first to play? (it should be an asset...) (gameFirstPlayer not used)
             --> what if last to speak and no one spoke? (it should be an asset...)
+            --> globalScore not used
+
+
+[MISSING FEATURES]
+            * (contre-)coinche
+            * (annonces)
+            * sans/tout atout
