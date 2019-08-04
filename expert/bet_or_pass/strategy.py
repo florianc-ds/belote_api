@@ -91,3 +91,86 @@ def compute_support_score(player_cards, color, support_combinations):
         nb_detections = detect_combination_in_hand(combination['pattern'], player_cards, color, combination['trump'])
         support_score += derive_score(nb_detections, combination['value'], combination.get('max'))
     return support_score
+
+
+# STRATEGY
+def bet_or_pass_none_spoke():
+    return None, None, None
+
+
+def bet_or_pass_only_opponents_spoke():
+    return None, None, None
+
+
+def bet_or_pass_only_partner_spoke():
+    return None, None, None
+
+
+def bet_or_pass_only_player_partner_spoke_same_color():
+    return None, None, None
+
+
+def bet_or_pass_only_opponent_partner_spoke_opponent_leads():
+    return None, None, None
+
+
+def bet_or_pass_only_opponent_partner_spoke_partner_leads():
+    return None, None, None
+
+
+def bet_or_pass_everyone_spoke_opponent_leads_different_color():
+    return None, None, None
+
+
+def bet_or_pass_everyone_spoke_partner_leads_different_color():
+    return None, None, None
+
+
+def bet_or_pass_expert_strategy(player, players_bids):
+    partner = NEXT_PLAYER[NEXT_PLAYER[player]]
+    opponents = [NEXT_PLAYER[player], NEXT_PLAYER[partner]]
+
+    speakers = extract_speakers(players_bids)
+
+    if len(speakers) == 0:  # None spoke
+        action, color, value = bet_or_pass_none_spoke()
+    elif speakers.issubset(set(opponents)):  # only opponent(s) spoke
+        action, color, value = bet_or_pass_only_opponents_spoke()
+    elif speakers == {partner}:  # only partner spoke
+        action, color, value = bet_or_pass_only_partner_spoke()
+    elif speakers == {player, partner}:  # only player & partner spoke...
+        if have_player_and_partner_spoken_over_same_color(player, players_bids):  # ...over same color
+            action, color, value = 'pass', None, None
+        else:  # ...over different colors
+            action, color, value = bet_or_pass_only_player_partner_spoke_same_color()
+    elif speakers.issubset(set(opponents + [partner])):  # only opponent & partner spoke...
+        leader = extract_leader(players_bids)
+        if leader in opponents:  # ...and opponent leads
+            action, color, value = bet_or_pass_only_opponent_partner_spoke_opponent_leads()
+        elif leader == partner:
+            action, color, value = bet_or_pass_only_opponent_partner_spoke_partner_leads()
+        else:
+            print("RAISE EXCEPTION")
+            action, color, value = 'pass', None, None
+    elif speakers == set(opponents + [player, partner]):  # everyone spoke...
+        leader = extract_leader(players_bids)
+        if leader in opponents:  # ...and opponent leads...
+            if have_player_and_partner_spoken_over_same_color(player, players_bids):
+                # ...and same color for player & partner
+                action, color, value = 'pass', None, None
+            else:  # ...and differents color for player & partner
+                action, color, value = bet_or_pass_everyone_spoke_opponent_leads_different_color()
+        elif leader == partner:  # ...and partner leads...
+            if have_player_and_partner_spoken_over_same_color(player, players_bids):
+                # ...and same color for player & partner
+                action, color, value = 'pass', None, None
+            else:  # ...and different colors for player & partner
+                action, color, value = bet_or_pass_everyone_spoke_partner_leads_different_color()
+        else:
+            print("RAISE EXCEPTION")
+            action, color, value = 'pass', None, None
+    else:
+        print("RAISE EXCEPTION")
+        action, color, value = 'pass', None, None
+
+    return action, color, value
