@@ -7,6 +7,7 @@ from expert.bet_or_pass.strategy import (
     extract_speakers,
     have_player_and_partner_spoken_over_same_color,
     extract_leader,
+    get_best_opponent_bid,
 )
 
 
@@ -138,6 +139,36 @@ def test_have_player_and_partner_spoken_over_same_color(players_bids, expected):
 )
 def test_extract_leader(players_bids, expected):
     assert extract_leader(players_bids) == expected
+
+
+@pytest.mark.parametrize(
+    'players_bids, expected',
+    [
+        (
+            {
+                'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None},
+                'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None},
+            },
+            (None, None)  # none spoke
+        ),
+        (
+            {
+                'west': {'value': 90, 'color': 'h'}, 'east': {'value': None, 'color': None},
+                'north': {'value': 80, 'color': 's'}, 'south': {'value': None, 'color': None},
+            },
+            ('h', 90)  # 2 spoke
+        ),
+        (
+            {
+                'west': {'value': 80, 'color': 's'}, 'east': {'value': 100, 'color': 'd'},
+                'north': {'value': 110, 'color': 'h'}, 'south': {'value': 90, 'color': 'c'},
+            },
+            ('d', 100)  # all spoke
+        ),
+    ]
+)
+def test_get_best_opponent_bid(players_bids, expected):
+    assert get_best_opponent_bid(players_bids, ['east', 'west']) == expected
 
 
 @pytest.mark.parametrize(

@@ -62,6 +62,15 @@ def extract_leader(players_bids):
     return leader
 
 
+def get_best_opponent_bid(players_bids, opponents):
+    opponents_bids = [players_bids[opponent] for opponent in opponents if players_bids[opponent]['color'] is not None]
+    if len(opponents_bids) == 0:
+        return None, None
+    else:
+        best_bid = max(opponents_bids, key=lambda b: b['value'])
+        return best_bid['color'], best_bid['value']
+
+
 # COMPUTATION METHODS
 def compute_best_color_bet(player_cards, main_combinations):
     best_color = None
