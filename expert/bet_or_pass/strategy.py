@@ -175,29 +175,48 @@ def bet_or_pass_everyone_spoke_partner_leads_different_color(player_cards, partn
     return bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_value, partner_bid_color)
 
 
-def bet_or_pass_expert_strategy(player, players_bids):
+def bet_or_pass_expert_strategy(player, player_cards, players_bids):
     partner = NEXT_PLAYER[NEXT_PLAYER[player]]
     opponents = [NEXT_PLAYER[player], NEXT_PLAYER[partner]]
 
     speakers = extract_speakers(players_bids)
 
     if len(speakers) == 0:  # None spoke
-        action, color, value = bet_or_pass_none_spoke()
+        action, color, value = bet_or_pass_none_spoke(player_cards)
     elif speakers.issubset(set(opponents)):  # only opponent(s) spoke
-        action, color, value = bet_or_pass_only_opponents_spoke()
+        best_opponent_bid_value = get_best_opponent_bid(players_bids, opponents)[1]
+        action, color, value = bet_or_pass_only_opponents_spoke(player_cards, best_opponent_bid_value)
     elif speakers == {partner}:  # only partner spoke
-        action, color, value = bet_or_pass_only_partner_spoke()
+        action, color, value = bet_or_pass_only_partner_spoke(
+            player_cards,
+            players_bids[partner]['color'],
+            players_bids[partner]['value']
+        )
     elif speakers == {player, partner}:  # only player & partner spoke...
         if have_player_and_partner_spoken_over_same_color(player, players_bids):  # ...over same color
             action, color, value = 'pass', None, None
         else:  # ...over different colors
-            action, color, value = bet_or_pass_only_player_partner_spoke_same_color()
+            action, color, value = bet_or_pass_only_player_partner_spoke_different_colors(
+                player_cards,
+                players_bids[partner]['color'],
+                players_bids[partner]['value']
+            )
     elif speakers.issubset(set(opponents + [partner])):  # only opponent & partner spoke...
         leader = extract_leader(players_bids)
         if leader in opponents:  # ...and opponent leads
-            action, color, value = bet_or_pass_only_opponent_partner_spoke_opponent_leads()
-        elif leader == partner:
-            action, color, value = bet_or_pass_only_opponent_partner_spoke_partner_leads()
+            best_opponent_bid_value = get_best_opponent_bid(players_bids, opponents)[1]
+            action, color, value = bet_or_pass_only_opponent_partner_spoke_opponent_leads(
+                player_cards,
+                players_bids[partner]['color'],
+                players_bids[partner]['value'],
+                best_opponent_bid_value
+            )
+        elif leader == partner:  # ...and partner leads
+            action, color, value = bet_or_pass_only_opponent_partner_spoke_partner_leads(
+                player_cards,
+                players_bids[partner]['color'],
+                players_bids[partner]['value']
+            )
         else:
             print("RAISE EXCEPTION")
             action, color, value = 'pass', None, None
@@ -207,14 +226,24 @@ def bet_or_pass_expert_strategy(player, players_bids):
             if have_player_and_partner_spoken_over_same_color(player, players_bids):
                 # ...and same color for player & partner
                 action, color, value = 'pass', None, None
-            else:  # ...and differents color for player & partner
-                action, color, value = bet_or_pass_everyone_spoke_opponent_leads_different_color()
+            else:  # ...and different color for player & partner
+                best_opponent_bid_value = get_best_opponent_bid(players_bids, opponents)[1]
+                action, color, value = bet_or_pass_everyone_spoke_opponent_leads_different_color(
+                    player_cards,
+                    players_bids[partner]['color'],
+                    players_bids[partner]['value'],
+                    best_opponent_bid_value
+                )
         elif leader == partner:  # ...and partner leads...
             if have_player_and_partner_spoken_over_same_color(player, players_bids):
                 # ...and same color for player & partner
                 action, color, value = 'pass', None, None
             else:  # ...and different colors for player & partner
-                action, color, value = bet_or_pass_everyone_spoke_partner_leads_different_color()
+                action, color, value = bet_or_pass_everyone_spoke_partner_leads_different_color(
+                    player_cards,
+                    players_bids[partner]['color'],
+                    players_bids[partner]['value']
+                )
         else:
             print("RAISE EXCEPTION")
             action, color, value = 'pass', None, None
