@@ -1,3 +1,4 @@
+from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATIONS, AGGRESSIVE_SUPPORT_COMBINATIONS
 from helpers.common_helpers import create_card
 from helpers.constants import COLORS, NEXT_PLAYER
 
@@ -103,36 +104,75 @@ def compute_support_score(player_cards, color, support_combinations):
 
 
 # STRATEGY
-def bet_or_pass_none_spoke():
-    return None, None, None
+def bet_or_pass_none_spoke(player_cards):
+    best_color, best_score = compute_best_color_bet(player_cards, MAIN_COMBINATIONS)
+    if best_color is not None:
+        return 'bet', best_color, best_score
+    else:
+        return 'pass', None, None
 
 
-def bet_or_pass_only_opponents_spoke():
-    return None, None, None
+def bet_or_pass_only_opponents_spoke(player_cards, opponent_bid_value):
+    best_color, best_score = compute_best_color_bet(player_cards, MAIN_COMBINATIONS)
+    if (best_color is None) or (best_score < opponent_bid_value):
+        return 'pass', None, None
+    elif best_score == opponent_bid_value:
+        return 'bet', best_color, best_score + 10
+    elif best_score > opponent_bid_value:
+        return 'bet', best_color, best_score
+    else:
+        print("RAISE EXCEPTION")
+        return None, None, None
 
 
-def bet_or_pass_only_partner_spoke():
-    return None, None, None
+def bet_or_pass_only_partner_spoke(player_cards, partner_bid_color, partner_bid_value):
+    best_color, best_score = compute_best_color_bet(player_cards, MAIN_COMBINATIONS)
+    support_score = compute_support_score(player_cards, partner_bid_color, SUPPORT_COMBINATIONS)
+    if (best_color is not None) and (best_score > (partner_bid_value + support_score)):
+        return 'bet', best_color, best_score
+    elif support_score > 0:
+        return 'bet', partner_bid_color, partner_bid_value + support_score
+    else:
+        return 'pass', None, None
 
 
-def bet_or_pass_only_player_partner_spoke_same_color():
-    return None, None, None
+def bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_color, partner_bid_value):
+    support_score = compute_support_score(player_cards, partner_bid_color, SUPPORT_COMBINATIONS)
+    if support_score > 0:
+        return 'bet', partner_bid_color, partner_bid_value + support_score
+    else:
+        return 'pass', None, None
 
 
-def bet_or_pass_only_opponent_partner_spoke_opponent_leads():
-    return None, None, None
+def bet_or_pass_only_opponent_partner_spoke_opponent_leads(player_cards,
+                                                           partner_bid_color, partner_bid_value,
+                                                           opponent_bid_value):
+    best_color, best_score = compute_best_color_bet(player_cards, MAIN_COMBINATIONS)
+    aggressive_support_score = compute_support_score(player_cards, partner_bid_color, AGGRESSIVE_SUPPORT_COMBINATIONS)
+    if (best_color is not None) and best_score > max(opponent_bid_value, partner_bid_value + aggressive_support_score):
+        return 'bet', best_color, best_score
+    elif (aggressive_support_score > 0) and ((partner_bid_value + aggressive_support_score) > opponent_bid_value):
+        return 'bet', partner_bid_color, partner_bid_value + aggressive_support_score
+    else:
+        return 'pass', None, None
 
 
-def bet_or_pass_only_opponent_partner_spoke_partner_leads():
-    return None, None, None
+def bet_or_pass_only_opponent_partner_spoke_partner_leads(player_cards, partner_bid_color, partner_bid_value):
+    return bet_or_pass_only_partner_spoke(player_cards, partner_bid_color, partner_bid_value)
 
 
-def bet_or_pass_everyone_spoke_opponent_leads_different_color():
-    return None, None, None
+def bet_or_pass_everyone_spoke_opponent_leads_different_color(player_cards,
+                                                              partner_bid_color, partner_bid_value,
+                                                              opponent_bid_value):
+    aggressive_support_score = compute_support_score(player_cards, partner_bid_color, AGGRESSIVE_SUPPORT_COMBINATIONS)
+    if (aggressive_support_score > 0) and ((partner_bid_value + aggressive_support_score) > opponent_bid_value):
+        return 'bet', partner_bid_color, partner_bid_value + aggressive_support_score
+    else:
+        return 'pass', None, None
 
 
-def bet_or_pass_everyone_spoke_partner_leads_different_color():
-    return None, None, None
+def bet_or_pass_everyone_spoke_partner_leads_different_color(player_cards, partner_bid_color, partner_bid_value):
+    return bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_value, partner_bid_color)
 
 
 def bet_or_pass_expert_strategy(player, players_bids):
