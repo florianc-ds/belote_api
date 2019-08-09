@@ -12,6 +12,8 @@
             --> what if last to speak and no one spoke? (it should be an asset...)
             --> globalScore not used
 
+[IMPROVEMENT] expert.play.strategy.play_expert_strategy
+            --> appels
 
 [MISSING FEATURES]
             * (contre-)coinche
