@@ -171,7 +171,7 @@ def bet_or_pass_everyone_spoke_opponent_leads_different_color(player_cards,
         return 'pass', None, None
 
 
-def bet_or_pass_everyone_spoke_partner_leads_different_color(player_cards, partner_bid_color, partner_bid_value):
+def bet_or_pass_everyone_spoke_partner_leads_different_colors(player_cards, partner_bid_color, partner_bid_value):
     return bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_value, partner_bid_color)
 
 
@@ -239,7 +239,7 @@ def bet_or_pass_expert_strategy(player, player_cards, players_bids):
                 # ...and same color for player & partner
                 action, color, value = 'pass', None, None
             else:  # ...and different colors for player & partner
-                action, color, value = bet_or_pass_everyone_spoke_partner_leads_different_color(
+                action, color, value = bet_or_pass_everyone_spoke_partner_leads_different_colors(
                     player_cards,
                     players_bids[partner]['color'],
                     players_bids[partner]['value']
