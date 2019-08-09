@@ -172,7 +172,7 @@ def bet_or_pass_everyone_spoke_opponent_leads_different_color(player_cards,
 
 
 def bet_or_pass_everyone_spoke_partner_leads_different_colors(player_cards, partner_bid_color, partner_bid_value):
-    return bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_value, partner_bid_color)
+    return bet_or_pass_only_player_partner_spoke_different_colors(player_cards, partner_bid_color, partner_bid_value)
 
 
 def bet_or_pass_expert_strategy(player, player_cards, players_bids):
