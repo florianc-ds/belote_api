@@ -1,6 +1,7 @@
 from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATIONS, AGGRESSIVE_SUPPORT_COMBINATIONS
 from helpers.common_helpers import create_card
 from helpers.constants import COLORS, NEXT_PLAYER
+from helpers.exceptions import UnhandledBetOrPassCaseException
 
 
 # COMBINATION RELATED HELPERS
@@ -121,8 +122,7 @@ def bet_or_pass_only_opponents_spoke(player_cards, opponent_bid_value):
     elif best_score > opponent_bid_value:
         return 'bet', best_color, best_score
     else:
-        print("RAISE EXCEPTION")
-        return None, None, None
+        raise UnhandledBetOrPassCaseException()
 
 
 def bet_or_pass_only_partner_spoke(player_cards, partner_bid_color, partner_bid_value):
@@ -218,8 +218,8 @@ def bet_or_pass_expert_strategy(player, player_cards, players_bids):
                 players_bids[partner]['value']
             )
         else:
-            print("RAISE EXCEPTION")
-            action, color, value = 'pass', None, None
+            raise UnhandledBetOrPassCaseException(f'Leader ({leader}) is neither among opponents ({opponents}) '
+                                                  f'nor partner ({partner})')
     elif {player, partner}.issubset(speakers) and (speakers & set(opponents)):  # everyone spoke...
         leader = extract_leader(players_bids)
         if leader in opponents:  # ...and opponent leads...
@@ -245,10 +245,11 @@ def bet_or_pass_expert_strategy(player, player_cards, players_bids):
                     players_bids[partner]['value']
                 )
         else:
-            print("RAISE EXCEPTION")
-            action, color, value = 'pass', None, None
+            raise UnhandledBetOrPassCaseException(f'Leader ({leader}) is neither among opponents ({opponents}) '
+                                                  f'nor partner ({partner})')
     else:
-        print("RAISE EXCEPTION")
-        action, color, value = 'pass', None, None
+        raise UnhandledBetOrPassCaseException(f'Following configuration is not handled: speakers are: {speakers} '
+                                              f'while player is {player}, partner is {partner} '
+                                              f'and opponents: {opponents}')
 
     return action, color, value

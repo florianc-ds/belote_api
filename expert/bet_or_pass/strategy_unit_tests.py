@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import pytest
 
 from expert.bet_or_pass.combinations import MAIN_COMBINATIONS, SUPPORT_COMBINATIONS
@@ -8,7 +10,10 @@ from expert.bet_or_pass.strategy import (
     have_player_and_partner_spoken_over_same_color,
     extract_leader,
     get_best_opponent_bid,
+    bet_or_pass_only_opponents_spoke,
+    bet_or_pass_expert_strategy,
 )
+from helpers.exceptions import UnhandledBetOrPassCaseException
 
 
 @pytest.mark.parametrize(
@@ -215,3 +220,42 @@ def test_compute_best_color_bet_without_value_info():
 )
 def test_compute_support_score(player_cards, expected):
     assert compute_support_score(player_cards, 's', SUPPORT_COMBINATIONS) == expected
+
+
+def test_bet_or_pass_expert_strategy_unhandled_case_exception_1():
+    with pytest.raises(UnhandledBetOrPassCaseException), \
+         patch('expert.bet_or_pass.strategy.extract_leader') as extract_leader_mock:
+        extract_leader_mock.return_value  = None
+        bet_or_pass_expert_strategy(
+            player='south',
+            player_cards=[],
+            players_bids={
+                'west': {'value': 100, 'color': 'h'}, 'east': {'value': 80, 'color': 'h'},
+                'north': {'value': 90, 'color': 'c'}, 'south': {'value': None, 'color': None}
+            },
+        )
+
+
+def test_bet_or_pass_expert_strategy_unhandled_case_exception_2():
+    with pytest.raises(UnhandledBetOrPassCaseException), \
+         patch('expert.bet_or_pass.strategy.extract_leader') as extract_leader_mock:
+        extract_leader_mock.return_value = None
+        bet_or_pass_expert_strategy(
+            player='south',
+            player_cards=[],
+            players_bids={
+                'west': {'value': None, 'color': None}, 'east': {'value': 90, 'color': 'h'},
+                'north': {'value': 100, 'color': 'c'}, 'south': {'value': 80, 'color': 's'}
+            },
+        )
+
+
+def test_bet_or_pass_expert_strategy_unhandled_case_exception_3():
+    with pytest.raises(UnhandledBetOrPassCaseException), \
+         patch('expert.bet_or_pass.strategy.extract_speakers') as extract_speakers_mock:
+        extract_speakers_mock.return_value = {'mock_speaker_1', 'mock_speaker_2'}
+        bet_or_pass_expert_strategy(
+            player='south',
+            player_cards=[],
+            players_bids={},
+        )

@@ -2,11 +2,6 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK] Manage unhandled cases in bet_or_pass_expert_strategy
-            --> create UnhandledBetOrPassCaseException exception
-            --> raise UnhandledBetOrPassCaseException in bet_or_pass_expert_strategy
-            --> test exceptions are raised
-
 [BACK] Bind bet_or_pass_expert_strategy to API
             --> update bet_or_pass_expert_strategy parameters
             --> call bet_or_pass_expert_strategy in app.py
