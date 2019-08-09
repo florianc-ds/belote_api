@@ -1,0 +1,301 @@
+[
+   {
+      "_description": "none spoke, good hand",
+      "player": "south",
+      "player_cards": ["7s", "8s", "9s", "Js", "Kh", "10h", "8c", "Ad"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": null, "color": null}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_none_spoke",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 100
+   },
+   {
+      "_description": "none spoke, useless hand",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "Kh", "10h", "Ah", "Jc", "Qd"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": null, "color": null}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_none_spoke",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only opponents spoke, useless hand",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "Kh", "10h", "Ah", "Jc", "Qd"],
+      "players_bids": {
+         "west": {"value": 90, "color": "d"}, "east": {"value": 80, "color": "d"},
+         "north": {"value": null, "color": null}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponents_spoke",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only opponent spoke, has to upgrade own anticipated bid to compete",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "Kh", "10h", "Jc", "Qd", "Kd"],
+      "players_bids": {
+         "west": {"value": 80, "color": "d"}, "east": {"value": null, "color": null},
+         "north": {"value": null, "color": null}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponents_spoke",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 90
+   },
+   {
+      "_description": "only opponents spoke, better hand than opponents",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "As", "Kh", "Ah", "Qd", "Kd"],
+      "players_bids": {
+         "west": {"value": 80, "color": "d"}, "east": {"value": null, "color": null},
+         "north": {"value": null, "color": null}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponents_spoke",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 100
+   },
+   {
+      "_description": "only partner spoke, better hand than partner",
+      "player": "south",
+      "player_cards": ["Js", "Qs", "Ks", "10s", "7h", "8h", "Kc", "Jd"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 80, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_partner_spoke",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 100
+   },
+   {
+      "_description": "only partner spoke, no good hand but can support partner",
+      "player": "south",
+      "player_cards": ["9s", "Js",  "7h", "8h", "9c", "Jd", "7d", "10d"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 80, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_partner_spoke",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 90
+   },
+   {
+      "_description": "only partner spoke, useless hand",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "7h", "8h", "Jh", "7d", "8d"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 80, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_partner_spoke",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only player & partner spoke over same color",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "7h", "8h", "Jh", "7d", "8d"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 90, "color": "s"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "pass",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only player & partner spoke over different color, but player can support partner",
+      "player": "south",
+      "player_cards": ["7s", "Js", "As", "Kh", "Ah", "7d", "9d", "Ad"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 100, "color": "c"}, "south": {"value": 90, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_player_partner_spoke_different_colors",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 120
+   },
+   {
+      "_description": "only player & partner spoke over different color, can not support",
+      "player": "south",
+      "player_cards": ["Js", "Qs", "Ks", "7h", "8h", "10h", "9d", "Qh"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": null, "color": null},
+         "north": {"value": 90, "color": "c"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_player_partner_spoke_different_colors",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only opponents & partner spoke and opponent leads, wonderful hand",
+      "player": "south",
+      "player_cards": ["7s", "8s", "9s", "Js", "10h", "Ah", "Kc", "Kd"],
+      "players_bids": {
+         "west": {"value": 100, "color": "h"}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_opponent_leads",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 110
+   },
+   {
+      "_description": "only opponents & partner spoke and opponent leads, can aggressively support partner",
+      "player": "south",
+      "player_cards": ["7s", "Js", "Qs", "8h", "10h", "9c", "10c", "Qd"],
+      "players_bids": {
+         "west": {"value": 100, "color": "h"}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_opponent_leads",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 110
+   },
+   {
+      "_description": "only opponents & partner spoke and opponent leads, hand not good enough to upgrade",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "7h", "8h", "7c", "8c", "Qd"],
+      "players_bids": {
+         "west": {"value": 100, "color": "h"}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_opponent_leads",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "only opponent & partner spoke and partner leads, better hand than partner",
+      "player": "south",
+      "player_cards": ["9s", "Qs", "Ks", "10s", "As", "7h", "8h", "10h"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_partner_leads",
+      "_expected_action": "bet",
+      "_expected_color": "s",
+      "_expected_value": 110
+   },
+   {
+      "_description": "only opponent & partner spoke and partner leads, no good hand but can support partner",
+      "player": "south",
+      "player_cards": ["7s", "8s", "Js", "Qs", "8h", "Qc", "Kc", "10d"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_partner_leads",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 110
+   },
+   {
+      "_description": "only opponent & partner spoke and partner leads, useless hand",
+      "player": "south",
+      "player_cards": ["7s", "Ks", "10s", "7h", "Kh", "10h", "7d", "Kd"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 80, "color": "h"},
+         "north": {"value": 90, "color": "c"}, "south": {"value": null, "color": null}
+      },
+      "_bet_or_pass_block": "bet_or_pass_only_opponent_partner_spoke_partner_leads",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "everyone spoke and opponent leads and same color for player & partner",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "Kh", "10h", "7d", "Kd", "10d"],
+      "players_bids": {
+         "west": {"value": 110, "color": "h"}, "east": {"value": 90, "color": "h"},
+         "north": {"value": 100, "color": "s"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "pass",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "everyone spoke and opponent leads and different color for player & partner, can aggressively support partner",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "7h", "8h", "Jc", "Kd", "10d"],
+      "players_bids": {
+         "west": {"value": 110, "color": "h"}, "east": {"value": 90, "color": "h"},
+         "north": {"value": 100, "color": "c"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_everyone_spoke_opponent_leads_different_color",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 120
+   },
+   {
+      "_description": "everyone spoke and opponent leads and different color for player & partner, hand not good enough to support partner",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "7h", "8h", "9c", "Kd", "10d"],
+      "players_bids": {
+         "west": {"value": 110, "color": "h"}, "east": {"value": 90, "color": "h"},
+         "north": {"value": 100, "color": "c"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_everyone_spoke_opponent_leads_different_color",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "everyone spoke and partner leads and same color for player & partner",
+      "player": "south",
+      "player_cards": ["7s"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 90, "color": "h"},
+         "north": {"value": 100, "color": "s"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "pass",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
+      "_description": "everyone spoke and partner leads and different colors for player & partner, can support partner",
+      "player": "south",
+      "player_cards": ["7s", "Js", "As", "7h", "Kh", "7c", "Jd", "Ad"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 100, "color": "h"},
+         "north": {"value": 110, "color": "c"}, "south": {"value": 90, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_everyone_spoke_partner_leads_different_colors",
+      "_expected_action": "bet",
+      "_expected_color": "c",
+      "_expected_value": 120
+   },
+   {
+      "_description": "everyone spoke and partner leads and different colors for player & partner, hand not good enough to support partner",
+      "player": "south",
+      "player_cards": ["7s", "9s", "Js", "7h", "8h", "7c", "8c", "Kd"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 90, "color": "h"},
+         "north": {"value": 100, "color": "c"}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "bet_or_pass_everyone_spoke_partner_leads_different_colors",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   }
+]

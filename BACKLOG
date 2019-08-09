@@ -2,10 +2,6 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK] Implement bet_or_pass_... blocks
-            --> implement according to doc
-            --> add test(s)
-
 [BACK] Manage unhandled cases in bet_or_pass_expert_strategy
             --> create UnhandledBetOrPassCaseException exception
             --> raise UnhandledBetOrPassCaseException in bet_or_pass_expert_strategy
