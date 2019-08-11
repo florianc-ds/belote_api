@@ -7,6 +7,7 @@ from functools import update_wrapper
 from flask import Flask
 from flask import make_response, request, current_app
 
+from expert.bet_or_pass.strategy import bet_or_pass_expert_strategy
 from expert.play.strategy import play_expert_strategy
 from helpers.bet_or_pass_helpers import bet_or_pass_template
 from helpers.play_helpers import play_template
@@ -170,8 +171,8 @@ def bet_or_pass_expert():
         data = json.loads(request.data)
         response = bet_or_pass_template(
             data=data,
-            used_fields=['playersBids'],
-            strategy=bet_or_pass_random_strategy,
+            used_fields=['player', 'playerCards', 'playersBids'],
+            strategy=bet_or_pass_expert_strategy,
         )
 
         return json.dumps(response)

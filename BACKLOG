@@ -2,9 +2,6 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK] Bind bet_or_pass_expert_strategy to API
-            --> update bet_or_pass_expert_strategy parameters
-            --> call bet_or_pass_expert_strategy in app.py
 
 
 [IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
