@@ -6,18 +6,43 @@
     - partner leads at color c but player only has trumps in hands --> crashed...
         LEAF 03001
         data: {'player': 'north', 'trumpColor': 's', 'playerCards': ['8s', 'Qs', 'Ks', '10s', 'Js'], 'cardsPlayability': [True, True, True, True, True], 'round': 3, 'roundCards': {'west': '9c', 'east': '7c', 'north': None, 'south': 'Ac'}, 'roundColor': 'c', 'gameHistory': {'west': ['Ad', '9h', 'Qd', '9c'], 'east': ['8d', 'Ah', '9d', '7c'], 'north': ['Kd', 'Kh', '8h'], 'south': ['7d', '9s', 'Jd', 'Ac']}, 'roundsFirstPlayer': ['west', 'west', 'south', 'west'], 'contract': 110, 'contractTeam': 'north/south', 'globalScore': {'east/west': 0, 'north/south': 0}}
+
+[BACK][BUG] helpers.exceptions.UnhandledBetOrPassCaseException
+        CASE 1:
+        helpers.exceptions.UnhandledBetOrPassCaseException: Following configuration is not handled: speakers are: {'north', 'south', 'east'} while player is east, partner is west and opponents: ['north', 'south']
+        data: {'player': 'east', 'playerCards': ['Ah', '7s', '8s', '9s', 'As', '7c', 'Jc', 'Kc'], 'playersBids': {'west': {'value': None, 'color': None}, 'east': {'value': 100, 'color': 's'}, 'north': {'value': 110, 'color': 'd'}, 'south': {'value': 90, 'color': 'd'}}, 'auctionPassedTurnInRow': 2, 'globalScore': {'east/west': 2496, 'north/south': 1866}, 'gameFirstPlayer': 'south'}
+        CASE 2:
+        helpers.exceptions.UnhandledBetOrPassCaseException: Following configuration is not handled: speakers are: {'west', 'north'} while player is west, partner is east and opponents: ['south', 'north']
+        data: {'player': 'west', 'playerCards': ['7h', 'Kh', '7d', 'Jd', '10d', 'Ad', 'Qc', 'Kc'], 'playersBids': {'west': {'value': 80, 'color': 'd'}, 'east': {'value': None, 'color': None}, 'north': {'value': 100, 'color': 's'}, 'south': {'value': None, 'color': None}}, 'auctionPassedTurnInRow': 0, 'globalScore': {'east/west': 2559, 'north/south': 2357}, 'gameFirstPlayer': 'west'}
+
+[BACK] play expert should be more clever:
     - player cut but partner led with Ace...
         LEAF 020001
         data: {'player': 'west', 'trumpColor': 'c', 'playerCards': ['Qh', '7s', 'Js', '8d', 'Jd', 'Qd', 'Qc'], 'cardsPlayability': [False, False, False, True, True, True, False], 'round': 1, 'roundCards': {'west': None, 'east': 'Kd', 'north': '7c', 'south': 'Ad'}, 'roundColor': 'd', 'gameHistory': {'west': ['Ad', '9h', 'Qd', '9c', '10s'], 'east': ['8d', 'Ah', '9d', '7c', '8s', 'Kd'], 'north': ['Kd', 'Kh', '8h', 'Ks', '7c'], 'south': ['7d', '9s', 'Jd', 'Ac', 'As', 'Ad']}, 'roundsFirstPlayer': ['west', 'south'], 'contract': 110, 'contractTeam': 'north/south', 'globalScore': {'east/west': 0, 'north/south': 0}}
     - player plays 10 when opponent opened with Ace (color), while he had 9 in hand...
         LEAF 01011
         data: {'player': 'north', 'trumpColor': 's', 'playerCards': ['Kh', '9d', '10d', 'Jc', 'Qc', 'Kc'], 'cardsPlayability': [False, True, True, False, False, False], 'round': 2, 'roundCards': {'west': None, 'east': 'Ad', 'north': None, 'south': None}, 'roundColor': 'd', 'gameHistory': {'west': ['Ad', '9h', 'Qd', '9c', '10s', 'Jd', 'Qh', 'Qc', '8d', 'Js', 'Qd', '7s', '10s', '8s'], 'east': ['8d', 'Ah', '9d', '7c', '8s', 'Kd', 'Ah', '9c', 'Kh', 'Ac', 'Jh', '9d', 'Js', '9s', 'Ad'], 'north': ['Kd', 'Kh', '8h', 'Ks', '7c', '10h', 'Jc', '9h', '8c', 'Kc', '10c', 'As', '8c'], 'south': ['7d', '9s', 'Jd', 'Ac', 'As', 'Ad', '8h', '7d', '7h', '9s', 'Qs', '10d', '7s', '8h']}, 'roundsFirstPlayer': ['west', 'east', 'east'], 'contract': 120, 'contractTeam': 'east/west', 'globalScore': {'east/west': 0, 'north/south': 0}}
+    - west bet on 'h', when partner (east) plays first in round, he should open at 'h' if west did not do it yet
+        CASE 1:
+        LEAF 0011100
+        data: {'player': 'east', 'trumpColor': 'h', 'playerCards': ['10h', '9s', 'Qs', '8d', '10c'], 'cardsPlayability': [True, True, True, True, True], 'round': 3, 'roundCards': {'west': None, 'east': None, 'north': None, 'south': None}, 'roundColor': None, 'gameHistory': {'west': ['8s', '9c', 'Qd'], 'east': ['7s', 'Kc', 'Ad'], 'north': ['As', '7c', 'Jd'], 'south': ['10d', 'Ac', '7d']}, 'roundsFirstPlayer': ['north', 'north', 'south', 'east'], 'contract': 90, 'contractTeam': 'east/west', 'globalScore': {'east/west': 1481, 'north/south': 1571}}
+        CASE 2:
+        LEAF 0011100
+        [2019-08-14 19:57:54,016] INFO in play_helpers: data: {'player': 'east', 'trumpColor': 'h', 'playerCards': ['Kh', '7s', '8d', 'Qd', 'Kd', 'Qc', 'Kc', 'Ac'], 'cardsPlayability': [True, True, True, True, True, True, True, True], 'round': 0, 'roundCards': {'west': None, 'east': None, 'north': None, 'south': None}, 'roundColor': None, 'gameHistory': {'west': [], 'east': [], 'north': [], 'south': []}, 'roundsFirstPlayer': ['east'], 'contract': 100, 'contractTeam': 'east/west', 'globalScore': {'east/west': 2559, 'north/south': 2095}}
+
+[BACK] Expert agent should speak:
+    - (J+7+8+10)+A
+        data: {'player': 'north', 'playerCards': ['Ah', '8s', '7d', '8d', 'Jd', '10d', 'Jc', '10c'], 'playersBids': {'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None}, 'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None}}, 'auctionPassedTurnInRow': 0, 'globalScore': {'east/west': 850, 'north/south': 1064}, 'gameFirstPlayer': 'east'}
 
 [BACK] Make random & highest_card less aggressive while bidding
+    - random_agent.RANDOM_BET_PROBABILITY=0.3 for instance
+    - highest_card_agent.HIGHEST_CARD_MIN_POINTS=50 for instance
 
 [FRONT][BUG] Check that belote is taken into account while checking if contract has been filled <== not sure it is the case
 
-[FRONT][BUG] When game restarts and agent must talk first, it does not trigger automatically...
+[FRONT][BUG] When game restarts (after it ended or none spoke) and agent must talk first, it does not trigger automatically...
+
+[FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
 
 [IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
             --> what if first to play? (it should be an asset...) (gameFirstPlayer not used)
