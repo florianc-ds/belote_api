@@ -38,10 +38,6 @@
     - random_agent.RANDOM_BET_PROBABILITY=0.3 for instance
     - highest_card_agent.HIGHEST_CARD_MIN_POINTS=50 for instance
 
-[FRONT][BUG] Check that belote is taken into account while checking if contract has been filled <== not sure it is the case
-
-[FRONT][BUG] When game restarts (after it ended or none spoke) and agent must talk first, it does not trigger automatically...
-
 [FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
 
 [IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
@@ -53,6 +49,6 @@
             --> appels
 
 [MISSING FEATURES]
-            * (contre-)coinche
+            * (sur-)coinche
             * (annonces)
             * sans/tout atout
