@@ -221,6 +221,19 @@
       "_expected_value": null
    },
    {
+      "_description": "only opponent & player spoke",
+      "player": "south",
+      "player_cards": ["9s", "Js", "7h", "8h", "7c", "8c", "7d", "8d"],
+      "players_bids": {
+         "west": {"value": null, "color": null}, "east": {"value": 90, "color": "h"},
+         "north": {"value": null, "color": null}, "south": {"value": 80, "color": "s"}
+      },
+      "_bet_or_pass_block": "pass",
+      "_expected_action": "pass",
+      "_expected_color": null,
+      "_expected_value": null
+   },
+   {
       "_description": "everyone spoke and opponent leads and same color for player & partner",
       "player": "south",
       "player_cards": ["7s", "9s", "Js", "Kh", "10h", "7d", "Kd", "10d"],

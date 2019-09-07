@@ -220,6 +220,9 @@ def bet_or_pass_expert_strategy(player, player_cards, players_bids):
         else:
             raise UnhandledBetOrPassCaseException(f'Leader ({leader}) is neither among opponents ({opponents}) '
                                                   f'nor partner ({partner})')
+    elif speakers.issubset(set(opponents + [player])):  # only opponents & player spoke (opponents are leading)
+        # we consider player first bet is already the highest he can place
+        action, color, value = 'pass', None, None
     elif {player, partner}.issubset(speakers) and (speakers & set(opponents)):  # everyone spoke...
         leader = extract_leader(players_bids)
         if leader in opponents:  # ...and opponent leads...
