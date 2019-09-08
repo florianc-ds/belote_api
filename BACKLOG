@@ -2,19 +2,6 @@
             - bugs (fix them)
             - expert play strategy oddities
 
-[BACK][BUG] play expert fails when:
-    - partner leads at color c but player only has trumps in hands --> crashed...
-        LEAF 03001
-        data: {'player': 'north', 'trumpColor': 's', 'playerCards': ['8s', 'Qs', 'Ks', '10s', 'Js'], 'cardsPlayability': [True, True, True, True, True], 'round': 3, 'roundCards': {'west': '9c', 'east': '7c', 'north': None, 'south': 'Ac'}, 'roundColor': 'c', 'gameHistory': {'west': ['Ad', '9h', 'Qd', '9c'], 'east': ['8d', 'Ah', '9d', '7c'], 'north': ['Kd', 'Kh', '8h'], 'south': ['7d', '9s', 'Jd', 'Ac']}, 'roundsFirstPlayer': ['west', 'west', 'south', 'west'], 'contract': 110, 'contractTeam': 'north/south', 'globalScore': {'east/west': 0, 'north/south': 0}}
-
-[BACK][BUG] helpers.exceptions.UnhandledBetOrPassCaseException
-        CASE 1:
-        helpers.exceptions.UnhandledBetOrPassCaseException: Following configuration is not handled: speakers are: {'north', 'south', 'east'} while player is east, partner is west and opponents: ['north', 'south']
-        data: {'player': 'east', 'playerCards': ['Ah', '7s', '8s', '9s', 'As', '7c', 'Jc', 'Kc'], 'playersBids': {'west': {'value': None, 'color': None}, 'east': {'value': 100, 'color': 's'}, 'north': {'value': 110, 'color': 'd'}, 'south': {'value': 90, 'color': 'd'}}, 'auctionPassedTurnInRow': 2, 'globalScore': {'east/west': 2496, 'north/south': 1866}, 'gameFirstPlayer': 'south'}
-        CASE 2:
-        helpers.exceptions.UnhandledBetOrPassCaseException: Following configuration is not handled: speakers are: {'west', 'north'} while player is west, partner is east and opponents: ['south', 'north']
-        data: {'player': 'west', 'playerCards': ['7h', 'Kh', '7d', 'Jd', '10d', 'Ad', 'Qc', 'Kc'], 'playersBids': {'west': {'value': 80, 'color': 'd'}, 'east': {'value': None, 'color': None}, 'north': {'value': 100, 'color': 's'}, 'south': {'value': None, 'color': None}}, 'auctionPassedTurnInRow': 0, 'globalScore': {'east/west': 2559, 'north/south': 2357}, 'gameFirstPlayer': 'west'}
-
 [BACK] play expert should be more clever:
     - player cut but partner led with Ace...
         LEAF 020001
