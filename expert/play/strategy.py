@@ -350,7 +350,10 @@ def play_expert_first_in_round(player, contract_team, player_cards, playable_car
                     return get_highest_trump_card(playable_cards, trump_color)
                 else:
                     # LEVEL 6
-                    if has_several_trumps(playable_cards, trump_color):
+                    if (
+                            has_several_trumps(playable_cards, trump_color)
+                            or not has_color_already_been_asked(trump_color, game_history, round, rounds_first_player)
+                    ):
                         logger.info('LEAF 0011101')
                         return get_lowest_trump_card(playable_cards, trump_color)
                     else:
