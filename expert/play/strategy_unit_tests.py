@@ -26,6 +26,7 @@ from expert.play.strategy import (
     get_winning_cards,
     can_opponents_cut,
     has_several_trumps,
+    has_color_already_been_asked,
 )
 from helpers.exceptions import UnhandledPlayCaseException
 
@@ -302,6 +303,21 @@ def test_has_several_trumps(hand_cards, expected):
 def test_can_opponents_cut(player, hand_cards, game_history, current_round, rounds_first_player, trump_color, expected):
     assert can_opponents_cut(player, hand_cards, game_history,
                              current_round, rounds_first_player, trump_color) == expected
+
+
+@pytest.mark.parametrize(
+    'game_history, current_round, rounds_first_player, expected',
+    [
+        ({'west': [], 'east': [], 'north': [], 'south': []}, 0, ['south'], False),
+        ({'west': ['7d'], 'east': ['Js'], 'north': ['As'], 'south': ['7s']}, 1, ['south', 'west'], True),
+        (
+                {'west': ['8d', 'Ah', 'As'], 'east': ['Jd', 'Kh'], 'north': ['Ad', '7h'], 'south': ['7d', '8h', 'Ks']},
+                2, ['south', 'north', 'west'], False
+        ),
+    ]
+)
+def test_has_color_already_been_asked(game_history, current_round, rounds_first_player, expected):
+    assert has_color_already_been_asked('s', game_history, current_round, rounds_first_player) == expected
 
 
 @pytest.mark.parametrize(

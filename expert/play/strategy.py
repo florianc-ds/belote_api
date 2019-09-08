@@ -214,6 +214,12 @@ def can_opponents_cut(player, hand_cards, game_history, current_round, rounds_fi
     return False
 
 
+def has_color_already_been_asked(color, game_history, current_round, rounds_first_player):
+    rounds_first_cards = [game_history[round_first_player][round]
+                          for round, round_first_player in enumerate(rounds_first_player[:current_round])]
+    return color in [extract_color(card) for card in rounds_first_cards]
+
+
 def count_round_points(round_cards, trump_color, round):
     # Automatically add 10 points for last round
     points = 0 if round != 7 else 10
