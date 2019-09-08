@@ -84,6 +84,16 @@ MAIN_COMBINATIONS = [
         ]
     },
     {
+        'trigger': 'J+10+8+7',
+        'bonus': [
+            {
+                'pattern': 'A',
+                'trump': False,
+                'value': {1: 10, 2: 10, 3: 20}
+            },
+        ]
+    },
+    {
         'trigger': 'J+K+Q',
         'bonus': [
             {
