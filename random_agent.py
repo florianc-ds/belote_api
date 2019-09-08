@@ -6,7 +6,7 @@ from helpers.bet_or_pass_helpers import derive_currently_highest_bid_value
 from helpers.constants import COLORS
 from helpers.play_helpers import derive_playable_cards
 
-RANDOM_BET_PROBABILITY = 0.5
+RANDOM_BET_PROBABILITY = 0.3
 RANDOM_COLOR_WEIGHTS = [1, 1, 1, 1]
 RANDOM_VALUE_NORMAL_MU = 0.
 RANDOM_VALUE_NORMAL_SIGMA = 2.3

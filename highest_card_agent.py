@@ -5,7 +5,7 @@ from helpers.common_helpers import extract_value, extract_color
 from helpers.constants import TRUMP_POINTS, PLAIN_POINTS, COLORS
 from helpers.play_helpers import derive_playable_cards
 
-HIGHEST_CARD_MIN_POINTS = 35  # (J, 9, A)
+HIGHEST_CARD_MIN_POINTS = 50  # (J, 9, A)
 MAX_POINTS_IN_HAND = 93  # (J, 9, A, 10 (Trump) + A * 3 + 10)
 # raw_value = K * (points) ^ A
 # K * (HIGHEST_CARD_MIN_POINTS) ^ A = 80
