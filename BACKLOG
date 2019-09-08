@@ -1,23 +1,20 @@
-[FRONT] Try new route /expert/play and search for
-            - bugs (fix them)
-            - expert play strategy oddities
+[FEATURES] implement:
+    - Manage CORS issues
+    - Implement a "DEV" mode -> when disabled, other players' cards are hidden
+    - Add a first page that lets player decide its side and fellows
 
-[BACK] Expert agent should speak:
-    - (J+7+8+10)+A
-        data: {'player': 'north', 'playerCards': ['Ah', '8s', '7d', '8d', 'Jd', '10d', 'Jc', '10c'], 'playersBids': {'west': {'value': None, 'color': None}, 'east': {'value': None, 'color': None}, 'north': {'value': None, 'color': None}, 'south': {'value': None, 'color': None}}, 'auctionPassedTurnInRow': 0, 'globalScore': {'east/west': 850, 'north/south': 1064}, 'gameFirstPlayer': 'east'}
 
-[BACK] Make random & highest_card less aggressive while bidding
-    - random_agent.RANDOM_BET_PROBABILITY=0.3 for instance
-    - highest_card_agent.HIGHEST_CARD_MIN_POINTS=50 for instance
+[REINFORCEMENT] Implement reinforcement agent..!
 
-[FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
 
-[IMPROVEMENT] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
+[IMPROVEMENT][FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
+
+[IMPROVEMENT][BACK] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
             --> what if first to play? (it should be an asset...) (gameFirstPlayer not used)
             --> what if last to speak and no one spoke? (it should be an asset...)
             --> globalScore not used
 
-[IMPROVEMENT] expert.play.strategy.play_expert_strategy
+[IMPROVEMENT][BACK] expert.play.strategy.play_expert_strategy
             --> appels
 
 [MISSING FEATURES]
