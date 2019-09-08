@@ -77,370 +77,88 @@
                         "_expected": "Ad"
                      }
                   }
-               }
-            },
-            "NO": {
-               "YES": {
-                  "_id": "001101",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["As", "7d", "Kd", "Jc", "10c", "10h"],
-                  "cards_playability": [true, true, true, true, true, true],
-                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                  "trump_color": "s",
-                  "round_color": null,
-                  "round": 2,
-                  "game_history": {"west": ["7s", "8s"], "south": ["Js", "9s"], "east": ["Qs", "Ks"], "north": ["10s", "10d"]},
-                  "rounds_first_player": ["south", "south", "south"],
-                  "_final_leaf_id": "001000",
-                  "_expected": "7d"
-               },
-               "NO": {
-                  "_id": "001100",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As"],
-                  "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                  "trump_color": "s",
-                  "round_color": null,
-                  "round": 0,
-                  "game_history": {"west": [], "south": [], "east": [], "north": []},
-                  "rounds_first_player": ["south"],
-                  "_expected": "7s"
-               }
-            }
-         },
-         "NO": {
-            "YES": {
-               "_id": "00101",
-               "player": "south",
-               "contract_team": "south/north",
-               "player_cards": ["7s", "As", "7c", "8c", "Qc", "Ac"],
-               "cards_playability": [true, true, true, true, true, true],
-               "round_cards": {"west": null, "south": null, "east": null, "north": null},
-               "trump_color": "h",
-               "round_color": null,
-               "round": 2,
-               "game_history": {"west": ["8s", "Ad"], "south": ["10s", "8h"], "east": ["Ks", "9d"], "north": ["7h", "7d"]},
-               "rounds_first_player": ["east", "north", "south"],
-               "_expected": "Ac"
-            },
-            "NO": {
-               "YES": {
-                  "_id": "001001",
-                  "player": "south",
-                  "contract_team": "south/north",
-                  "player_cards": ["7s", "9s", "10s", "8d", "Qc"],
-                  "cards_playability": [true, true, true, true, true],
-                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                  "trump_color": "h",
-                  "round_color": null,
-                  "round": 3,
-                  "game_history": {"west": ["10h", "8s", "Kc"], "south": ["7h", "Kh", "Ac"], "east": ["8h", "7d", "10c"], "north": ["Jh", "9h", "7c"]},
-                  "rounds_first_player": ["north", "north", "north", "south"],
-                  "_expected": "Qc"
-               },
-               "NO": {
-                  "_id": "001000",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "8s", "10s", "Qd", "Kd", "10d", "10c"],
-                  "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                  "trump_color": "h",
-                  "round_color": null,
-                  "round": 0,
-                  "game_history": {"west": ["8c"], "south": ["Ac"], "east": ["7c"], "north": ["Jc"]},
-                  "rounds_first_player": ["south", "south"],
-                  "_expected": "7s"
-               }
-            }
-         }
-      },
-      "NO": {
-         "YES": {
-            "_id": "0001",
-            "player": "south",
-            "contract_team": "east/west",
-            "player_cards": ["7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As"],
-            "cards_playability": [true, true, true, true, true, true, true, true],
-            "round_cards": {"west": null, "south": null, "east": null, "north": null},
-            "trump_color": "s",
-            "round_color": null,
-            "round": 0,
-            "game_history": {"west": [], "south": [], "east": [], "north": []},
-            "rounds_first_player": ["south"],
-            "_expected": "7s"
-         },
-         "NO": {
-            "YES": {
-               "_id": "00001",
-               "player": "south",
-               "contract_team": "east/west",
-               "player_cards": ["7s", "As", "7d", "Ad", "7c", "Ac", "7h", "Ah"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": null, "south": null, "east": null, "north": null},
-               "trump_color": null,
-               "round_color": null,
-               "round": 0,
-               "game_history": {"west": [], "south": [], "east": [], "north": []},
-               "rounds_first_player": ["south"],
-               "_expected": "As"
-            },
-            "NO": {
-               "YES": {
-                  "_id": "000001",
-                  "player": "south",
-                  "contract_team": "east/west",
-                  "player_cards": ["8s", "Ks", "10s", "8c", "10c", "Kh"],
-                  "cards_playability": [true, true, true, true, true, true],
-                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                  "trump_color": "h",
-                  "round_color": null,
-                  "round": 2,
-                  "game_history": {"west": ["7h", "Ad"], "south": ["7s", "8h"], "east": ["Js", "7d"], "north": ["As", "10d"]},
-                  "rounds_first_player": ["north", "west", "south"],
-                  "_expected": "8s"
                },
                "NO": {
                   "YES": {
-                     "_id": "0000001",
+                     "_id": "001101",
                      "player": "south",
-                     "contract_team": "east/west",
-                     "player_cards": ["7s", "8s", "9s", "Qd", "Kd"],
+                     "contract_team": "north/south",
+                     "player_cards": ["As", "7d", "Kd", "Jc", "10c", "10h"],
+                     "cards_playability": [true, true, true, true, true, true],
+                     "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                     "trump_color": "s",
+                     "round_color": null,
+                     "round": 2,
+                     "game_history": {
+                        "west": ["7s", "8s"], "south": ["Js", "9s"], "east": ["Qs", "Ks"], "north": ["10s", "10d"]
+                     },
+                     "rounds_first_player": ["south", "south", "south"],
+                     "_final_leaf_id": "001000",
+                     "_expected": "7d"
+                  },
+                  "NO": {
+                     "_id": "001100",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As"],
+                     "cards_playability": [true, true, true, true, true, true, true, true],
+                     "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                     "trump_color": "s",
+                     "round_color": null,
+                     "round": 0,
+                     "game_history": {"west": [], "south": [], "east": [], "north": []},
+                     "rounds_first_player": ["south"],
+                     "_expected": "7s"
+                  }
+               }
+            },
+            "NO": {
+               "YES": {
+                  "_id": "00101",
+                  "player": "south",
+                  "contract_team": "south/north",
+                  "player_cards": ["7s", "As", "7c", "8c", "Qc", "Ac"],
+                  "cards_playability": [true, true, true, true, true, true],
+                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                  "trump_color": "h",
+                  "round_color": null,
+                  "round": 2,
+                  "game_history": {
+                     "west": ["8s", "Ad"], "south": ["10s", "8h"], "east": ["Ks", "9d"], "north": ["7h", "7d"]
+                  },
+                  "rounds_first_player": ["east", "north", "south"],
+                  "_expected": "Ac"
+               },
+               "NO": {
+                  "YES": {
+                     "_id": "001001",
+                     "player": "south",
+                     "contract_team": "south/north",
+                     "player_cards": ["7s", "9s", "10s", "8d", "Qc"],
                      "cards_playability": [true, true, true, true, true],
                      "round_cards": {"west": null, "south": null, "east": null, "north": null},
                      "trump_color": "h",
                      "round_color": null,
                      "round": 3,
-                     "game_history": {"west": ["Jh", "9h", "7d"], "south": ["7h", "8h", "Ad"], "east": ["10h", "Qh", "10d"], "north": ["Kh", "Ah", "8d"]},
-                     "rounds_first_player": ["west", "west", "west", "south"],
-                     "_expected": "Kd"
+                     "game_history": {
+                        "west": ["10h", "8s", "Kc"], "south": ["7h", "Kh", "Ac"], "east": ["8h", "7d", "10c"],
+                        "north": ["Jh", "9h", "7c"]
+                     },
+                     "rounds_first_player": ["north", "north", "north", "south"],
+                     "_expected": "Qc"
                   },
                   "NO": {
-                     "_id": "0000000",
+                     "_id": "001000",
                      "player": "south",
-                     "contract_team": "east/west",
-                     "player_cards": ["7s", "Ks", "7d", "Kd", "7c", "Kc", "7h", "Kh"],
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "8s", "10s", "Qd", "Kd", "10d", "10c"],
                      "cards_playability": [true, true, true, true, true, true, true, true],
                      "round_cards": {"west": null, "south": null, "east": null, "north": null},
-                     "trump_color": "d",
+                     "trump_color": "h",
                      "round_color": null,
                      "round": 0,
-                     "game_history": {"west": [], "south": [], "east": [], "north": []},
-                     "rounds_first_player": ["south"],
-                     "_expected": "7c"
-                  }
-               }
-            }
-         }
-      }
-   },
-   "1": {
-      "YES": {
-         "YES": {
-            "_id": "0111",
-            "player": "south",
-            "contract_team": "north/south",
-            "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
-            "cards_playability": [false, false, true, false, true, false, false, false],
-            "round_cards": {"west": "Ah", "south": null, "east": null, "north": null},
-            "trump_color": "h",
-            "round_color": "h",
-            "round": 0,
-            "game_history": {"west": ["Ah"], "south": [], "east": [], "north": []},
-            "rounds_first_player": ["west"],
-            "_expected": "9h"
-         },
-         "NO": {
-            "_id": "0110",
-            "player": "south",
-            "contract_team": "north/south",
-            "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
-            "cards_playability": [true, true, true, true, true, true, true, true],
-            "round_cards": {"west": "Jd", "south": null, "east": null, "north": null},
-            "trump_color": "d",
-            "round_color": "d",
-            "round": 0,
-            "game_history": {"west": ["Jd"], "south": [], "east": [], "north": []},
-            "rounds_first_player": ["west"],
-            "_expected": "7h"
-         }
-      },
-      "NO": {
-         "YES": {
-            "YES": {
-               "_id": "01011",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
-               "cards_playability": [true, true, true, true, true, true, false],
-               "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
-               "trump_color": "d",
-               "round_color": "h",
-               "round": 1,
-               "game_history": {"west": ["Jd", "7h"], "south": ["7d"], "east": ["Ah"], "north": ["8d"]},
-               "rounds_first_player": ["west", "west"],
-               "_expected": "10h"
-            },
-            "NO": {
-               "_id": "01010",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s", "7c"],
-               "cards_playability": [true, true, true, true, true, true, false, false],
-               "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
-               "trump_color": "d",
-               "round_color": "h",
-               "round": 0,
-               "game_history": {"west": ["7h"], "south": [], "east": [], "north": []},
-               "rounds_first_player": ["west"],
-               "_expected": "8h"
-            }
-         },
-         "NO": {
-            "YES": {
-               "_id": "01001",
-               "player": "west",
-               "contract_team": "north/south",
-               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
-               "cards_playability": [true, true, true, true, true, true, true, false],
-               "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
-               "trump_color": "h",
-               "round_color": "d",
-               "round": 0,
-               "game_history": {"west": ["7d"], "south": [], "east": [], "north": []},
-               "rounds_first_player": ["west"],
-               "_expected": "7h"
-            },
-            "NO": {
-               "_id": "01000",
-               "player": "west",
-               "contract_team": "north/south",
-               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
-               "cards_playability": [true, true, true, true, true, true, true, false],
-               "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
-               "trump_color": "c",
-               "round_color": "d",
-               "round": 0,
-               "game_history": {"west": ["7d"], "south": [], "east": [], "north": []},
-               "rounds_first_player": ["west"],
-               "_expected": "7h"
-            }
-         }
-      }
-   },
-   "2": {
-      "YES": {
-         "YES": {
-            "_id": "0211",
-            "player": "south",
-            "contract_team": "north/south",
-            "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "9c"],
-            "cards_playability": [false, false, false, true, true, false, false, false],
-            "round_cards": {"west": "Qd", "south": null, "east": null, "north": "7d"},
-            "trump_color": "d",
-            "round_color": "d",
-            "round": 0,
-            "game_history": {"west": ["Qd"], "south": [], "east": [], "north": ["7d"]},
-            "rounds_first_player": ["north"],
-            "_expected": "Ad"
-         },
-         "NO": {
-            "YES": {
-               "_id": "02101",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": "8h", "south": null, "east": null, "north": "Jh"},
-               "trump_color": "h",
-               "round_color": "h",
-               "round": 0,
-               "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["Jh"]},
-               "rounds_first_player": ["north"],
-               "_expected": "10c"
-            },
-            "NO": {
-               "_id": "02100",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": "8h", "south": null, "east": null, "north": "7h"},
-               "trump_color": "h",
-               "round_color": "h",
-               "round": 0,
-               "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["7h"]},
-               "rounds_first_player": ["north"],
-               "_expected": "7c"
-            }
-         }
-      },
-      "NO": {
-         "YES": {
-            "YES": {
-               "_id": "02011",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "Ks", "10s", "Ad", "Jc", "Qc", "8h", "10h"],
-               "cards_playability": [true, true, true, false, false, false, false, false],
-               "round_cards": {"west": "As", "south": null, "east": null, "north": "8s"},
-               "trump_color": "d",
-               "round_color": "s",
-               "round": 0,
-               "game_history": {"west": ["As"], "south": [], "east": [], "north": ["8s"]},
-               "rounds_first_player": ["north"],
-               "_expected": "7s"
-            },
-            "NO": {
-               "YES": {
-                  "_id": "020101",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "Ks", "As", "Kd", "10h", "Ah", "9c"],
-                  "cards_playability": [true, true, true, false, false, false, false],
-                  "round_cards": {"west": "10s", "south": null, "east": null, "north": "Qs"},
-                  "trump_color": "d",
-                  "round_color": "s",
-                  "round": 1,
-                  "game_history": {"west": ["8d", "10s"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "Qs"]},
-                  "rounds_first_player": ["north", "north"],
-                  "_expected": "As"
-               },
-               "NO": {
-                  "YES": {
-                     "_id": "0201001",
-                     "player": "south",
-                     "contract_team": "north/south",
-                     "player_cards": ["7s", "Ks", "10s", "Kd", "10h", "Ah", "9c"],
-                     "cards_playability": [true, true, true, false, false, false, false],
-                     "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
-                     "trump_color": "d",
-                     "round_color": "s",
-                     "round": 1,
-                     "game_history": {"west": ["8d", "Js"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "As"]},
-                     "rounds_first_player": ["north", "north"],
-                     "_expected": "10s"
-                  },
-                  "NO": {
-                     "_id": "0201000",
-                     "player": "south",
-                     "contract_team": "north/south",
-                     "player_cards": ["7s", "Ks", "10s", "Kd", "Ah", "9c"],
-                     "cards_playability": [true, true, true, false, false, false],
-                     "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
-                     "trump_color": "d",
-                     "round_color": "s",
-                     "round": 2,
-                     "game_history": {
-                        "west": ["8s", "9c", "Js"],
-                        "south": ["9s", "8c"],
-                        "east": ["7d", "7c"],
-                        "north": ["Qs", "Ac", "As"]
-                     },
-                     "rounds_first_player": ["north", "east", "north"],
+                     "game_history": {"west": ["8c"], "south": ["Ac"], "east": ["7c"], "north": ["Jc"]},
+                     "rounds_first_player": ["south", "south"],
                      "_expected": "7s"
                   }
                }
@@ -448,242 +166,536 @@
          },
          "NO": {
             "YES": {
+               "_id": "0001",
+               "player": "south",
+               "contract_team": "east/west",
+               "player_cards": ["7s", "8s", "9s", "10s", "Js", "Qs", "Ks", "As"],
+               "cards_playability": [true, true, true, true, true, true, true, true],
+               "round_cards": {"west": null, "south": null, "east": null, "north": null},
+               "trump_color": "s",
+               "round_color": null,
+               "round": 0,
+               "game_history": {"west": [], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["south"],
+               "_expected": "7s"
+            },
+            "NO": {
                "YES": {
-                  "_id": "020011",
+                  "_id": "00001",
                   "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "8s", "9s", "Qs", "Ks"],
-                  "cards_playability": [true, true, true, true, true],
-                  "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
-                  "trump_color": "s",
-                  "round_color": "d",
-                  "round": 3,
-                  "game_history": {
-                     "west": ["Ac", "10d", "9h", "Jd"],
-                     "south": ["7c", "7d", "7h"],
-                     "east": ["8c", "Kc", "8h"],
-                     "north": ["9c", "9d", "Ah", "Ad"]
-                  },
-                  "rounds_first_player": ["west", "west", "north", "north"],
-                  "_expected": "7s"
+                  "contract_team": "east/west",
+                  "player_cards": ["7s", "As", "7d", "Ad", "7c", "Ac", "7h", "Ah"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                  "trump_color": null,
+                  "round_color": null,
+                  "round": 0,
+                  "game_history": {"west": [], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["south"],
+                  "_expected": "As"
                },
                "NO": {
-                  "_id": "020010",
+                  "YES": {
+                     "_id": "000001",
+                     "player": "south",
+                     "contract_team": "east/west",
+                     "player_cards": ["8s", "Ks", "10s", "8c", "10c", "Kh"],
+                     "cards_playability": [true, true, true, true, true, true],
+                     "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                     "trump_color": "h",
+                     "round_color": null,
+                     "round": 2,
+                     "game_history": {
+                        "west": ["7h", "Ad"], "south": ["7s", "8h"], "east": ["Js", "7d"], "north": ["As", "10d"]
+                     },
+                     "rounds_first_player": ["north", "west", "south"],
+                     "_expected": "8s"
+                  },
+                  "NO": {
+                     "YES": {
+                        "_id": "0000001",
+                        "player": "south",
+                        "contract_team": "east/west",
+                        "player_cards": ["7s", "8s", "9s", "Qd", "Kd"],
+                        "cards_playability": [true, true, true, true, true],
+                        "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                        "trump_color": "h",
+                        "round_color": null,
+                        "round": 3,
+                        "game_history": {
+                           "west": ["Jh", "9h", "7d"], "south": ["7h", "8h", "Ad"], "east": ["10h", "Qh", "10d"],
+                           "north": ["Kh", "Ah", "8d"]
+                        },
+                        "rounds_first_player": ["west", "west", "west", "south"],
+                        "_expected": "Kd"
+                     },
+                     "NO": {
+                        "_id": "0000000",
+                        "player": "south",
+                        "contract_team": "east/west",
+                        "player_cards": ["7s", "Ks", "7d", "Kd", "7c", "Kc", "7h", "Kh"],
+                        "cards_playability": [true, true, true, true, true, true, true, true],
+                        "round_cards": {"west": null, "south": null, "east": null, "north": null},
+                        "trump_color": "d",
+                        "round_color": null,
+                        "round": 0,
+                        "game_history": {"west": [], "south": [], "east": [], "north": []},
+                        "rounds_first_player": ["south"],
+                        "_expected": "7c"
+                     }
+                  }
+               }
+            }
+         }
+      },
+      "1": {
+         "YES": {
+            "YES": {
+               "_id": "0111",
+               "player": "south",
+               "contract_team": "north/south",
+               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+               "cards_playability": [false, false, true, false, true, false, false, false],
+               "round_cards": {"west": "Ah", "south": null, "east": null, "north": null},
+               "trump_color": "h",
+               "round_color": "h",
+               "round": 0,
+               "game_history": {"west": ["Ah"], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["west"],
+               "_expected": "9h"
+            },
+            "NO": {
+               "_id": "0110",
+               "player": "south",
+               "contract_team": "north/south",
+               "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+               "cards_playability": [true, true, true, true, true, true, true, true],
+               "round_cards": {"west": "Jd", "south": null, "east": null, "north": null},
+               "trump_color": "d",
+               "round_color": "d",
+               "round": 0,
+               "game_history": {"west": ["Jd"], "south": [], "east": [], "north": []},
+               "rounds_first_player": ["west"],
+               "_expected": "7h"
+            }
+         },
+         "NO": {
+            "YES": {
+               "YES": {
+                  "_id": "01011",
                   "player": "south",
                   "contract_team": "north/south",
-                  "player_cards": ["8h", "10h", "Ah", "9s", "Ks", "Kc", "10c"],
-                  "cards_playability": [true, true, true, true, true, true, true],
-                  "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
-                  "trump_color": "s",
-                  "round_color": "d",
+                  "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
+                  "trump_color": "d",
+                  "round_color": "h",
                   "round": 1,
-                  "game_history": {"west": ["7s", "Jd"], "south": ["8s"], "east": ["7h"], "north": ["Js", "Ad"]},
-                  "rounds_first_player": ["north", "north"],
+                  "game_history": {"west": ["Jd", "7h"], "south": ["7d"], "east": ["Ah"], "north": ["8d"]},
+                  "rounds_first_player": ["west", "west"],
                   "_expected": "10h"
+               },
+               "NO": {
+                  "_id": "01010",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["8h", "9h", "10h", "Jh", "Qh", "Kh", "7s", "7c"],
+                  "cards_playability": [true, true, true, true, true, true, false, false],
+                  "round_cards": {"west": "7h", "south": null, "east": null, "north": null},
+                  "trump_color": "d",
+                  "round_color": "h",
+                  "round": 0,
+                  "game_history": {"west": ["7h"], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "8h"
                }
             },
             "NO": {
                "YES": {
-                  "_id": "020001",
-                  "player": "south",
+                  "_id": "01001",
+                  "player": "west",
                   "contract_team": "north/south",
-                  "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
-                  "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": "7d", "south": null, "east": null, "north": "10d"},
-                  "trump_color": "s",
+                  "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
+                  "trump_color": "h",
                   "round_color": "d",
                   "round": 0,
-                  "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["10d"]},
+                  "game_history": {"west": ["7d"], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "7h"
+               },
+               "NO": {
+                  "_id": "01000",
+                  "player": "west",
+                  "contract_team": "north/south",
+                  "player_cards": ["7h", "8h", "9h", "10h", "Jh", "Qh", "Kh", "7s"],
+                  "cards_playability": [true, true, true, true, true, true, true, false],
+                  "round_cards": {"west": "7d", "south": null, "east": null, "north": null},
+                  "trump_color": "c",
+                  "round_color": "d",
+                  "round": 0,
+                  "game_history": {"west": ["7d"], "south": [], "east": [], "north": []},
+                  "rounds_first_player": ["west"],
+                  "_expected": "7h"
+               }
+            }
+         }
+      },
+      "2": {
+         "YES": {
+            "YES": {
+               "_id": "0211",
+               "player": "south",
+               "contract_team": "north/south",
+               "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "9c"],
+               "cards_playability": [false, false, false, true, true, false, false, false],
+               "round_cards": {"west": "Qd", "south": null, "east": null, "north": "7d"},
+               "trump_color": "d",
+               "round_color": "d",
+               "round": 0,
+               "game_history": {"west": ["Qd"], "south": [], "east": [], "north": ["7d"]},
+               "rounds_first_player": ["north"],
+               "_expected": "Ad"
+            },
+            "NO": {
+               "YES": {
+                  "_id": "02101",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "8h", "south": null, "east": null, "north": "Jh"},
+                  "trump_color": "h",
+                  "round_color": "h",
+                  "round": 0,
+                  "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["Jh"]},
+                  "rounds_first_player": ["north"],
+                  "_expected": "10c"
+               },
+               "NO": {
+                  "_id": "02100",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "8s", "8d", "9d", "Ad", "7c", "8c", "10c"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "8h", "south": null, "east": null, "north": "7h"},
+                  "trump_color": "h",
+                  "round_color": "h",
+                  "round": 0,
+                  "game_history": {"west": ["8h"], "south": [], "east": [], "north": ["7h"]},
+                  "rounds_first_player": ["north"],
+                  "_expected": "7c"
+               }
+            }
+         },
+         "NO": {
+            "YES": {
+               "YES": {
+                  "_id": "02011",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "Ks", "10s", "Ad", "Jc", "Qc", "8h", "10h"],
+                  "cards_playability": [true, true, true, false, false, false, false, false],
+                  "round_cards": {"west": "As", "south": null, "east": null, "north": "8s"},
+                  "trump_color": "d",
+                  "round_color": "s",
+                  "round": 0,
+                  "game_history": {"west": ["As"], "south": [], "east": [], "north": ["8s"]},
                   "rounds_first_player": ["north"],
                   "_expected": "7s"
                },
                "NO": {
                   "YES": {
-                     "_id": "0200001",
+                     "_id": "020101",
                      "player": "south",
                      "contract_team": "north/south",
-                     "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
-                     "cards_playability": [true, true, true, false, false, false, false, false],
-                     "round_cards": {"west": "Ad", "south": null, "east": null, "north": "Kd"},
+                     "player_cards": ["7s", "Ks", "As", "Kd", "10h", "Ah", "9c"],
+                     "cards_playability": [true, true, true, false, false, false, false],
+                     "round_cards": {"west": "10s", "south": null, "east": null, "north": "Qs"},
+                     "trump_color": "d",
+                     "round_color": "s",
+                     "round": 1,
+                     "game_history": {"west": ["8d", "10s"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "Qs"]},
+                     "rounds_first_player": ["north", "north"],
+                     "_expected": "As"
+                  },
+                  "NO": {
+                     "YES": {
+                        "_id": "0201001",
+                        "player": "south",
+                        "contract_team": "north/south",
+                        "player_cards": ["7s", "Ks", "10s", "Kd", "10h", "Ah", "9c"],
+                        "cards_playability": [true, true, true, false, false, false, false],
+                        "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
+                        "trump_color": "d",
+                        "round_color": "s",
+                        "round": 1,
+                        "game_history": {"west": ["8d", "Js"], "south": ["7d"], "east": ["7h"], "north": ["Jd", "As"]},
+                        "rounds_first_player": ["north", "north"],
+                        "_expected": "10s"
+                     },
+                     "NO": {
+                        "_id": "0201000",
+                        "player": "south",
+                        "contract_team": "north/south",
+                        "player_cards": ["7s", "Ks", "10s", "Kd", "Ah", "9c"],
+                        "cards_playability": [true, true, true, false, false, false],
+                        "round_cards": {"west": "Js", "south": null, "east": null, "north": "As"},
+                        "trump_color": "d",
+                        "round_color": "s",
+                        "round": 2,
+                        "game_history": {
+                           "west": ["8s", "9c", "Js"],
+                           "south": ["9s", "8c"],
+                           "east": ["7d", "7c"],
+                           "north": ["Qs", "Ac", "As"]
+                        },
+                        "rounds_first_player": ["north", "east", "north"],
+                        "_expected": "7s"
+                     }
+                  }
+               }
+            },
+            "NO": {
+               "YES": {
+                  "YES": {
+                     "_id": "020011",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "8s", "9s", "Qs", "Ks"],
+                     "cards_playability": [true, true, true, true, true],
+                     "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
                      "trump_color": "s",
                      "round_color": "d",
-                     "round": 0,
-                     "game_history": {"west": ["Ad"], "south": [], "east": [], "north": ["Kd"]},
-                     "rounds_first_player": ["north"],
+                     "round": 3,
+                     "game_history": {
+                        "west": ["Ac", "10d", "9h", "Jd"],
+                        "south": ["7c", "7d", "7h"],
+                        "east": ["8c", "Kc", "8h"],
+                        "north": ["9c", "9d", "Ah", "Ad"]
+                     },
+                     "rounds_first_player": ["west", "west", "north", "north"],
                      "_expected": "7s"
                   },
                   "NO": {
-                     "_id": "0200000",
+                     "_id": "020010",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["8h", "10h", "Ah", "9s", "Ks", "Kc", "10c"],
+                     "cards_playability": [true, true, true, true, true, true, true],
+                     "round_cards": {"west": "Jd", "south": null, "east": null, "north": "Ad"},
+                     "trump_color": "s",
+                     "round_color": "d",
+                     "round": 1,
+                     "game_history": {"west": ["7s", "Jd"], "south": ["8s"], "east": ["7h"], "north": ["Js", "Ad"]},
+                     "rounds_first_player": ["north", "north"],
+                     "_expected": "10h"
+                  }
+               },
+               "NO": {
+                  "YES": {
+                     "_id": "020001",
                      "player": "south",
                      "contract_team": "north/south",
                      "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
                      "cards_playability": [true, true, true, true, true, true, true, true],
-                     "round_cards": {"west": "7d", "south": null, "east": null, "north": "Kd"},
+                     "round_cards": {"west": "7d", "south": null, "east": null, "north": "10d"},
                      "trump_color": "s",
                      "round_color": "d",
                      "round": 0,
-                     "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["Kd"]},
+                     "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["10d"]},
                      "rounds_first_player": ["north"],
-                     "_expected": "7c"
+                     "_expected": "7s"
+                  },
+                  "NO": {
+                     "YES": {
+                        "_id": "0200001",
+                        "player": "south",
+                        "contract_team": "north/south",
+                        "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
+                        "cards_playability": [true, true, true, false, false, false, false, false],
+                        "round_cards": {"west": "Ad", "south": null, "east": null, "north": "Kd"},
+                        "trump_color": "s",
+                        "round_color": "d",
+                        "round": 0,
+                        "game_history": {"west": ["Ad"], "south": [], "east": [], "north": ["Kd"]},
+                        "rounds_first_player": ["north"],
+                        "_expected": "7s"
+                     },
+                     "NO": {
+                        "_id": "0200000",
+                        "player": "south",
+                        "contract_team": "north/south",
+                        "player_cards": ["7s", "9s", "Ks", "7c", "8c", "Ac", "Kh", "10h"],
+                        "cards_playability": [true, true, true, true, true, true, true, true],
+                        "round_cards": {"west": "7d", "south": null, "east": null, "north": "Kd"},
+                        "trump_color": "s",
+                        "round_color": "d",
+                        "round": 0,
+                        "game_history": {"west": ["7d"], "south": [], "east": [], "north": ["Kd"]},
+                        "rounds_first_player": ["north"],
+                        "_expected": "7c"
+                     }
                   }
                }
             }
          }
-      }
-   },
-   "3": {
-      "YES": {
-         "YES": {
-            "_id": "0311",
-            "player": "south",
-            "contract_team": "north/south",
-            "player_cards": ["7s", "8s", "Kh", "10h", "7d", "10d", "9d", "Ac"],
-            "cards_playability": [false, false, false, false, false, true, true, false],
-            "round_cards": {"west": "Kd", "south": null, "east": "8d", "north": "Qd"},
-            "trump_color": "d",
-            "round_color": "d",
-            "round": 0,
-            "game_history": {"west": ["Kd"], "south": [], "east": ["8d"], "north": ["Qd"]},
-            "rounds_first_player": ["east"],
-            "_expected": "10d"
-         },
-         "NO": {
-            "YES": {
-               "_id": "03101",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": "8c", "south": null, "east": "7c", "north": "10c"},
-               "trump_color": "c",
-               "round_color": "c",
-               "round": 0,
-               "game_history": {"west": ["8c"], "south": [], "east": ["7c"], "north": ["10c"]},
-               "rounds_first_player": ["east"],
-               "_expected": "10h"
-            },
-            "NO": {
-               "_id": "03100",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": "8c", "south": null, "east": "Jc", "north": "10c"},
-               "trump_color": "c",
-               "round_color": "c",
-               "round": 0,
-               "game_history": {"west": ["8c"], "south": [], "east": ["Jc"], "north": ["10c"]},
-               "rounds_first_player": ["east"],
-               "_expected": "7d"
-            }
-         }
       },
-      "NO": {
+      "3": {
          "YES": {
             "YES": {
-               "_id": "03011",
+               "_id": "0311",
                "player": "south",
                "contract_team": "north/south",
-               "player_cards": ["7s", "10s", "As", "8h", "Kh", "Qd", "Ad", "8c"],
-               "cards_playability": [true, true, true, false, false, false, false, false],
-               "round_cards": {"west": "Ks", "south": null, "east": "8s", "north": "Js"},
+               "player_cards": ["7s", "8s", "Kh", "10h", "7d", "10d", "9d", "Ac"],
+               "cards_playability": [false, false, false, false, false, true, true, false],
+               "round_cards": {"west": "Kd", "south": null, "east": "8d", "north": "Qd"},
                "trump_color": "d",
-               "round_color": "s",
+               "round_color": "d",
                "round": 0,
-               "game_history": {"west": ["Ks"], "south": [], "east": ["8s"], "north": ["Js"]},
+               "game_history": {"west": ["Kd"], "south": [], "east": ["8d"], "north": ["Qd"]},
                "rounds_first_player": ["east"],
-               "_expected": "As"
+               "_expected": "10d"
             },
             "NO": {
                "YES": {
-                  "_id": "030101",
+                  "_id": "03101",
                   "player": "south",
                   "contract_team": "north/south",
-                  "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
-                  "cards_playability": [true, true, true, false, false, false, false, false],
-                  "round_cards": {"west": "Js", "south": null, "east": "8s", "north": "As"},
-                  "trump_color": "d",
-                  "round_color": "s",
-                  "round": 0,
-                  "game_history": {"west": ["Js"], "south": [], "east": ["8s"], "north": ["As"]},
-                  "rounds_first_player": ["east"],
-                  "_expected": "10s"
-               },
-               "NO": {
-                  "_id": "030100",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
-                  "cards_playability": [true, true, true, false, false, false, false, false],
-                  "round_cards": {"west": "As", "south": null, "east": "8s", "north": "Js"},
-                  "trump_color": "d",
-                  "round_color": "s",
-                  "round": 0,
-                  "game_history": {"west": ["As"], "south": [], "east": ["8s"], "north": ["Js"]},
-                  "rounds_first_player": ["east"],
-                  "_expected": "7s"
-               }
-            }
-         },
-         "NO": {
-            "YES": {
-               "YES": {
-                  "_id": "030011",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "8s", "9s", "Js", "Qs", "Ks", "10s", "As"],
+                  "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
                   "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
-                  "trump_color": "s",
-                  "round_color": "d",
-                  "round": 0,
-                  "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
-                  "rounds_first_player": ["east"],
-                  "_expected": "7s"
-               },
-               "NO": {
-                  "_id": "030010",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
-                  "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                  "round_cards": {"west": "8c", "south": null, "east": "7c", "north": "10c"},
                   "trump_color": "c",
-                  "round_color": "d",
+                  "round_color": "c",
                   "round": 0,
-                  "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                  "game_history": {"west": ["8c"], "south": [], "east": ["7c"], "north": ["10c"]},
                   "rounds_first_player": ["east"],
                   "_expected": "10h"
+               },
+               "NO": {
+                  "_id": "03100",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "8s", "As", "Kh", "10h", "7d", "10d", "9d"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "8c", "south": null, "east": "Jc", "north": "10c"},
+                  "trump_color": "c",
+                  "round_color": "c",
+                  "round": 0,
+                  "game_history": {"west": ["8c"], "south": [], "east": ["Jc"], "north": ["10c"]},
+                  "rounds_first_player": ["east"],
+                  "_expected": "7d"
+               }
+            }
+         },
+         "NO": {
+            "YES": {
+               "YES": {
+                  "_id": "03011",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "10s", "As", "8h", "Kh", "Qd", "Ad", "8c"],
+                  "cards_playability": [true, true, true, false, false, false, false, false],
+                  "round_cards": {"west": "Ks", "south": null, "east": "8s", "north": "Js"},
+                  "trump_color": "d",
+                  "round_color": "s",
+                  "round": 0,
+                  "game_history": {"west": ["Ks"], "south": [], "east": ["8s"], "north": ["Js"]},
+                  "rounds_first_player": ["east"],
+                  "_expected": "As"
+               },
+               "NO": {
+                  "YES": {
+                     "_id": "030101",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
+                     "cards_playability": [true, true, true, false, false, false, false, false],
+                     "round_cards": {"west": "Js", "south": null, "east": "8s", "north": "As"},
+                     "trump_color": "d",
+                     "round_color": "s",
+                     "round": 0,
+                     "game_history": {"west": ["Js"], "south": [], "east": ["8s"], "north": ["As"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "10s"
+                  },
+                  "NO": {
+                     "_id": "030100",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "Ks", "10s", "8h", "Kh", "Qd", "Ad", "8c"],
+                     "cards_playability": [true, true, true, false, false, false, false, false],
+                     "round_cards": {"west": "As", "south": null, "east": "8s", "north": "Js"},
+                     "trump_color": "d",
+                     "round_color": "s",
+                     "round": 0,
+                     "game_history": {"west": ["As"], "south": [], "east": ["8s"], "north": ["Js"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "7s"
+                  }
                }
             },
             "NO": {
                "YES": {
-                  "_id": "030001",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "As", "Jh", "Qh", "10h", "7c", "10c", "Jc"],
-                  "cards_playability": [false, false, false, false, false, false, true, true],
-                  "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
-                  "trump_color": "c",
-                  "round_color": "d",
-                  "round": 0,
-                  "game_history": {"west": ["8c"], "south": [], "east": ["Jd"], "north": ["Ad"]},
-                  "rounds_first_player": ["east"],
-                  "_expected": "10c"
+                  "YES": {
+                     "_id": "030011",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "8s", "9s", "Js", "Qs", "Ks", "10s", "As"],
+                     "cards_playability": [true, true, true, true, true, true, true, true],
+                     "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "s",
+                     "round_color": "d",
+                     "round": 0,
+                     "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "7s"
+                  },
+                  "NO": {
+                     "_id": "030010",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
+                     "cards_playability": [true, true, true, true, true, true, true, true],
+                     "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "c",
+                     "round_color": "d",
+                     "round": 0,
+                     "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "10h"
+                  }
                },
                "NO": {
-                  "_id": "030000",
-                  "player": "south",
-                  "contract_team": "north/south",
-                  "player_cards": ["7s", "8s", "Ks", "As", "8h", "Jh", "Qh", "10h"],
-                  "cards_playability": [true, true, true, true, true, true, true, true],
-                  "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
-                  "trump_color": "c",
-                  "round_color": "d",
-                  "round": 0,
-                  "game_history": {"west": ["8c"], "south": [], "east": ["Jd"], "north": ["Ad"]},
-                  "rounds_first_player": ["east"],
-                  "_expected": "7s"
+                  "YES": {
+                     "_id": "030001",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "As", "Jh", "Qh", "10h", "7c", "10c", "Jc"],
+                     "cards_playability": [false, false, false, false, false, false, true, true],
+                     "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "c",
+                     "round_color": "d",
+                     "round": 0,
+                     "game_history": {"west": ["8c"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "10c"
+                  },
+                  "NO": {
+                     "_id": "030000",
+                     "player": "south",
+                     "contract_team": "north/south",
+                     "player_cards": ["7s", "8s", "Ks", "As", "8h", "Jh", "Qh", "10h"],
+                     "cards_playability": [true, true, true, true, true, true, true, true],
+                     "round_cards": {"west": "8c", "south": null, "east": "Jd", "north": "Ad"},
+                     "trump_color": "c",
+                     "round_color": "d",
+                     "round": 0,
+                     "game_history": {"west": ["8c"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                     "rounds_first_player": ["east"],
+                     "_expected": "7s"
+                  }
                }
             }
          }
