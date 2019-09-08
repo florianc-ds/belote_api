@@ -627,18 +627,34 @@
          },
          "NO": {
             "YES": {
-               "_id": "03001",
-               "player": "south",
-               "contract_team": "north/south",
-               "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
-               "cards_playability": [true, true, true, true, true, true, true, true],
-               "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
-               "trump_color": "c",
-               "round_color": "d",
-               "round": 0,
-               "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
-               "rounds_first_player": ["east"],
-               "_expected": "10h"
+               "YES": {
+                  "_id": "030011",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "8s", "9s", "Js", "Qs", "Ks", "10s", "As"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                  "trump_color": "s",
+                  "round_color": "d",
+                  "round": 0,
+                  "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                  "rounds_first_player": ["east"],
+                  "_expected": "7s"
+               },
+               "NO": {
+                  "_id": "030010",
+                  "player": "south",
+                  "contract_team": "north/south",
+                  "player_cards": ["7s", "Qs", "As", "Jh", "Qh", "10h", "7c", "Jc"],
+                  "cards_playability": [true, true, true, true, true, true, true, true],
+                  "round_cards": {"west": "7d", "south": null, "east": "Jd", "north": "Ad"},
+                  "trump_color": "c",
+                  "round_color": "d",
+                  "round": 0,
+                  "game_history": {"west": ["7d"], "south": [], "east": ["Jd"], "north": ["Ad"]},
+                  "rounds_first_player": ["east"],
+                  "_expected": "10h"
+               }
             },
             "NO": {
                "YES": {
