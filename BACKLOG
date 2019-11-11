@@ -1,5 +1,4 @@
 [FEATURES] implement:
-    - Manage CORS issues
     - Implement a "DEV" mode -> when disabled, other players' cards are hidden
     - Define a real link/url strategy (/# = Welcome, /#/Game = Game,...) and use react-router
 
