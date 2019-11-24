@@ -1,8 +1,11 @@
+[BUG][FRONT] API call does not trigger during "bid or pass" phase when dealing again (due to lack of bidder)
+
 [FEATURES] implement:
-    - Implement a "DEV" mode -> when disabled, other players' cards are hidden
-    - Define a real link/url strategy (/# = Welcome, /#/Game = Game,...) and use react-router
+    - Implement a "DEV" mode -> when disabled, other players' cards are hidden (switch in Welcome)
+    - [REINFORCEMENT]
 
 [REINFORCEMENT] Implement reinforcement agent..!
+            --> Analysis (doc, problem definition, reward function,...)
 
 
 [IMPROVEMENT][FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
@@ -14,6 +17,13 @@
 
 [IMPROVEMENT][BACK] expert.play.strategy.play_expert_strategy
             --> appels
+
+[TECHNICAL DEBT][FRONT] Factorize "// Robot bettors here" and "// Robot players here" parts (#DRY)
+
+[TECHNICAL DEBT][FRONT] Externalize methods from Game
+                            -> functional (settleWinner, countRoundScore, computeRealEndGameScore, checkPlayability,...)
+                            -> technical (hydrateStateWithLocalStorage, saveStateToLocalStorage)
+                            -> central (placeBid, passAuction, playCard,...)
 
 [MISSING FEATURES]
             * (sur-)coinche
