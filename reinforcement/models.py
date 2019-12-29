@@ -1,5 +1,3 @@
-# @TODO: Add typing for return types
-
 from typing import List, Dict, Optional
 from enum import Enum
 
@@ -46,18 +44,18 @@ class Updatable(Describable):
         super().__init__()
         pass
 
-    def _check_params(self, **kwargs):
+    def _check_params(self, **kwargs) -> bool:
         if self.UPDATE_PARAMS is None:
             raise NotImplementedError('UPDATE_PARAMS is not re-defined as a class attribute')
         return set(self.UPDATE_PARAMS).issubset(set(kwargs.keys()))
 
-    def _validate(self, **kwargs):
+    def _validate(self, **kwargs) -> bool:
         raise NotImplementedError()
 
-    def _update(self, **kwargs):
+    def _update(self, **kwargs) -> int:
         raise NotImplementedError()
 
-    def update(self, **kwargs):
+    def update(self, **kwargs) -> int:
         try:
             if not self._check_params(**kwargs):
                 return CHECK_ERROR_CODE
@@ -96,10 +94,10 @@ class Hand(Updatable):
         super().__init__()
         self.cards = cards
 
-    def _validate(self, **kwargs):
+    def _validate(self, **kwargs) -> bool:
         return kwargs['card_index'] < len(self.cards)
 
-    def _update(self, **kwargs):
+    def _update(self, **kwargs) -> int:
         self.cards.pop(kwargs['card_index'])
         return OK_CODE
 
@@ -119,10 +117,10 @@ class TrickCards(Updatable):
     def set_leader(self):
         raise NotImplementedError()
 
-    def _validate(self, **kwargs):
+    def _validate(self, **kwargs) -> bool:
         return self.cards[kwargs['player']] is None
 
-    def _update(self, **kwargs):
+    def _update(self, **kwargs) -> int:
         self.cards[kwargs['player']] = kwargs['card']
         self.set_leader()
         return OK_CODE
@@ -142,11 +140,11 @@ class Auction(Updatable):
         self.current_passed: int = 0
 
     # @TODO: implement Auction._validate
-    def _validate(self):
+    def _validate(self) -> bool:
         raise NotImplementedError()
 
     # @TODO: implement Auction._update
-    def _update(self):
+    def _update(self) -> int:
         raise NotImplementedError()
 
     def reset(self):
@@ -167,11 +165,11 @@ class Round(Updatable):
         self.trump: Optional[str] = None
 
     # @TODO: implement Round._validate
-    def _validate(self):
+    def _validate(self) -> bool:
         raise NotImplementedError()
 
     # @TODO: implement Round._update
-    def _update(self):
+    def _update(self) -> int:
         raise NotImplementedError()
 
     # @TODO: implement Round.reset
@@ -193,15 +191,15 @@ class Game(Updatable):
 
     # @TODO: implement Game.deal
     @classmethod
-    def deal(cls):
+    def deal(cls) -> Dict[Player, List[Card]]:
         raise NotImplementedError()
 
     # @TODO: implement Game._validate
-    def _validate(self):
+    def _validate(self) -> bool:
         raise NotImplementedError()
 
     # @TODO: implement Game._update
-    def _update(self):
+    def _update(self) -> int:
         raise NotImplementedError()
 
     # @TODO: implement Game.reset
