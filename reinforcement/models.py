@@ -1,3 +1,5 @@
+# @TODO: revise the _validate methods to check for type, format... And try to DRY (cf Round.update that calls for Hand._validate)
+
 from typing import List, Dict, Optional
 from enum import Enum
 from itertools import product
@@ -10,6 +12,8 @@ seed(13)
 OK_CODE = 0
 AUCTION_END_OK_CODE = 10
 AUCTION_END_KO_CODE = 11
+TRICK_END_CODE = 15
+ROUND_END_CODE = 16
 CHECK_ERROR_CODE = 20
 VALIDATION_ERROR_CODE = 21
 UNKNOWN_ERROR_CODE = 22
@@ -112,6 +116,9 @@ class Hand(Updatable):
         super().__init__()
         self.cards = cards
 
+    def __len__(self):
+        return len(self.cards)
+
     def _validate(self, **kwargs) -> bool:
         return kwargs['card_index'] < len(self.cards)
 
@@ -141,7 +148,10 @@ class TrickCards(Updatable):
     def _update(self, **kwargs) -> int:
         self.cards[kwargs['player']] = kwargs['card']
         self.set_leader()
-        return OK_CODE
+        if any([cards is None for cards in self.cards.values()]):
+            return OK_CODE
+        else:
+            return TRICK_END_CODE
 
     def reset(self, **kwargs):
         self.cards = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
@@ -186,29 +196,61 @@ class Auction(Updatable):
         self.current_best = None
 
 
-# @TODO: implement Round
 class Round(Updatable):
     UPDATE_PARAMS = ['player', 'card_index']
 
-    def __init__(self, hands: Dict[Player, List[Card]]):
+    def __init__(self, hands: Dict[Player, List[Card]], trump: str):
         super().__init__()
         self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands}
         self.trick_cards: TrickCards = TrickCards()
         self.trick: int = 0
+        self.score: Dict[Team, int] = {team: 0 for team in Team}
         self.belote: List[Player] = []
-        self.trump: Optional[str] = None
+        self.trump: str = trump
 
-    # @TODO: implement Round._validate
-    def _validate(self) -> bool:
+    # @TODO: implement Round.card_is_playable
+    def card_is_playable(self, card_index: int) -> bool:
         raise NotImplementedError()
 
-    # @TODO: implement Round._update
-    def _update(self) -> int:
+    # @TODO: implement Round.is_belote_card
+    def is_belote_card(self, card: Card) -> bool:
         raise NotImplementedError()
 
-    # @TODO: implement Round.reset
-    def reset(self):
+    # @TODO: implement Round.update_round_score
+    def update_round_score(self):
         raise NotImplementedError()
+
+    def _validate(self, **kwargs) -> bool:
+        card_index = kwargs['card_index']
+        if (type(card_index) != int) or (card_index >= len(self.hands[kwargs['player']])):
+            return False
+        return self.card_is_playable(card_index)
+
+    def _update(self, **kwargs) -> int:
+        card = self.hands[kwargs['player']][kwargs['card_index']]
+        if self.is_belote_card(card):
+            self.belote.append(kwargs['player'])
+        trick_cards_update_code = self.trick_cards.update(card=card, **kwargs)
+        hand_update_code = self.hands[kwargs['player']].update(**kwargs)
+        if trick_cards_update_code == TRICK_END_CODE:
+            self.update_round_score()
+            self.trick_cards.reset()
+            if self.trick == 7:
+                return ROUND_END_CODE
+            else:
+                self.trick += 1
+                return hand_update_code
+        else:
+            return hand_update_code
+
+    def reset(self, **kwargs):
+        for player, hand in self.hands.items():
+            hand.reset(cards=kwargs['cards'][player])
+        self.trick_cards.reset(**kwargs)
+        self.trick: int = 0
+        self.score = {team: 0 for team in Team}
+        self.belote = []
+        self.trump: str = kwargs['trump']
 
 
 # @TODO: Adapt __init__ in order not to initialize from arguments
