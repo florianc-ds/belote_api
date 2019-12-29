@@ -1,9 +1,12 @@
+# @TODO: Add typing for return types
+
 from typing import List, Dict, Optional
 from enum import Enum
 
 OK_CODE = 0
-VALIDATION_ERROR_CODE = 10
-UNKNOWN_ERROR_CODE = 20
+CHECK_ERROR_CODE = 10
+VALIDATION_ERROR_CODE = 20
+UNKNOWN_ERROR_CODE = 30
 
 
 class Player(Enum):
@@ -31,14 +34,22 @@ class Describable(object):
     def __init__(self):
         pass
 
+    # @TODO: implement recursive dict representation
     def describe(self):
         return self.__dict__
 
 
 class Updatable(Describable):
+    UPDATE_PARAMS = None
+
     def __init__(self):
         super().__init__()
         pass
+
+    def _check_params(self, **kwargs):
+        if self.UPDATE_PARAMS is None:
+            raise NotImplementedError('UPDATE_PARAMS is not re-defined as a class attribute')
+        return set(self.UPDATE_PARAMS).issubset(set(kwargs.keys()))
 
     def _validate(self, **kwargs):
         raise NotImplementedError()
@@ -48,7 +59,9 @@ class Updatable(Describable):
 
     def update(self, **kwargs):
         try:
-            if self._validate(**kwargs):
+            if not self._check_params(**kwargs):
+                return CHECK_ERROR_CODE
+            elif self._validate(**kwargs):
                 return self._update(**kwargs)
             else:
                 return VALIDATION_ERROR_CODE
@@ -77,27 +90,30 @@ class Bid(Describable):
 
 
 class Hand(Updatable):
+    UPDATE_PARAMS = ['card_index']
+
     def __init__(self, cards: List[Card]):
         super().__init__()
         self.cards = cards
 
     def _validate(self, **kwargs):
-        return Card(kwargs['color'], kwargs['value']) in self.cards
+        return kwargs['card_index'] < len(self.cards)
 
     def _update(self, **kwargs):
-        self.cards.remove(Card(kwargs['color'], kwargs['value']))
+        self.cards.pop(kwargs['card_index'])
         return OK_CODE
 
     def reset(self, **kwargs):
         self.cards = kwargs['cards']
 
 
-# @TODO: Adapt __init__ in order not to initialize from arguments
 class TrickCards(Updatable):
-    def __init__(self, cards: Dict[Player, Card], leader: Optional[Player]):
+    UPDATE_PARAMS = ['player', 'card']
+
+    def __init__(self):
         super().__init__()
-        self.cards = cards
-        self.leader = leader
+        self.cards: Dict[Player, Card] = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.leader: Optional[Player] = None
 
     # @TODO: implement TrickCards.set_leader
     def set_leader(self):
@@ -112,37 +128,90 @@ class TrickCards(Updatable):
         return OK_CODE
 
     def reset(self, **kwargs):
-        self.cards = dict(zip([p for p in Player], [None for i in range(len(Player))]))
+        self.cards = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.leader = None
 
 
-# @TODO: Adapt __init__ in order not to initialize from arguments
-# @TODO: implement Round
-class Round(Updatable):
-    def __init__(self, hands: Dict[Player, Hand], trick_cards: TrickCards,
-                 trick: int, belote: List[Player], trump: str):
-        super().__init__()
-        self.hands = hands
-        self.trick_cards = trick_cards
-        self.trick = trick
-        self.belote = belote
-        self.trump = trump
-
-
-# @TODO: Adapt __init__ in order not to initialize from arguments
 # @TODO: implement Auction
 class Auction(Updatable):
-    def __init__(self, bids: Dict[Player, Bid], current_passed: int):
+    UPDATE_PARAMS = ['passed', 'player', 'color', 'value']
+
+    def __init__(self):
         super().__init__()
-        self.bids = bids
-        self.current_passed = current_passed
+        self.bids: Dict[Player, Bid] = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.current_passed: int = 0
+
+    # @TODO: implement Auction._validate
+    def _validate(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Auction._update
+    def _update(self):
+        raise NotImplementedError()
+
+    def reset(self):
+        self.bids = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.current_passed = 0
+
+
+# @TODO: implement Round
+class Round(Updatable):
+    UPDATE_PARAMS = ['player', 'card_index']
+
+    def __init__(self, hands: Dict[Player, List[Card]]):
+        super().__init__()
+        self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands}
+        self.trick_cards: TrickCards = TrickCards()
+        self.trick: int = 0
+        self.belote: List[Player] = []
+        self.trump: Optional[str] = None
+
+    # @TODO: implement Round._validate
+    def _validate(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Round._update
+    def _update(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Round.reset
+    def reset(self):
+        raise NotImplementedError()
 
 
 # @TODO: Adapt __init__ in order not to initialize from arguments
 # @TODO: implement Game
 class Game(Updatable):
-    def __init__(self, state: State, auction: Auction, round: Round, score: Dict[Team, int]):
+    UPDATE_PARAMS = ['player']
+
+    def __init__(self):
         super().__init__()
-        self.state = state
-        self.auction = auction
-        self.round = round
-        self.score = score
+        self.state: State = State.AUCTION
+        self.auction: Auction = Auction()
+        self.round: Round = Round(self.deal())
+        self.score: Dict[Team, int] = {team: 0 for team in Team}
+
+    # @TODO: implement Game.deal
+    @classmethod
+    def deal(cls):
+        raise NotImplementedError()
+
+    # @TODO: implement Game._validate
+    def _validate(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Game._update
+    def _update(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Game.reset
+    def reset(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Game.end_auction
+    def end_auction(self):
+        raise NotImplementedError()
+
+    # @TODO: implement Game.end_round
+    def end_round(self):
+        raise NotImplementedError()
