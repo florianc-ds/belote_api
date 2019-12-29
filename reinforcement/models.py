@@ -38,9 +38,19 @@ class Describable(object):
     def __init__(self):
         pass
 
-    # @TODO: implement recursive dict representation
+    @staticmethod
+    def _describe(elt):
+        if 'describe' in dir(elt):
+            return elt.describe()
+        elif '__dict__' in dir(elt):
+            return elt.__dict__
+        elif ('__iter__' in dir(elt)) and (type(elt) != dict):
+            return [Describable._describe(e) for e in elt]
+        else:
+            return elt
+
     def describe(self):
-        return self.__dict__
+        return {k: Describable._describe(v) for k, v in self.__dict__.items()}
 
 
 class Updatable(Describable):
