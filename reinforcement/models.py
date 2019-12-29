@@ -1,5 +1,11 @@
 from typing import List, Dict, Optional
 from enum import Enum
+from itertools import product
+from random import seed, shuffle
+
+from helpers import constants
+
+seed(13)
 
 OK_CODE = 0
 CHECK_ERROR_CODE = 10
@@ -189,10 +195,11 @@ class Game(Updatable):
         self.round: Round = Round(self.deal())
         self.score: Dict[Team, int] = {team: 0 for team in Team}
 
-    # @TODO: implement Game.deal
     @classmethod
     def deal(cls) -> Dict[Player, List[Card]]:
-        raise NotImplementedError()
+        cards = [Card(color, value) for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.values())]
+        shuffle(cards)
+        return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
 
     # @TODO: implement Game._validate
     def _validate(self) -> bool:
