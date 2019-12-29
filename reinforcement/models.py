@@ -8,9 +8,11 @@ from helpers import constants
 seed(13)
 
 OK_CODE = 0
-CHECK_ERROR_CODE = 10
-VALIDATION_ERROR_CODE = 20
-UNKNOWN_ERROR_CODE = 30
+AUCTION_END_OK_CODE = 10
+AUCTION_END_KO_CODE = 11
+CHECK_ERROR_CODE = 20
+VALIDATION_ERROR_CODE = 21
+UNKNOWN_ERROR_CODE = 22
 
 
 class Player(Enum):
@@ -146,7 +148,6 @@ class TrickCards(Updatable):
         self.leader = None
 
 
-# @TODO: implement Auction
 class Auction(Updatable):
     UPDATE_PARAMS = ['passed', 'player', 'color', 'value']
 
@@ -154,18 +155,35 @@ class Auction(Updatable):
         super().__init__()
         self.bids: Dict[Player, Bid] = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
         self.current_passed: int = 0
+        self.current_best: int = None
 
-    # @TODO: implement Auction._validate
-    def _validate(self) -> bool:
-        raise NotImplementedError()
+    def auction_is_successful(self) -> bool:
+        return any([bid is not None for bid in self.bids])
 
-    # @TODO: implement Auction._update
-    def _update(self) -> int:
-        raise NotImplementedError()
+    def _validate(self, **kwargs) -> bool:
+        if kwargs['passed']:
+            return True
+        else:
+            value = kwargs['value']
+            value_format_is_valid = (type(value) == int) and (value % 10 == 0)
+            value_amount_is_valid = (value > max(80, 0 if self.current_best is None else self.current_best))
+            return value_format_is_valid and value_amount_is_valid
 
-    def reset(self):
+    def _update(self, **kwargs) -> int:
+        if kwargs['passed']:
+            if kwargs['passed'] == 3:
+                return AUCTION_END_OK_CODE if self.auction_is_successful() else AUCTION_END_KO_CODE
+            else:
+                self.current_passed += 1
+                return OK_CODE
+        else:
+            self.bids[kwargs['player']] = Bid(color=kwargs['color'], value=kwargs['value'])
+            return OK_CODE
+
+    def reset(self, **kwargs):
         self.bids = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
         self.current_passed = 0
+        self.current_best = None
 
 
 # @TODO: implement Round
