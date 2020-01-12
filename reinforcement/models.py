@@ -170,6 +170,11 @@ class Auction(Updatable):
     def auction_is_successful(self) -> bool:
         return any([bid is not None for bid in self.bids])
 
+    def get_best_color(self):
+        if self.current_best is not None:
+            return [bid.color for bid in self.bids.values()
+                    if (bid is not None) and (bid.value == self.current_best)][0]
+
     def _validate(self, **kwargs) -> bool:
         if kwargs['passed']:
             return True
@@ -199,14 +204,14 @@ class Auction(Updatable):
 class Round(Updatable):
     UPDATE_PARAMS = ['player', 'card_index']
 
-    def __init__(self, hands: Dict[Player, List[Card]], trump: str):
+    def __init__(self, hands: Dict[Player, List[Card]]):
         super().__init__()
         self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands}
         self.trick_cards: TrickCards = TrickCards()
         self.trick: int = 0
         self.score: Dict[Team, int] = {team: 0 for team in Team}
         self.belote: List[Player] = []
-        self.trump: str = trump
+        self.trump: Optional[str] = None
 
     # @TODO: implement Round.card_is_playable
     def card_is_playable(self, card_index: int) -> bool:
@@ -216,8 +221,8 @@ class Round(Updatable):
     def is_belote_card(self, card: Card) -> bool:
         raise NotImplementedError()
 
-    # @TODO: implement Round.update_round_score
-    def update_round_score(self):
+    # @TODO: implement Round.update_round_score (also check for belote if last_trick)
+    def update_round_score(self, last_trick=False):
         raise NotImplementedError()
 
     def _validate(self, **kwargs) -> bool:
@@ -236,12 +241,16 @@ class Round(Updatable):
             self.update_round_score()
             self.trick_cards.reset()
             if self.trick == 7:
+                self.update_round_score(last_trick=True)
                 return ROUND_END_CODE
             else:
                 self.trick += 1
                 return hand_update_code
         else:
             return hand_update_code
+
+    def set_trump(self, trump):
+        self.trump: str = trump
 
     def reset(self, **kwargs):
         for player, hand in self.hands.items():
@@ -250,11 +259,8 @@ class Round(Updatable):
         self.trick: int = 0
         self.score = {team: 0 for team in Team}
         self.belote = []
-        self.trump: str = kwargs['trump']
 
 
-# @TODO: Adapt __init__ in order not to initialize from arguments
-# @TODO: implement Game
 class Game(Updatable):
     UPDATE_PARAMS = ['player']
 
@@ -271,22 +277,47 @@ class Game(Updatable):
         shuffle(cards)
         return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
 
-    # @TODO: implement Game._validate
-    def _validate(self) -> bool:
+    def _validate(self, **kwargs) -> bool:
+        return kwargs['player'] in Player.__members__
+
+    def _update(self, **kwargs) -> int:
+        if self.state == State.AUCTION:
+            auction_update_code = self.auction.update(**kwargs)
+            if auction_update_code in [AUCTION_END_OK_CODE, AUCTION_END_KO_CODE]:
+                self.end_auction(status=auction_update_code, **kwargs)
+                return OK_CODE
+            else:
+                return auction_update_code
+        elif self.state == State.PLAYING:
+            round_update_code = self.round.update(**kwargs)
+            if round_update_code == ROUND_END_CODE:
+                self.end_round(**kwargs)
+                return OK_CODE
+            else:
+                return round_update_code
+        else:
+            return UNKNOWN_ERROR_CODE
+
+    def reset(self, **kwargs):
+        self.state = State.AUCTION
+        self.auction.reset(**kwargs)
+        self.round.reset(cards=self.deal(), **kwargs)
+        self.score = {team: 0 for team in Team}
+
+    def end_auction(self, status, **kwargs):
+        if status == AUCTION_END_OK_CODE:
+            self.round.set_trump(self.auction.get_best_color())
+            self.state = State.PLAYING
+        elif status == AUCTION_END_KO_CODE:
+            self.auction.reset(**kwargs)
+            self.round.reset(cards=self.deal())
+
+    # @TODO: implement Game.update_score (compare round.score to contract and compute game score)
+    def update_score(self):
         raise NotImplementedError()
 
-    # @TODO: implement Game._update
-    def _update(self) -> int:
-        raise NotImplementedError()
-
-    # @TODO: implement Game.reset
-    def reset(self):
-        raise NotImplementedError()
-
-    # @TODO: implement Game.end_auction
-    def end_auction(self):
-        raise NotImplementedError()
-
-    # @TODO: implement Game.end_round
-    def end_round(self):
-        raise NotImplementedError()
+    def end_round(self, **kwargs):
+        self.update_score()
+        self.auction.reset(**kwargs)
+        self.round.reset(cards=self.deal(), **kwargs)
+        self.state = State.AUCTION
