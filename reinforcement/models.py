@@ -132,17 +132,16 @@ class Hand(Updatable):
 
 
 class TrickCards(Updatable):
-    UPDATE_PARAMS = ['player', 'card']
+    UPDATE_PARAMS = ['player', 'card', 'trump_color']
 
     def __init__(self):
         super().__init__()
         self.cards: Dict[Player, Optional[Card]] = {player: None for player in Player}
         self.leader: Optional[Player] = None
-        self.trump: Optional[str] = None
 
-    def set_leader(self):
-        trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == self.trump)]
-        plain_cards = [card for card in self.cards.values() if (card is not None) and (card.color != self.trump)]
+    def set_leader(self, trump_color):
+        trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trump_color)]
+        plain_cards = [card for card in self.cards.values() if (card is not None) and (card.color != trump_color)]
         if trump_cards:
             leading_card = sorted(trump_cards, key=lambda x: (constants.TRUMP_POINTS[x], x)[-1])
         elif plain_cards:
@@ -156,14 +155,11 @@ class TrickCards(Updatable):
 
     def _update(self, **kwargs) -> int:
         self.cards[kwargs['player']] = kwargs['card']
-        self.set_leader()
+        self.set_leader(trump_color=kwargs['trump_color'])
         if any([cards is None for cards in self.cards.values()]):
             return OK_CODE
         else:
             return TRICK_END_CODE
-
-    def set_trump(self, trump):
-        self.trump: str = trump
 
     def reset(self, **kwargs):
         self.cards = {player: None for player in Player}
@@ -248,7 +244,7 @@ class Round(Updatable):
         card = self.hands[kwargs['player']][kwargs['card_index']]
         if self.is_belote_card(card):
             self.belote.append(kwargs['player'])
-        trick_cards_update_code = self.trick_cards.update(card=card, **kwargs)
+        trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, **kwargs)
         hand_update_code = self.hands[kwargs['player']].update(**kwargs)
         if trick_cards_update_code == TRICK_END_CODE:
             self.update_round_score()
@@ -264,7 +260,6 @@ class Round(Updatable):
 
     def set_trump(self, trump):
         self.trump: str = trump
-        self.trick_cards.set_trump(trump)
 
     def reset(self, **kwargs):
         for player, hand in self.hands.items():
