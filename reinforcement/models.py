@@ -135,12 +135,20 @@ class TrickCards(Updatable):
 
     def __init__(self):
         super().__init__()
-        self.cards: Dict[Player, Card] = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.cards: Dict[Player, Optional[Card]] = {player: None for player in Player}
         self.leader: Optional[Player] = None
+        self.trump: Optional[str] = None
 
-    # @TODO: implement TrickCards.set_leader
     def set_leader(self):
-        raise NotImplementedError()
+        trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == self.trump)]
+        plain_cards = [card for card in self.cards.values() if (card is not None) and (card.color != self.trump)]
+        if trump_cards:
+            leading_card = sorted(trump_cards, key=lambda x: (constants.TRUMP_POINTS[x], x)[-1])
+        elif plain_cards:
+            leading_card = sorted(trump_cards, key=lambda x: (constants.PLAIN_POINTS[x], x)[-1])
+        else:
+            return
+        self.leader = [player for (player, card) in self.cards.items() if card == leading_card][0]
 
     def _validate(self, **kwargs) -> bool:
         return self.cards[kwargs['player']] is None
@@ -153,8 +161,11 @@ class TrickCards(Updatable):
         else:
             return TRICK_END_CODE
 
+    def set_trump(self, trump):
+        self.trump: str = trump
+
     def reset(self, **kwargs):
-        self.cards = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.cards = {player: None for player in Player}
         self.leader = None
 
 
@@ -251,6 +262,7 @@ class Round(Updatable):
 
     def set_trump(self, trump):
         self.trump: str = trump
+        self.trick_cards.set_trump(trump)
 
     def reset(self, **kwargs):
         for player, hand in self.hands.items():
