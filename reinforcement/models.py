@@ -1,4 +1,5 @@
 # @TODO: revise the _validate methods to check for type, format... And try to DRY (cf Round.update that calls for Hand._validate)
+# @TODO: ensure player is the expected one in _validate methods
 
 from typing import List, Dict, Optional
 from enum import Enum
@@ -174,7 +175,7 @@ class Auction(Updatable):
 
     def __init__(self):
         super().__init__()
-        self.bids: Dict[Player, Bid] = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.bids: Dict[Player, Optional[Bid]] = {player: None for player in Player}
         self.current_passed: int = 0
         self.current_best: int = None
 
@@ -207,7 +208,7 @@ class Auction(Updatable):
             return OK_CODE
 
     def reset(self, **kwargs):
-        self.bids = dict(zip([p for p in Player], [None for i in range(len(Player.__members__))]))
+        self.bids = {player: None for player in Player}
         self.current_passed = 0
         self.current_best = None
 
@@ -215,11 +216,12 @@ class Auction(Updatable):
 class Round(Updatable):
     UPDATE_PARAMS = ['player', 'card_index']
 
-    def __init__(self, hands: Dict[Player, List[Card]]):
+    def __init__(self, hands: Dict[Player, List[Card]], trick_opener: Player):
         super().__init__()
         self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands}
         self.trick_cards: TrickCards = TrickCards()
         self.trick: int = 0
+        self.trick_opener: Player = trick_opener
         self.score: Dict[Team, int] = {team: 0 for team in Team}
         self.belote: List[Player] = []
         self.trump: Optional[str] = None
@@ -268,7 +270,8 @@ class Round(Updatable):
         for player, hand in self.hands.items():
             hand.reset(cards=kwargs['cards'][player])
         self.trick_cards.reset(**kwargs)
-        self.trick: int = 0
+        self.trick = 0
+        self.trick_opener = kwargs['trick_opener']
         self.score = {team: 0 for team in Team}
         self.belote = []
 
@@ -276,11 +279,12 @@ class Round(Updatable):
 class Game(Updatable):
     UPDATE_PARAMS = ['player']
 
-    def __init__(self):
+    def __init__(self, first_player: Player):
         super().__init__()
         self.state: State = State.AUCTION
+        self.first_player = first_player
         self.auction: Auction = Auction()
-        self.round: Round = Round(self.deal())
+        self.round: Round = Round(hands=self.deal(), trick_opener=first_player)
         self.score: Dict[Team, int] = {team: 0 for team in Team}
 
     @classmethod
@@ -312,8 +316,9 @@ class Game(Updatable):
 
     def reset(self, **kwargs):
         self.state = State.AUCTION
+        self.first_player = kwargs['first_player']
         self.auction.reset(**kwargs)
-        self.round.reset(cards=self.deal(), **kwargs)
+        self.round.reset(cards=self.deal(), trick_opener=self.first_player, **kwargs)
         self.score = {team: 0 for team in Team}
 
     def end_auction(self, status, **kwargs):
@@ -321,8 +326,9 @@ class Game(Updatable):
             self.round.set_trump(self.auction.get_best_color())
             self.state = State.PLAYING
         elif status == AUCTION_END_KO_CODE:
+            self.first_player = NEXT_PLAYER[self.first_player]
             self.auction.reset(**kwargs)
-            self.round.reset(cards=self.deal())
+            self.round.reset(cards=self.deal(), trick_opener=self.first_player, **kwargs)
 
     # @TODO: implement Game.update_score (compare round.score to contract and compute game score)
     def update_score(self):
@@ -330,6 +336,7 @@ class Game(Updatable):
 
     def end_round(self, **kwargs):
         self.update_score()
+        self.first_player = NEXT_PLAYER[self.first_player]
         self.auction.reset(**kwargs)
-        self.round.reset(cards=self.deal(), **kwargs)
+        self.round.reset(cards=self.deal(), trick_opener=self.first_player, **kwargs)
         self.state = State.AUCTION
