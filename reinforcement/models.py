@@ -222,9 +222,40 @@ class Round(Updatable):
         self.belote: List[Player] = []
         self.trump: Optional[str] = None
 
-    # @TODO: implement Round.card_is_playable
-    def card_is_playable(self, card_index: int) -> bool:
-        raise NotImplementedError()
+    def card_is_playable(self, player: Player, card_index: int) -> bool:
+        if player == self.trick_opener:
+            return True
+        else:
+            player_card = self.hands[player].cards[card_index]
+            trump_cards = [card for card in self.hands[player].cards if card.color == self.trump]
+            trick_color = self.trick_cards.cards[self.trick_opener].color
+            if trick_color == self.trump:
+                if trump_cards:
+                    leading_card = self.trick_cards.cards[self.trick_cards.leader]
+                    player_highest_trump = max(trump_cards, key=_rank_trump_card)
+                    return (
+                            (_rank_trump_card(player_card) > _rank_trump_card(leading_card))
+                            or (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
+                    )
+                else:
+                    return True
+            else:
+                color_cards = [card for card in self.hands[player].cards if card.color == trick_color]
+                if color_cards:
+                    return player_card in color_cards
+                elif trump_cards:
+                    leader = self.trick_cards.leader
+                    if PLAYER_TO_TEAM[player] == PLAYER_TO_TEAM[leader]:
+                        return True
+                    else:
+                        leading_card = self.trick_cards.cards[leader]
+                        player_highest_trump = max(trump_cards, key=_rank_trump_card)
+                        return (
+                                (_rank_trump_card(player_card) > _rank_trump_card(leading_card))
+                                or (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
+                        )
+                else:
+                    return True
 
     # @TODO: implement Round.is_belote_card
     def is_belote_card(self, card: Card) -> bool:
@@ -235,10 +266,11 @@ class Round(Updatable):
         raise NotImplementedError()
 
     def _validate(self, **kwargs) -> bool:
+        player = kwargs['player']
         card_index = kwargs['card_index']
-        if (type(card_index) != int) or (card_index >= len(self.hands[kwargs['player']])):
+        if (type(card_index) != int) or (card_index >= len(self.hands[player])):
             return False
-        return self.card_is_playable(card_index)
+        return self.card_is_playable(player, card_index)
 
     def _update(self, **kwargs) -> int:
         card = self.hands[kwargs['player']][kwargs['card_index']]
