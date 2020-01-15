@@ -143,9 +143,9 @@ class TrickCards(Updatable):
         trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trump_color)]
         plain_cards = [card for card in self.cards.values() if (card is not None) and (card.color != trump_color)]
         if trump_cards:
-            leading_card = sorted(trump_cards, key=lambda x: (constants.TRUMP_POINTS[x], x)[-1])
+            leading_card = sorted(trump_cards, key=_rank_trump_card)[-1]
         elif plain_cards:
-            leading_card = sorted(trump_cards, key=lambda x: (constants.PLAIN_POINTS[x], x)[-1])
+            leading_card = sorted(trump_cards, key=_rank_plain_card)[-1]
         else:
             return
         self.leader = [player for (player, card) in self.cards.items() if card == leading_card][0]
@@ -335,3 +335,12 @@ class Game(Updatable):
         self.auction.reset(**kwargs)
         self.round.reset(cards=self.deal(), trick_opener=self.first_player, **kwargs)
         self.state = State.AUCTION
+
+
+# HELPERS
+def _rank_trump_card(card: Card):
+    return constants.TRUMP_POINTS[card.value], card.value
+
+
+def _rank_plain_card(card: Card):
+    return constants.PLAIN_POINTS[card.value], card.value, -constants.COLORS.index(card.color)
