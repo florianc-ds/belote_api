@@ -282,6 +282,10 @@ class Game(Updatable):
         self.round: Round = Round(hands=self.deal(), trick_opener=first_player)
         self.score: Dict[Team, int] = {team: 0 for team in Team}
 
+    # @TODO: Implement Game.describe_state
+    def describe_state(self):
+        raise NotImplementedError()
+
     @classmethod
     def deal(cls) -> Dict[Player, List[Card]]:
         cards = [Card(color, value) for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.values())]
