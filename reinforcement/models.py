@@ -257,9 +257,8 @@ class Round(Updatable):
                 else:
                     return True
 
-    # @TODO: implement Round.is_belote_card
     def is_belote_card(self, card: Card) -> bool:
-        raise NotImplementedError()
+        return (card.color == self.trump) and (card.value in ['Q', 'K'])
 
     # @TODO: implement Round.update_round_score (also check for belote if last_trick)
     def update_round_score(self, last_trick=False):
