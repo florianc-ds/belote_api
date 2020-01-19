@@ -10,6 +10,8 @@ from helpers import constants
 
 seed(13)
 
+COLOR_TO_SYMBOL = {'s': '♠', 'd': '♦', 'h': '♥', 'c': '♣'}
+
 OK_CODE = 0
 AUCTION_END_OK_CODE = 10
 AUCTION_END_KO_CODE = 11
@@ -51,7 +53,9 @@ class Describable(object):
             return elt.describe()
         elif '__dict__' in dir(elt):
             return elt.__dict__
-        elif ('__iter__' in dir(elt)) and (type(elt) != dict):
+        elif type(elt) == dict:
+            return {k: Describable._describe(v) for k, v in elt.items()}
+        elif ('__iter__' in dir(elt)) and (type(elt) not in [dict, str]):
             return [Describable._describe(e) for e in elt]
         else:
             return elt
@@ -101,6 +105,9 @@ class Card(Describable):
 
     def __eq__(self, other):
         return (self.color == other.color) and (self.value == other.value)
+
+    def describe(self):
+        return f'{self.value}{COLOR_TO_SYMBOL[self.color]}'
 
 
 class Bid(Describable):
