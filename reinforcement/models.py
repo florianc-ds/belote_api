@@ -260,8 +260,16 @@ class Round(Updatable):
     def is_belote_card(self, card: Card) -> bool:
         return (card.color == self.trump) and (card.value in ['Q', 'K'])
 
-    # @TODO: implement Round.update_round_score (also check for belote if last_trick)
     def update_round_score(self, last_trick=False):
+        leading_team = PLAYER_TO_TEAM[self.trick_cards.leader]
+        self.score[leading_team] += sum(
+            [constants.TRUMP_POINTS[card.value] if card.color == self.trump else constants.TRUMP_POINTS[card.value]
+             for card in self.trick_cards.cards.values()]
+        )
+        if last_trick:
+            self.score[leading_team] += 10
+            if self.belote[0] == self.belote[1]:
+                self.score[PLAYER_TO_TEAM[self.belote[0]]] += 20
         raise NotImplementedError()
 
     def _validate(self, **kwargs) -> bool:
@@ -278,12 +286,13 @@ class Round(Updatable):
         trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, **kwargs)
         hand_update_code = self.hands[kwargs['player']].update(**kwargs)
         if trick_cards_update_code == TRICK_END_CODE:
-            self.update_round_score()
-            self.trick_cards.reset()
             if self.trick == 7:
                 self.update_round_score(last_trick=True)
+                self.trick_cards.reset()
                 return ROUND_END_CODE
             else:
+                self.update_round_score()
+                self.trick_cards.reset()
                 self.trick += 1
                 return hand_update_code
         else:
