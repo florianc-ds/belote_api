@@ -173,7 +173,7 @@ class Auction(Updatable):
         super().__init__()
         self.bids: Dict[Player, Optional[Bid]] = {player: None for player in Player}
         self.current_passed: int = 0
-        self.current_best: int = None
+        self.current_best: Optional[Player] = None
 
     def auction_is_successful(self) -> bool:
         return any([bid is not None for bid in self.bids])
@@ -181,7 +181,7 @@ class Auction(Updatable):
     def get_best_color(self):
         if self.current_best is not None:
             return [bid.color for bid in self.bids.values()
-                    if (bid is not None) and (bid.value == self.current_best)][0]
+                    if (bid is not None) and (bid.value == self.bids[self.current_best].value)][0]
 
     def _validate(self, **kwargs) -> bool:
         if kwargs['passed']:
@@ -189,7 +189,8 @@ class Auction(Updatable):
         else:
             value = kwargs['value']
             value_format_is_valid = (type(value) == int) and (value % 10 == 0)
-            value_amount_is_valid = (value > max(80, 0 if self.current_best is None else self.current_best))
+            current_best_bid = self.bids[self.current_best].value
+            value_amount_is_valid = (value > max(80,  0 if current_best_bid is None else current_best_bid))
             return value_format_is_valid and value_amount_is_valid
 
     def _update(self, **kwargs) -> int:
@@ -201,6 +202,7 @@ class Auction(Updatable):
                 return OK_CODE
         else:
             self.bids[kwargs['player']] = Bid(color=kwargs['color'], value=kwargs['value'])
+            self.current_best = kwargs['player']
             return OK_CODE
 
     def reset(self, **kwargs):
@@ -369,9 +371,17 @@ class Game(Updatable):
             self.auction.reset(**kwargs)
             self.round.reset(cards=self.deal(), trick_opener=self.first_player, **kwargs)
 
-    # @TODO: implement Game.update_score (compare round.score to contract and compute game score)
     def update_score(self):
-        raise NotImplementedError()
+        contract_team = PLAYER_TO_TEAM[self.auction.current_best]
+        contract_team_round_score = self.round.score[contract_team]
+        opponent_team = Team.ONE if contract_team == Team.TWO else Team.TWO
+        opponent_team_round_score = self.round.score[opponent_team]
+        contract = self.auction.bids[self.auction.current_best].value
+        if contract_team_round_score >= contract:
+            self.score[contract_team] += round(contract_team_round_score / 10) * 10 + contract
+            self.score[opponent_team] += round(opponent_team_round_score / 10) * 10
+        else:
+            self.score[opponent_team] += 160 + contract
 
     def end_round(self, **kwargs):
         self.update_score()
