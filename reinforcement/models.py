@@ -216,7 +216,7 @@ class Round(Updatable):
 
     def __init__(self, hands: Dict[Player, List[Card]], trick_opener: Player):
         super().__init__()
-        self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands}
+        self.hands: Dict[Player, Hand] = {player: Hand(cards) for (player, cards) in hands.items()}
         self.trick_cards: TrickCards = TrickCards()
         self.trick: int = 0
         self.trick_opener: Player = trick_opener
@@ -282,7 +282,7 @@ class Round(Updatable):
         return self.card_is_playable(player, card_index)
 
     def _update(self, **kwargs) -> int:
-        card = self.hands[kwargs['player']][kwargs['card_index']]
+        card = self.hands[kwargs['player']].cards[kwargs['card_index']]
         if self.is_belote_card(card):
             self.belote.append(kwargs['player'])
         trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, **kwargs)
@@ -330,7 +330,7 @@ class Game(Updatable):
 
     @classmethod
     def deal(cls) -> Dict[Player, List[Card]]:
-        cards = [Card(color, value) for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.values())]
+        cards = [Card(color, value) for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.keys())]
         shuffle(cards)
         return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
 
@@ -398,3 +398,9 @@ def _rank_trump_card(card: Card):
 
 def _rank_plain_card(card: Card):
     return constants.PLAIN_POINTS[card.value], card.value, -constants.COLORS.index(card.color)
+
+
+if __name__ == '__main__':
+    from pprint import pprint
+    new_game = Game(first_player=Player.ONE)
+    pprint(new_game.describe())
