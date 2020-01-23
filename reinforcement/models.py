@@ -399,9 +399,9 @@ class Game(Updatable):
         return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
 
     def _validate(self, **kwargs) -> bool:
-        known_player = kwargs['player'] in Player.__members__
+        known_player = kwargs['player'] in Player
         if not known_player:
-            logger.warning(f"Player ({kwargs['player']}) unknown. Please choose among {Player.__members__}")
+            logger.warning(f"Player ({kwargs['player']}) unknown. Please choose among {list(Player)}")
         return known_player
 
     def _update(self, **kwargs) -> int:
