@@ -1,6 +1,6 @@
 # @TODO: revise the _validate methods to check for type, format... And try to DRY (cf Round.update that calls for Hand._validate)
 # @TODO: ensure player is the expected one in _validate methods
-
+import logging
 from typing import List, Dict, Optional
 from enum import Enum
 from itertools import product
@@ -20,6 +20,8 @@ ROUND_END_CODE = 16
 CHECK_ERROR_CODE = 20
 VALIDATION_ERROR_CODE = 21
 UNKNOWN_ERROR_CODE = 22
+
+logger = logging.getLogger()
 
 
 class Player(Enum):
@@ -83,14 +85,22 @@ class Updatable(Describable):
         raise NotImplementedError()
 
     def update(self, **kwargs) -> int:
+        class_name = self.__class__.__name__
         try:
             if not self._check_params(**kwargs):
+                logger.warning(f"Parameters passed ({kwargs}) for update action on {class_name} are not sufficient.\n"
+                               f"Required parameters for Class {class_name} are {self.UPDATE_PARAMS}")
                 return CHECK_ERROR_CODE
-            elif self._validate(**kwargs):
-                return self._update(**kwargs)
-            else:
+            elif not self._validate(**kwargs):
+                logger.warning(f"Validation went wrong in Class {class_name} for parameters {kwargs}")
                 return VALIDATION_ERROR_CODE
-        except:
+            else:
+                return self._update(**kwargs)
+        except Exception as e:
+            logger.warning(f"Something went wrong during update process for Class {class_name}\n"
+                           f"Parameters passed are: {kwargs}\n"
+                           f"Current state of instance is: {self.describe()}\n"
+                           f"ERROR: {e}")
             return UNKNOWN_ERROR_CODE
 
     def reset(self, **kwargs):
@@ -128,7 +138,11 @@ class Hand(Updatable):
         return len(self.cards)
 
     def _validate(self, **kwargs) -> bool:
-        return kwargs['card_index'] < len(self.cards)
+        correct_index = kwargs['card_index'] < len(self.cards)
+        if not correct_index:
+            logger.warning(f"Card index ({kwargs['card_index']}) "
+                           f"is higher than the number of cards in hand ({len(self.cards)})")
+        return correct_index
 
     def _update(self, **kwargs) -> int:
         self.cards.pop(kwargs['card_index'])
@@ -158,7 +172,10 @@ class TrickCards(Updatable):
         self.leader = [player for (player, card) in self.cards.items() if card == leading_card][0]
 
     def _validate(self, **kwargs) -> bool:
-        return self.cards[kwargs['player']] is None
+        empty_card = self.cards[kwargs['player']] is None
+        if not empty_card:
+            logger.warning(f"Trying to override an existing card ({self.cards[kwargs['player']]}) in TrickCards")
+        return empty_card
 
     def _update(self, **kwargs) -> int:
         self.cards[kwargs['player']] = kwargs['card']
@@ -166,6 +183,7 @@ class TrickCards(Updatable):
         if any([cards is None for cards in self.cards.values()]):
             return OK_CODE
         else:
+            logger.info("End of the trick")
             return TRICK_END_CODE
 
     def reset(self, **kwargs):
@@ -196,14 +214,25 @@ class Auction(Updatable):
         else:
             value = kwargs['value']
             value_format_is_valid = (type(value) == int) and (value % 10 == 0)
+            if not value_format_is_valid:
+                logger.warning(f"Value of the bid ({value}) is not valid: integer dividable by 10 is expected")
+                return False
             current_best_bid = self.bids[self.current_best].value
             value_amount_is_valid = (value > max(80,  0 if current_best_bid is None else current_best_bid))
-            return value_format_is_valid and value_amount_is_valid
+            if not value_amount_is_valid:
+                logger.warning(f"Value of the bid ({value}) is lesser than the current best bid ({current_best_bid})")
+                return False
+            return True
 
     def _update(self, **kwargs) -> int:
         if kwargs['passed']:
             if kwargs['passed'] == 3:
-                return AUCTION_END_OK_CODE if self.auction_is_successful() else AUCTION_END_KO_CODE
+                if self.auction_is_successful():
+                    logger.info("End of the auction")
+                    return AUCTION_END_OK_CODE
+                else:
+                    logger.info("Nobody bet. Dealing again")
+                    return AUCTION_END_KO_CODE
             else:
                 self.current_passed += 1
                 return OK_CODE
@@ -240,29 +269,51 @@ class Round(Updatable):
             trick_color = self.trick_cards.cards[self.trick_opener].color
             if trick_color == self.trump:
                 if trump_cards:
+                    if player_card.color != self.trump:
+                        logger.warning(f"Playing trumps, card ({player_card.describe()}) must be trump ({self.trump})")
+                        return False
                     leading_card = self.trick_cards.cards[self.trick_cards.leader]
                     player_highest_trump = max(trump_cards, key=_rank_trump_card)
-                    return (
-                            (_rank_trump_card(player_card) > _rank_trump_card(leading_card))
-                            or (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
-                    )
+                    if not (
+                            (_rank_trump_card(player_card) > _rank_trump_card(leading_card)) or
+                            (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
+                    ):
+                        logger.warning(f"Playing trumps, card ({player_card.describe()}) "
+                                       f"must be higher than current leading trump ({leading_card.describe()})")
+                        return False
+                    else:
+                        return True
                 else:
                     return True
             else:
                 color_cards = [card for card in self.hands[player].cards if card.color == trick_color]
                 if color_cards:
-                    return player_card in color_cards
+                    valid_color = player_card in color_cards
+                    if not valid_color:
+                        logger.warning(f"Player has to play trick color ({trick_color}), "
+                                       f"but played instead {player_card.describe()}")
+                    return valid_color
                 elif trump_cards:
+                    if player_card.color != self.trump:
+                        logger.warning(f"Can not furnish on color {trick_color}, "
+                                       f"player must cut but instead played {player_card.describe()}")
+                        return False
                     leader = self.trick_cards.leader
                     if PLAYER_TO_TEAM[player] == PLAYER_TO_TEAM[leader]:
                         return True
                     else:
                         leading_card = self.trick_cards.cards[leader]
                         player_highest_trump = max(trump_cards, key=_rank_trump_card)
-                        return (
-                                (_rank_trump_card(player_card) > _rank_trump_card(leading_card))
-                                or (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
-                        )
+                        if not (
+                                (leading_card.color != self.trump) or
+                                (_rank_trump_card(player_card) > _rank_trump_card(leading_card)) or
+                                (_rank_trump_card(leading_card) > _rank_trump_card(player_highest_trump))
+                        ):
+                            logger.warning(f"Can not furnish on color {trick_color}, player must cut with "
+                                           f"a high enough trump, but instead played {player_card.describe()}")
+                            return False
+                        else:
+                            return True
                 else:
                     return True
 
@@ -279,18 +330,23 @@ class Round(Updatable):
             self.score[leading_team] += 10
             if self.belote[0] == self.belote[1]:
                 self.score[PLAYER_TO_TEAM[self.belote[0]]] += 20
-        raise NotImplementedError()
 
     def _validate(self, **kwargs) -> bool:
         player = kwargs['player']
         card_index = kwargs['card_index']
-        if (type(card_index) != int) or (card_index >= len(self.hands[player])):
+        if type(card_index) != int:
+            logger.warning(f"Card index ({card_index}) is invalid")
+            return False
+        elif card_index >= len(self.hands[player].cards):
+            logger.warning(f"Card index ({card_index}) "
+                           f"is higher than the number of cards in hand ({len(self.hands[player].cards)})")
             return False
         return self.card_is_playable(player, card_index)
 
     def _update(self, **kwargs) -> int:
         card = self.hands[kwargs['player']].cards[kwargs['card_index']]
         if self.is_belote_card(card):
+            logger.info('(Re-)Belote')
             self.belote.append(kwargs['player'])
         trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, **kwargs)
         hand_update_code = self.hands[kwargs['player']].update(**kwargs)
@@ -298,6 +354,7 @@ class Round(Updatable):
             if self.trick == 7:
                 self.update_round_score(last_trick=True)
                 self.trick_cards.reset()
+                logger.info("End of the round")
                 return ROUND_END_CODE
             else:
                 self.update_round_score()
@@ -342,7 +399,10 @@ class Game(Updatable):
         return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
 
     def _validate(self, **kwargs) -> bool:
-        return kwargs['player'] in Player.__members__
+        known_player = kwargs['player'] in Player.__members__
+        if not known_player:
+            logger.warning(f"Player ({kwargs['player']}) unknown. Please choose among {Player.__members__}")
+        return known_player
 
     def _update(self, **kwargs) -> int:
         if self.state == State.AUCTION:
