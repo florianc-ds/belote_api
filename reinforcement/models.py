@@ -53,10 +53,12 @@ class Describable(object):
     def _describe(elt):
         if 'describe' in dir(elt):
             return elt.describe()
+        elif isinstance(elt, Enum):
+            return elt.value
         elif '__dict__' in dir(elt):
             return elt.__dict__
         elif type(elt) == dict:
-            return {k: Describable._describe(v) for k, v in elt.items()}
+            return {Describable._describe(k): Describable._describe(v) for k, v in elt.items()}
         elif ('__iter__' in dir(elt)) and (type(elt) not in [dict, str]):
             return [Describable._describe(e) for e in elt]
         else:
@@ -100,7 +102,7 @@ class Updatable(Describable):
             logger.warning(f"Something went wrong during update process for Class {class_name}\n"
                            f"Parameters passed are: {kwargs}\n"
                            f"Current state of instance is: {self.describe()}\n"
-                           f"ERROR: {e}")
+                           f"ERROR: {e.__class__.__name__}: {e}")
             return UNKNOWN_ERROR_CODE
 
     def reset(self, **kwargs):
@@ -108,10 +110,10 @@ class Updatable(Describable):
 
 
 class Card(Describable):
-    def __init__(self, color: str, value: str):
+    def __init__(self, value: str, color: str):
         super().__init__()
-        self.color = color
         self.value = value
+        self.color = color
 
     def __eq__(self, other):
         return (self.color == other.color) and (self.value == other.value)
@@ -153,23 +155,23 @@ class Hand(Updatable):
 
 
 class TrickCards(Updatable):
-    UPDATE_PARAMS = ['player', 'card', 'trump_color']
+    UPDATE_PARAMS = ['player', 'card', 'trump_color', 'trick_color']
 
     def __init__(self):
         super().__init__()
         self.cards: Dict[Player, Optional[Card]] = {player: None for player in Player}
         self.leader: Optional[Player] = None
 
-    def set_leader(self, trump_color):
+    def set_leader(self, trump_color, trick_color):
         trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trump_color)]
-        plain_cards = [card for card in self.cards.values() if (card is not None) and (card.color != trump_color)]
+        color_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trick_color)]
         if trump_cards:
             leading_card = sorted(trump_cards, key=_rank_trump_card)[-1]
-        elif plain_cards:
-            leading_card = sorted(trump_cards, key=_rank_plain_card)[-1]
+        elif color_cards:
+            leading_card = sorted(color_cards, key=_rank_plain_card)[-1]
         else:
             return
-        self.leader = [player for (player, card) in self.cards.items() if card == leading_card][0]
+        self.leader = [player for (player, card) in self.cards.items() if card is not None and card == leading_card][0]
 
     def _validate(self, **kwargs) -> bool:
         empty_card = self.cards[kwargs['player']] is None
@@ -179,7 +181,7 @@ class TrickCards(Updatable):
 
     def _update(self, **kwargs) -> int:
         self.cards[kwargs['player']] = kwargs['card']
-        self.set_leader(trump_color=kwargs['trump_color'])
+        self.set_leader(trump_color=kwargs['trump_color'], trick_color=kwargs['trick_color'])
         if any([cards is None for cards in self.cards.values()]):
             return OK_CODE
         else:
@@ -197,11 +199,11 @@ class Auction(Updatable):
     def __init__(self):
         super().__init__()
         self.bids: Dict[Player, Optional[Bid]] = {player: None for player in Player}
-        self.current_passed: int = 0
+        self.current_passed: int = -1
         self.current_best: Optional[Player] = None
 
     def auction_is_successful(self) -> bool:
-        return any([bid is not None for bid in self.bids])
+        return any([bid is not None for bid in self.bids.values()])
 
     def get_best_color(self):
         if self.current_best is not None:
@@ -217,8 +219,8 @@ class Auction(Updatable):
             if not value_format_is_valid:
                 logger.warning(f"Value of the bid ({value}) is not valid: integer dividable by 10 is expected")
                 return False
-            current_best_bid = self.bids[self.current_best].value
-            value_amount_is_valid = (value > max(80,  0 if current_best_bid is None else current_best_bid))
+            current_best_bid = self.bids[self.current_best].value if self.current_best else None
+            value_amount_is_valid = (value > (current_best_bid if current_best_bid is not None else 79))
             if not value_amount_is_valid:
                 logger.warning(f"Value of the bid ({value}) is lesser than the current best bid ({current_best_bid})")
                 return False
@@ -226,7 +228,7 @@ class Auction(Updatable):
 
     def _update(self, **kwargs) -> int:
         if kwargs['passed']:
-            if kwargs['passed'] == 3:
+            if self.current_passed == 2:
                 if self.auction_is_successful():
                     logger.info("End of the auction")
                     return AUCTION_END_OK_CODE
@@ -239,11 +241,12 @@ class Auction(Updatable):
         else:
             self.bids[kwargs['player']] = Bid(color=kwargs['color'], value=kwargs['value'])
             self.current_best = kwargs['player']
+            self.current_passed = 0
             return OK_CODE
 
     def reset(self, **kwargs):
         self.bids = {player: None for player in Player}
-        self.current_passed = 0
+        self.current_passed = -1
         self.current_best = None
 
 
@@ -294,14 +297,14 @@ class Round(Updatable):
                                        f"but played instead {player_card.describe()}")
                     return valid_color
                 elif trump_cards:
-                    if player_card.color != self.trump:
-                        logger.warning(f"Can not furnish on color {trick_color}, "
-                                       f"player must cut but instead played {player_card.describe()}")
-                        return False
                     leader = self.trick_cards.leader
                     if PLAYER_TO_TEAM[player] == PLAYER_TO_TEAM[leader]:
                         return True
                     else:
+                        if player_card.color != self.trump:
+                            logger.warning(f"Can not furnish on color {trick_color}, "
+                                           f"player must cut but instead played {player_card.describe()}")
+                            return False
                         leading_card = self.trick_cards.cards[leader]
                         player_highest_trump = max(trump_cards, key=_rank_trump_card)
                         if not (
@@ -323,7 +326,7 @@ class Round(Updatable):
     def update_round_score(self, last_trick=False):
         leading_team = PLAYER_TO_TEAM[self.trick_cards.leader]
         self.score[leading_team] += sum(
-            [constants.TRUMP_POINTS[card.value] if card.color == self.trump else constants.TRUMP_POINTS[card.value]
+            [constants.TRUMP_POINTS[card.value] if card.color == self.trump else constants.PLAIN_POINTS[card.value]
              for card in self.trick_cards.cards.values()]
         )
         if last_trick:
@@ -348,7 +351,14 @@ class Round(Updatable):
         if self.is_belote_card(card):
             logger.info('(Re-)Belote')
             self.belote.append(kwargs['player'])
-        trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, **kwargs)
+        if kwargs['player'] == self.trick_opener:
+            trick_color = card.color
+        else:
+            trick_color = self.trick_cards.cards[self.trick_opener].color
+        trick_cards_update_code = self.trick_cards.update(card=card, trump_color=self.trump, trick_color=trick_color,
+                                                          **kwargs)
+        if trick_cards_update_code not in [OK_CODE, TRICK_END_CODE]:
+            return trick_cards_update_code
         hand_update_code = self.hands[kwargs['player']].update(**kwargs)
         if trick_cards_update_code == TRICK_END_CODE:
             if self.trick == 7:
@@ -358,6 +368,7 @@ class Round(Updatable):
                 return ROUND_END_CODE
             else:
                 self.update_round_score()
+                self.trick_opener = self.trick_cards.leader
                 self.trick_cards.reset()
                 self.trick += 1
                 return hand_update_code
@@ -375,6 +386,7 @@ class Round(Updatable):
         self.trick_opener = kwargs['trick_opener']
         self.score = {team: 0 for team in Team}
         self.belote = []
+        self.trump = None
 
 
 class Game(Updatable):
@@ -394,9 +406,10 @@ class Game(Updatable):
 
     @classmethod
     def deal(cls) -> Dict[Player, List[Card]]:
-        cards = [Card(color, value) for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.keys())]
+        cards = [Card(color=color, value=value)
+                 for (color, value) in product(constants.COLORS, constants.PLAIN_POINTS.keys())]
         shuffle(cards)
-        return {player: cards[8 * i: 8 * (i + 1) + 1] for (i, player) in enumerate(Player)}
+        return {player: cards[8 * i: 8 * (i + 1)] for (i, player) in enumerate(Player)}
 
     def _validate(self, **kwargs) -> bool:
         known_player = kwargs['player'] in Player
@@ -445,9 +458,13 @@ class Game(Updatable):
         opponent_team_round_score = self.round.score[opponent_team]
         contract = self.auction.bids[self.auction.current_best].value
         if contract_team_round_score >= contract:
+            logger.info(f"Contract ({contract}) has been reached ({contract_team_round_score}) "
+                        f"by {contract_team.value}")
             self.score[contract_team] += round(contract_team_round_score / 10) * 10 + contract
             self.score[opponent_team] += round(opponent_team_round_score / 10) * 10
         else:
+            logger.info(f"Contract ({contract}) has not been reached ({contract_team_round_score}) "
+                        f"by {contract_team.value}")
             self.score[opponent_team] += 160 + contract
 
     def end_round(self, **kwargs):
@@ -465,9 +482,3 @@ def _rank_trump_card(card: Card):
 
 def _rank_plain_card(card: Card):
     return constants.PLAIN_POINTS[card.value], card.value, -constants.COLORS.index(card.color)
-
-
-if __name__ == '__main__':
-    from pprint import pprint
-    new_game = Game(first_player=Player.ONE)
-    pprint(new_game.describe())
