@@ -4,3 +4,7 @@ class UnhandledPlayCaseException(Exception):
 
 class UnhandledBetOrPassCaseException(Exception):
     pass
+
+
+class StringNotInAlphabetException(Exception):
+    pass
