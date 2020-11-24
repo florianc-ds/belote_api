@@ -1,0 +1,33 @@
+GOAL = state with at most 10^6 cardinality
+STATE 1 =
+[
+    [
+        [
+            0/1 (player has card),
+            0/1 (another player has card),
+            0/1 (player played card in trick),
+            0/1 (another player played card in trick),
+            0/1 (card already played in previous tricks)
+        ],
+        ...                          1 line for each of the 32 cards
+        [0/1, 0/1, 0/1, 0/1, 0/1]
+    ],  ==> 5^32
+    0/1 (bet team),  ==> 2
+]
+==> 2 * 5^32 ~= 5 * 10^22...
+
+STATE 2 =
+[
+    [
+        (0/1/2/.../32), (index of the card, or 0 if empty)
+        ...            1 line for each of the 8 cards in hand
+        (0/1/2/.../32)
+    ],  ==> 32^8
+    [
+        (0/1/2/.../32), (index of the card, or 0 if empty)
+        ...            1 line for each of the 3 trick cards
+        (0/1/2/.../32)
+    ],  ==> 32^3
+    0/1 (bet team),  ==> 2
+]
+==> 2 * 32^11 ~= 7 * 10^16
