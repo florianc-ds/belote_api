@@ -2,7 +2,6 @@
             --> Analysis (doc, problem definition, reward function,...)
 
 
-[IMPROVEMENT][FRONT] Replace current cards representation with {'\u{1F0C2}'}, ... (cf https://en.wikipedia.org/wiki/Playing_cards_in_Unicode)
 [IMPROVEMENT][FRONT] When displaying game score, it could be better to flush last round cards before, couldn't it?
 
 [IMPROVEMENT][BACK] expert.bet_or_pass.strategy.bet_or_pass_expert_strategy
