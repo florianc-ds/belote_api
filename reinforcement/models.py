@@ -162,16 +162,8 @@ class TrickCards(Updatable):
         self.cards: Dict[Player, Optional[Card]] = {player: None for player in Player}
         self.leader: Optional[Player] = None
 
-    def set_leader(self, trump_color, trick_color):
-        trump_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trump_color)]
-        color_cards = [card for card in self.cards.values() if (card is not None) and (card.color == trick_color)]
-        if trump_cards:
-            leading_card = sorted(trump_cards, key=_rank_trump_card)[-1]
-        elif color_cards:
-            leading_card = sorted(color_cards, key=_rank_plain_card)[-1]
-        else:
-            return
-        self.leader = [player for (player, card) in self.cards.items() if card is not None and card == leading_card][0]
+    def set_leader(self, trump_color: str, trick_color: str):
+        self.leader = derive_leader(cards=self.cards, trump_color=trump_color, trick_color=trick_color)
 
     def _validate(self, **kwargs) -> bool:
         empty_card = self.cards[kwargs['player']] is None
@@ -486,3 +478,15 @@ def _rank_trump_card(card: Card):
 
 def _rank_plain_card(card: Card):
     return constants.PLAIN_POINTS[card.value], card.value, -constants.COLORS.index(card.color)
+
+
+def derive_leader(cards: Dict[Player, Optional[Card]], trump_color: str, trick_color: str) -> Optional[Player]:
+    trump_cards = [card for card in cards.values() if (card is not None) and (card.color == trump_color)]
+    color_cards = [card for card in cards.values() if (card is not None) and (card.color == trick_color)]
+    if trump_cards:
+        leading_card = sorted(trump_cards, key=_rank_trump_card)[-1]
+    elif color_cards:
+        leading_card = sorted(color_cards, key=_rank_plain_card)[-1]
+    else:
+        return
+    return [player for (player, card) in cards.items() if card is not None and card == leading_card][0]
