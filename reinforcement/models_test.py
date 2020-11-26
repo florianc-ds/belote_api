@@ -161,14 +161,6 @@ def test_round_invalid_card_index(caplog):
     assert f"Validation went wrong in Class Round for parameters {action}" in log_messages
 
 
-xxx = {
-    Player.ONE: [Card('7', 's'), Card('8', 's'), Card('9', 's'), Card('10', 's'), Card('J', 's'), Card('Q', 's'), Card('K', 's'), Card('A', 's')],
-    Player.TWO: [Card('7', 'd'), Card('8', 'd'), Card('9', 'd'), Card('10', 'd'), Card('J', 'd'), Card('Q', 'd'), Card('K', 'd'), Card('A', 'd')],
-    Player.THREE: [Card('7', 'h'), Card('8', 'h'), Card('9', 'h'), Card('10', 'h'), Card('J', 'h'), Card('Q', 'h'), Card('K', 'h'), Card('A', 'h')],
-    Player.FOUR: [Card('7', 'c'), Card('8', 'c'), Card('9', 'c'), Card('10', 'c'), Card('J', 'c'), Card('Q', 'c'), Card('K', 'c'), Card('A', 'c')],
-}
-
-
 @pytest.mark.parametrize('hands, trump, log', [
     # case 1: trump asked + trump in hand + no trump played
     (
