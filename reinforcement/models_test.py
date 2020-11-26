@@ -262,6 +262,7 @@ def test_round_valid_card():
         assert game.update(**action) == OK_CODE
 
     before_state = game.describe()
+    assert game.round.get_cards_playability(player=Player.ONE) == [True for i in range(8)]
     action = {'player': Player.ONE, 'card_index': 0}
     assert game.update(**action) == OK_CODE
     after_state = game.describe()
