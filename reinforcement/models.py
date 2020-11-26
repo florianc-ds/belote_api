@@ -314,7 +314,11 @@ class Round(Updatable):
 
     def get_cards_playability(self, player: Player) -> List[bool]:
         player_hand = self.hands[player]
-        return [self.card_is_playable(player, card_index) for card_index in range(len(player_hand))]
+        logging_level = logger.level
+        logger.setLevel(logging.ERROR)
+        cards_playability = [self.card_is_playable(player, card_index) for card_index in range(len(player_hand))]
+        logger.setLevel(logging_level)
+        return cards_playability
 
     def is_belote_card(self, card: Card) -> bool:
         return (card.color == self.trump) and (card.value in ['Q', 'K'])
