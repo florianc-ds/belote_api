@@ -34,6 +34,8 @@ def bet_or_pass_random_strategy(players_bids):
         currently_highest_bid_value = derive_currently_highest_bid_value(players_bids)
         if currently_highest_bid_value and (value <= currently_highest_bid_value):
             action = 'pass'
+            color = None
+            value = None
     else:
         action = 'pass'
         color = None
