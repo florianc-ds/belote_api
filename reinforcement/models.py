@@ -121,6 +121,9 @@ class Card(Describable):
     def describe(self):
         return f'{self.value}{COLOR_TO_SYMBOL[self.color]}'
 
+    def describe_plain(self):
+        return f'{self.value}{self.color}'
+
 
 class Bid(Describable):
     def __init__(self, color: str, value: int):
