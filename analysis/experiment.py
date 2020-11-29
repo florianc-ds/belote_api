@@ -7,7 +7,7 @@ import pandas as pd
 
 from helpers.common_helpers import extract_color, extract_value
 from random_agent import bet_or_pass_random_strategy, play_random_strategy
-from reinforcement.models import Game, Player, NEXT_PLAYER, PLAYER_TO_TEAM, derive_leader, Card, COLOR_TO_SYMBOL
+from reinforcement.models import Game, Player, NEXT_PLAYER, PLAYER_TO_TEAM, derive_leader, Card
 
 CONFIG_COLUMNS = ['experiment_id', 'nb_games', 'west_agent', 'south_agent', 'east_agent', 'north_agent']
 AUCTIONS_COLUMNS = [
