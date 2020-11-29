@@ -133,7 +133,8 @@ def handle_trick(
         trick_cards = game.round.trick_cards.cards.copy()
         trick_cards.update({player: Card(value=extract_value(agent_card), color=extract_color(agent_card))})
         trump_color = new_game_description['round']['trump']
-        trick_color = extract_color(agent_card)
+        trick_opener = game.round.trick_opener
+        trick_color = trick_cards[trick_opener].color
         belote_cards_players = new_game_description['round']['belote']
         action = {'player': player, 'card_index': player_cards.index(agent_card)}
         action_code = game.update(**action)
