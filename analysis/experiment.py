@@ -17,7 +17,8 @@ TRICKS_COLUMNS = [
     'experiment_id', 'game_id', 'round_id', 'trick_id', 'player', 'trick_position', 'action_code',
     'card',
     'is_last_in_trick', 'trick_winner', 'trick_points',
-    'is_last_in_round', 'contract_reached', 'contract', 'east/west_points', 'north/south_points',
+    'is_last_in_round', 'east/west_points', 'north/south_points', 'belote_team', 'contract', 'contract_reached',
+    'east/west_round_score', 'north/south_round_score',
     'is_last_in_game', 'game_winners', 'east/west_score', 'north/south_score',
 ]
 GAME_LIMIT = 3000
@@ -64,8 +65,8 @@ def handle_end_of_trick(
         trump_color: str, trick_color: str, trick_id: int
 ) -> Dict:
     trick_winner = derive_leader(cards=trick_cards, trump_color=trump_color, trick_color=trick_color)
+    trick_winner_team = PLAYER_TO_TEAM[trick_winner]
     if trick_id < 7:
-        trick_winner_team = PLAYER_TO_TEAM[trick_winner]
         trick_row_update = {
             'is_last_in_trick': True,
             'trick_winner': trick_winner.value,
@@ -75,24 +76,31 @@ def handle_end_of_trick(
     else:
         if len(belote_cards_players) != 2:  # state of belote cards are only up-to-date with the penultimate step
             belote_cards_players.append(player.value)
+        belote_team = None
+        if len(set(belote_cards_players)) == 1:
+            belote_team = PLAYER_TO_TEAM[Player._value2member_map_[belote_cards_players[0]]]
         trick_points = TOTAL_POINTS - sum(start_round_score.values())
+        round_points = {
+            'east/west': start_round_score['east/west'],
+            'north/south': start_round_score['north/south'],
+        }
+        round_points[trick_winner_team.value] += trick_points
+        if belote_team is not None:
+            round_points[belote_team.value] += 20
         contract_team = PLAYER_TO_TEAM[contractor]
-        contract_team_points = (
-                start_round_score[contract_team.value]
-                + (trick_points if trick_winner.value in contract_team.value else 0)
-                + (20 if (len(set(belote_cards_players)) == 1 and belote_cards_players[0] in contract_team.value)
-                   else 0)
-        )
-        contract_reached = contract_team_points >= contract
+        contract_reached = round_points[contract_team.value] >= contract
         trick_row_update = {
             'is_last_in_trick': True,
             'trick_winner': trick_winner.value,
             'trick_points': trick_points,
             'is_last_in_round': True,
-            'contract_reached': contract_reached,
+            'east/west_points': round_points['east/west'],
+            'north/south_points': round_points['north/south'],
+            'belote_team': belote_team.value if belote_team is not None else None,
             'contract': contract,
-            'east/west_points': game_description['score']['east/west'] - start_score['east/west'],
-            'north/south_points': game_description['score']['north/south'] - start_score['north/south'],
+            'contract_reached': contract_reached,
+            'east/west_round_score': game_description['score']['east/west'] - start_score['east/west'],
+            'north/south_round_score': game_description['score']['north/south'] - start_score['north/south'],
         }
         if max(game_description['score'].values()) >= GAME_LIMIT:
             trick_row_update.update(
