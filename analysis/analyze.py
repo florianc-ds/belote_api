@@ -135,52 +135,53 @@ def compute_avg_contract(auctions_df: pd.DataFrame, team: str) -> float:
 
 
 # TODO: need to compute sum(trick_points) + access to belote => points
-# def compute_avg_positive_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFrame, team: str) -> float:
-#     contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
-#         ['experiment_id', 'game_id', 'round_id'], keep='last'
-#     )
-#     contracted_df = contractor_df[
-#         contractor_df.apply(lambda row: PLAYER_TO_TEAM[row['player']] == team, axis=1)
-#     ][['experiment_id', 'game_id', 'round_id', 'player']]
-#     contracted_df = contracted_df.rename(
-#         columns={'experiment_id': 'experiment_id_', 'game_id': 'game_id_', 'round_id': 'round_id_', 'player': 'player_'}
-#     )
-#     succeeded_round_end_df = tricks_df[tricks_df['is_last_in_round'] & tricks_df['contract_reached']]
-#     succeeded_round_end_with_contracted_df = succeeded_round_end_df.merge(
-#         right=contracted_df,
-#         how='inner',
-#         left_on=['experiment_id', 'game_id', 'round_id'],
-#         right_on=['experiment_id_', 'game_id_', 'round_id_']
-#     )
-#
-#     return succeeded_round_end_with_contracted_df.apply(
-#         lambda row: row[f'{team}_points'] - 2 * row['contract'], axis=1
-#     ).mean()
+def compute_avg_positive_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFrame, team: str) -> float:
+    contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
+        ['experiment_id', 'game_id', 'round_id'], keep='last'
+    )
+    contracted_df = contractor_df[
+        contractor_df.apply(lambda row: PLAYER_TO_TEAM[row['player']] == team, axis=1)
+    ][['experiment_id', 'game_id', 'round_id', 'player']]
+    contracted_df = contracted_df.rename(
+        columns={'experiment_id': 'experiment_id_', 'game_id': 'game_id_', 'round_id': 'round_id_', 'player': 'player_'}
+    )
+    succeeded_round_end_df = tricks_df[tricks_df['is_last_in_round'] & tricks_df['contract_reached']]
+    succeeded_round_end_with_contracted_df = succeeded_round_end_df.merge(
+        right=contracted_df,
+        how='inner',
+        left_on=['experiment_id', 'game_id', 'round_id'],
+        right_on=['experiment_id_', 'game_id_', 'round_id_']
+    )
+
+    return succeeded_round_end_with_contracted_df.apply(
+        lambda row: row[f'{team}_points'] - row['contract'], axis=1
+    ).mean()
+
 
 # TODO: need to compute sum(trick_points) + access to belote => points
 # TODO: investigate why sometimes have failed_round_end_with_contracted_df['contract_reached'] False + points earned (more than just belote...)
-# def compute_avg_negative_margin(df: pd.DataFrame, team: str) -> float:
-#     contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
-#         ['experiment_id', 'game_id', 'round_id'], keep='last'
-#     )
-#     contracted_df = contractor_df[
-#         contractor_df.apply(lambda row: PLAYER_TO_TEAM[row['player']] == team, axis=1)
-#     ][['experiment_id', 'game_id', 'round_id', 'player']]
-#     contracted_df = contracted_df.rename(
-#         columns={'experiment_id': 'experiment_id_', 'game_id': 'game_id_', 'round_id': 'round_id_', 'player': 'player_'}
-#     )
-#     round_end_df = tricks_df[tricks_df['is_last_in_round']]
-#     failed_round_end_df = round_end_df[~round_end_df['contract_reached'].astype(bool)]
-#     failed_round_end_with_contracted_df = failed_round_end_df.merge(
-#         right=contracted_df,
-#         how='inner',
-#         left_on=['experiment_id', 'game_id', 'round_id'],
-#         right_on=['experiment_id_', 'game_id_', 'round_id_']
-#     )
-#
-#     return failed_round_end_with_contracted_df.apply(
-#         lambda row: -9999, axis=1
-#     ).mean()
+def compute_avg_negative_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFrame, team: str) -> float:
+    contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
+        ['experiment_id', 'game_id', 'round_id'], keep='last'
+    )
+    contracted_df = contractor_df[
+        contractor_df.apply(lambda row: PLAYER_TO_TEAM[row['player']] == team, axis=1)
+    ][['experiment_id', 'game_id', 'round_id', 'player']]
+    contracted_df = contracted_df.rename(
+        columns={'experiment_id': 'experiment_id_', 'game_id': 'game_id_', 'round_id': 'round_id_', 'player': 'player_'}
+    )
+    round_end_df = tricks_df[tricks_df['is_last_in_round']]
+    failed_round_end_df = round_end_df[~round_end_df['contract_reached'].astype(bool)]
+    failed_round_end_with_contracted_df = failed_round_end_df.merge(
+        right=contracted_df,
+        how='inner',
+        left_on=['experiment_id', 'game_id', 'round_id'],
+        right_on=['experiment_id_', 'game_id_', 'round_id_']
+    )
+
+    return failed_round_end_with_contracted_df.apply(
+        lambda row: row['contract'] - row[f'{team}_points'], axis=1
+    ).mean()
 
 
 if __name__ == '__main__':
@@ -206,8 +207,8 @@ if __name__ == '__main__':
     print(f'avg_game_score: {avg_game_score}')
     avg_contract = compute_avg_contract(auctions_df=auctions_df, team=team)
     print(f'avg_contract: {avg_contract}')
-    # avg_positive_margin = compute_avg_positive_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    # print(f'avg_positive_margin: {avg_positive_margin}')
-    # avg_negative_margin = compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    # print(f'avg_negative_margin: {avg_negative_margin}')
+    avg_positive_margin = compute_avg_positive_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
+    print(f'avg_positive_margin: {avg_positive_margin}')
+    avg_negative_margin = compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
+    print(f'avg_negative_margin: {avg_negative_margin}')
 
