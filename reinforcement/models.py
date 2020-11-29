@@ -334,8 +334,6 @@ class Round(Updatable):
         )
         if last_trick:
             self.score[leading_team] += 10
-            if self.belote[0] == self.belote[1]:
-                self.score[PLAYER_TO_TEAM[self.belote[0]]] += 20
 
     def _validate(self, **kwargs) -> bool:
         player = kwargs['player']
@@ -460,7 +458,15 @@ class Game(Updatable):
         opponent_team = Team.ONE if contract_team == Team.TWO else Team.TWO
         opponent_team_round_score = self.round.score[opponent_team]
         contract = self.auction.bids[self.auction.current_best].value
-        if contract_team_round_score >= contract:
+        # handling belote -> 20 points anyway
+        contract_team_round_score_with_belote = contract_team_round_score
+        if self.round.belote[0] == self.round.belote[1]:
+            belote_team = PLAYER_TO_TEAM[self.round.belote[0]]
+            logger.info(f"Belote and Rebelote for {belote_team.value}")
+            self.score[belote_team] += 20
+            if belote_team == contract_team:
+                contract_team_round_score_with_belote += 20
+        if contract_team_round_score_with_belote >= contract:
             logger.info(f"Contract ({contract}) has been reached ({contract_team_round_score}) "
                         f"by {contract_team.value}")
             self.score[contract_team] += round(contract_team_round_score / 10) * 10 + contract
