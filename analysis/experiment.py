@@ -1,11 +1,12 @@
 import os
 from datetime import datetime
 from time import time
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Optional
 
 import pandas as pd
 
 from helpers.common_helpers import extract_color, extract_value
+from highest_card_agent import bet_or_pass_highest_card_strategy, play_highest_card_strategy
 from random_agent import bet_or_pass_random_strategy, play_random_strategy
 from reinforcement.models import Game, Player, NEXT_PLAYER, PLAYER_TO_TEAM, derive_leader, Card
 
@@ -25,16 +26,38 @@ GAME_LIMIT = 3000
 TOTAL_POINTS = 162
 
 
+def get_agent_bet_or_pass(
+    agent: str, players_bids: Dict[str, Dict], player_cards: List[str]
+) -> Tuple[str, Optional[str], Optional[int]]:
+    if agent == 'RANDOM':
+        return bet_or_pass_random_strategy(players_bids=players_bids)
+    elif agent == 'HIGHEST_CARD':
+        return bet_or_pass_highest_card_strategy(player_cards=player_cards, players_bids=players_bids)
+
+
+def get_agent_play(
+    agent: str, player_cards: List[str], cards_playability: List[bool], trump_color: str
+) -> str:
+    if agent == 'RANDOM':
+        return play_random_strategy(player_cards=player_cards, cards_playability=cards_playability)
+    elif agent == 'HIGHEST_CARD':
+        return play_highest_card_strategy(
+            player_cards=player_cards, cards_playability=cards_playability, trump_color=trump_color
+        )
+
+
 def handle_auction_step(
-        game: Game, game_description: Dict, player: Player,
+        game: Game, game_description: Dict, player: Player, agent: str,
         experiment_id: str, game_id: int, round_id: int, auctions_df: pd.DataFrame
 ) -> Tuple[Dict, Player, pd.DataFrame]:
-    agent_action, color, value = bet_or_pass_random_strategy(
-        players_bids={
-            player: bid
-            if bid is not None else {'value': None, 'color': None}
-            for player, bid in game_description['auction']['bids'].items()
-        }
+    players_bids = {
+        player_: bid
+        if bid is not None else {'value': None, 'color': None}
+        for player_, bid in game_description['auction']['bids'].items()
+    }
+    player_cards = [card.describe_plain() for card in game.round.hands[player].cards]
+    agent_action, color, value = get_agent_bet_or_pass(
+        agent=agent, players_bids=players_bids, player_cards=player_cards
     )
     action = {'player': player, 'passed': (agent_action == 'pass'), 'color': color, 'value': value}
     action_code = game.update(**action)
@@ -116,7 +139,7 @@ def handle_end_of_trick(
 
 
 def handle_trick(
-        game: Game, game_description: Dict,
+        game: Game, game_description: Dict, agent: str,
         experiment_id: str, game_id: int, round_id: int, tricks_df: pd.DataFrame
 ):
     trick_id = game_description['round']['trick']
@@ -134,9 +157,10 @@ def handle_trick(
     trick_row = {}
     for trick_position in range(4):  # loop over players
         player_cards = [card.describe_plain() for card in game.round.hands[player].cards]
-        agent_card = play_random_strategy(
-            player_cards=player_cards,
-            cards_playability=game.round.get_cards_playability(player)
+        cards_playability = game.round.get_cards_playability(player)
+        current_trump_color = game_description['round']['trump']
+        agent_card = get_agent_play(
+            agent=agent, player_cards=player_cards, cards_playability=cards_playability, trump_color=current_trump_color
         )
         trick_cards = game.round.trick_cards.cards.copy()
         trick_cards.update({player: Card(value=extract_value(agent_card), color=extract_color(agent_card))})
@@ -219,13 +243,13 @@ def run_experiment(east_west_agents, north_south_agents, nb_games):
         while max(game_description['score'].values()) < GAME_LIMIT:  # loop over rounds
             while game_description['state'] == 'auction':  # auction steps
                 game_description, player, auctions_df = handle_auction_step(
-                    game=game, game_description=game_description, player=player, experiment_id=experiment_id,
-                    game_id=game_id, round_id=round_id, auctions_df=auctions_df
+                    game=game, game_description=game_description, player=player, agent=agents[f'{player.value}_agent'],
+                    experiment_id=experiment_id, game_id=game_id, round_id=round_id, auctions_df=auctions_df
                 )
             while game_description['state'] == 'playing':  # tricks steps
                 game_description, tricks_df = handle_trick(
-                    game=game, game_description=game_description, experiment_id=experiment_id,
-                    game_id=game_id, round_id=round_id, tricks_df=tricks_df
+                    game=game, game_description=game_description, agent=agents[f'{player.value}_agent'],
+                    experiment_id=experiment_id, game_id=game_id, round_id=round_id, tricks_df=tricks_df
                 )
             round_id += 1
 
@@ -237,5 +261,5 @@ def run_experiment(east_west_agents, north_south_agents, nb_games):
 if __name__ == "__main__":
     # TODO: Implement for other agents: highest_card & expert
     start_time = time()
-    run_experiment(east_west_agents='RANDOM', north_south_agents='RANDOM', nb_games=2)
+    run_experiment(east_west_agents='RANDOM', north_south_agents='HIGHEST_CARD', nb_games=2)
     print(f'elapsed time: {time()-start_time} sec')
