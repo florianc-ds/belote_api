@@ -130,7 +130,7 @@ def handle_end_of_trick(
                 {
                     'is_last_in_game': True,
                     'game_winners': 'east/west' if (game_description['score']['east/west']
-                                                    > game_description['score']['north/south']) else 'north_south',
+                                                    > game_description['score']['north/south']) else 'north/south',
                     'east/west_score': game_description['score']['east/west'],
                     'north/south_score': game_description['score']['north/south'],
                 }
