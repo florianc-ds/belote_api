@@ -134,7 +134,6 @@ def compute_avg_contract(auctions_df: pd.DataFrame, team: str) -> float:
     return contracted_df['value'].mean()
 
 
-# TODO: need to compute sum(trick_points) + access to belote => points
 def compute_avg_positive_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFrame, team: str) -> float:
     contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
         ['experiment_id', 'game_id', 'round_id'], keep='last'
@@ -158,8 +157,6 @@ def compute_avg_positive_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFra
     ).mean()
 
 
-# TODO: need to compute sum(trick_points) + access to belote => points
-# TODO: investigate why sometimes have failed_round_end_with_contracted_df['contract_reached'] False + points earned (more than just belote...)
 def compute_avg_negative_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFrame, team: str) -> float:
     contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
         ['experiment_id', 'game_id', 'round_id'], keep='last'
