@@ -522,8 +522,16 @@ def play_expert_third_in_round(player, player_cards, trump_asked, playable_cards
             ):
                 # LEVEL 5
                 if has_only_trumps_and_aces(playable_cards, trump_color):
-                    logger.info('LEAF 020011')
-                    return get_lowest_trump_card(playable_cards, trump_color)
+                    # LEVEL 6
+                    if has_color_in_hand(playable_cards, trump_color):
+                        logger.info('LEAF 0200111')
+                        return get_lowest_trump_card(playable_cards, trump_color)
+                    else:
+                        logger.info('LEAF 0200110')
+                        return get_lowest_plain_card(playable_cards, trump_color)
+                        # ==> could be any of the 2 Aces, we use "lowest" because :
+                        # - we need determinism
+                        # - function already exists
                 else:
                     logger.info('LEAF 020010')
                     return get_highest_plain_card(playable_cards, trump_color, exclude_aces=True)
