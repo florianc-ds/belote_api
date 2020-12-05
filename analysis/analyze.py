@@ -208,4 +208,3 @@ if __name__ == '__main__':
     print(f'avg_positive_margin: {avg_positive_margin}')
     avg_negative_margin = compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
     print(f'avg_negative_margin: {avg_negative_margin}')
-
