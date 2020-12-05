@@ -8,7 +8,7 @@ from random import seed, shuffle
 
 from helpers import constants
 
-seed(13)
+# seed(13)
 
 COLOR_TO_SYMBOL = {'s': '♠', 'd': '♦', 'h': '♥', 'c': '♣'}
 
