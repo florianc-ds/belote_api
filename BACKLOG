@@ -1,6 +1,3 @@
-[EXPERIMENT] Add log/print every 10 games with elapsed time
-[EXPERIMENT] Prevent pandas dataframe index from being written to CSV
-[EXPERIMENT] Write & flush dataframes (3 of them?) every 10 games
 [ANALYSIS] If same agents are confronting: average KPIs that can be
 [ANALYSIS] For compute_pc_[games|rounds|tricks]_won: compute intervals for a level of confidence of 95% and 99%
             cf https://en.wikipedia.org/wiki/Checking_whether_a_coin_is_fair for the method (Estimator of true probability + Examples.3)

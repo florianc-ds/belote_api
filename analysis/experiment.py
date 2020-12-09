@@ -226,10 +226,12 @@ def handle_trick(
     return new_game_description, trick_cards, new_tricks_df
 
 
-def prepare_data_folder(agent_A, agent_B, config_df, auctions_df, tricks_df):
+def prepare_data_folder(
+        agent_A: str, agent_B: str, config_df: pd.DataFrame, auctions_df: pd.DataFrame, tricks_df: pd.DataFrame
+):
     def create_csv_if_not_exist(file_path, df):
         if not os.path.exists(file_path):
-            df.to_csv(file_path, sep=';', header=True)
+            df.to_csv(file_path, sep=';', header=True, index=False)
     output_dir = f'./data/{agent_A}-vs-{agent_B}'
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -243,7 +245,36 @@ def prepare_data_folder(agent_A, agent_B, config_df, auctions_df, tricks_df):
     return config_path, auctions_path, tricks_path
 
 
-def run_experiment(east_west_agents, north_south_agents, nb_games):
+def save_and_flush_df(df: pd.DataFrame, path: str) -> pd.DataFrame:
+    df.to_csv(path, sep=';', mode='a', header=False, index=False)
+    return pd.DataFrame(columns=df.columns)
+
+
+def update_config_data(path: str, experiment_id: str, played_games: int):
+    config_df = pd.read_csv(path, sep=';')
+    previously_played_games = config_df[config_df["experiment_id"] == experiment_id].iloc[0]["nb_games"]
+    if previously_played_games != played_games:
+        config_df["nb_games"] = config_df.apply(
+            lambda row: played_games if row["experiment_id"] == experiment_id else row["nb_games"],
+            axis=1
+        )
+        config_df.to_csv(path, sep=';', index=False)
+        print(f"...already played {played_games} games")
+
+
+def save_and_flush_data(
+        experiment_id: str, played_games: int, config_path: str,
+        auctions_df: pd.DataFrame, auctions_path: str,
+        tricks_df: pd.DataFrame, tricks_path: str
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    flushed_auctions_df = save_and_flush_df(auctions_df, auctions_path)
+    flushed_tricks_df = save_and_flush_df(tricks_df, tricks_path)
+    update_config_data(config_path, experiment_id, played_games)
+
+    return flushed_auctions_df, flushed_tricks_df
+
+
+def run_experiment(east_west_agents, north_south_agents, nb_games, batch_size=5):
     experiment_id = datetime.now().strftime('%Y%m%d_%H%M%S')
     agents = {
         'west_agent': east_west_agents,
@@ -259,7 +290,8 @@ def run_experiment(east_west_agents, north_south_agents, nb_games):
         agent_A=east_west_agents, agent_B=north_south_agents,
         config_df=config_df, auctions_df=auctions_df, tricks_df=tricks_df
     )
-    config_df = config_df.append({"experiment_id": experiment_id, "nb_games": nb_games, **agents}, ignore_index=True)
+    config_df = config_df.append({"experiment_id": experiment_id, "nb_games": 0, **agents}, ignore_index=True)
+    config_df.to_csv(config_path, sep=';', mode='a', header=False, index=False)
 
     first_player = Player.ONE
     for game_id in range(nb_games):  # loop over games
@@ -284,13 +316,15 @@ def run_experiment(east_west_agents, north_south_agents, nb_games):
                 )
                 update_game_history(game_history, trick_cards)
             round_id += 1
-
-    config_df.to_csv(config_path, sep=';', mode='a', header=False)
-    auctions_df.to_csv(auctions_path, sep=';', mode='a', header=False)
-    tricks_df.to_csv(tricks_path, sep=';', mode='a', header=False)
+        played_games = game_id + 1
+        if played_games % batch_size == 0:
+            auctions_df, tricks_df = save_and_flush_data(
+                experiment_id, played_games, config_path, auctions_df, auctions_path, tricks_df, tricks_path
+            )
+    save_and_flush_data(experiment_id, nb_games, config_path, auctions_df, auctions_path, tricks_df, tricks_path)
 
 
 if __name__ == "__main__":
     start_time = time()
-    run_experiment(east_west_agents='EXPERT', north_south_agents='EXPERT', nb_games=2)
+    run_experiment(east_west_agents='EXPERT', north_south_agents='EXPERT', nb_games=50)
     print(f'elapsed time: {time()-start_time} sec')
