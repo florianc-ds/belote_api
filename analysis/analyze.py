@@ -14,20 +14,31 @@
 #           average contract for x
 #           average positive margin (diff between contract and score when won) for x
 #           average negative margin (diff between contract and score when lost) for x
+import math
 import os
+from statistics import NormalDist
+from typing import Tuple, Optional, List
 
 import pandas as pd
 
 PLAYER_TO_TEAM = {'east': 'east/west', 'west': 'east/west', 'north': 'north/south', 'south': 'north/south'}
 
 
-def compute_pc_games_won(tricks_df: pd.DataFrame, team: str) -> float:
+def compute_confidence_intervals(
+        estimator: float, nb_samples: int, required_confidence_level: float) -> Tuple[float, float]:
+    """cf https://en.wikipedia.org/wiki/Checking_whether_a_coin_is_fair"""
+    z_value = NormalDist().inv_cdf((1 + required_confidence_level) / 2.)
+    maximum_error = z_value / (2 * math.sqrt(nb_samples))
+    return estimator - maximum_error, estimator + maximum_error
+
+
+def compute_pc_games_won(tricks_df: pd.DataFrame, team: str) -> Tuple[float, int]:
     nb_games = len(pd.unique(tricks_df['experiment_id'] + '-' + tricks_df['game_id'].astype(str)))
     nb_won_games = tricks_df[tricks_df['game_winners'] == team].shape[0]
-    return nb_won_games / nb_games
+    return nb_won_games / nb_games, nb_games
 
 
-def compute_pc_rounds_won(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: str) -> float:
+def compute_pc_rounds_won(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: str) -> Tuple[float, int]:
     nb_rounds = len(
         pd.unique(
             tricks_df['experiment_id']
@@ -58,10 +69,10 @@ def compute_pc_rounds_won(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, te
         round_end_with_contract_df.apply(lambda row: round_won(row, team), axis=1)
     ].shape[0]
 
-    return nb_won_rounds / nb_rounds
+    return nb_won_rounds / nb_rounds, nb_rounds
 
 
-def compute_pc_tricks_won(tricks_df: pd.DataFrame, team: str) -> float:
+def compute_pc_tricks_won(tricks_df: pd.DataFrame, team: str) -> Tuple[float, int]:
     nb_tricks = len(
         pd.unique(
             tricks_df['experiment_id']
@@ -75,10 +86,10 @@ def compute_pc_tricks_won(tricks_df: pd.DataFrame, team: str) -> float:
         trick_end_df.apply(lambda row: PLAYER_TO_TEAM[row['trick_winner']] == team, axis=1)
     ].shape[0]
 
-    return nb_won_tricks / nb_tricks
+    return nb_won_tricks / nb_tricks, nb_tricks
 
 
-def compute_pc_contracted_rounds(auctions_df: pd.DataFrame, team: str) -> float:
+def compute_pc_contracted_rounds(auctions_df: pd.DataFrame, team: str) -> Tuple[float, int]:
     nb_rounds = len(
         pd.unique(
             auctions_df['experiment_id']
@@ -93,10 +104,11 @@ def compute_pc_contracted_rounds(auctions_df: pd.DataFrame, team: str) -> float:
         contractor_df.apply(lambda row: PLAYER_TO_TEAM[row['player']] == team, axis=1)
     ].shape[0]
 
-    return nb_contracted_rounds / nb_rounds
+    return nb_contracted_rounds / nb_rounds, nb_rounds
 
 
-def compute_pc_contracted_rounds_won(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: str) -> float:
+def compute_pc_contracted_rounds_won(
+        tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: str) -> Tuple[float, int]:
     contractor_df = auctions_df[auctions_df['action'] == 'bet'].drop_duplicates(
         ['experiment_id', 'game_id', 'round_id'], keep='last'
     )[['experiment_id', 'game_id', 'round_id', 'player']]
@@ -117,7 +129,7 @@ def compute_pc_contracted_rounds_won(tricks_df: pd.DataFrame, auctions_df: pd.Da
     )
     nb_contracted_rounds_won = round_end_with_contracted_df[round_end_with_contracted_df['contract_reached']].shape[0]
 
-    return nb_contracted_rounds_won / nb_contracted_rounds
+    return nb_contracted_rounds_won / nb_contracted_rounds, nb_contracted_rounds
 
 
 def compute_avg_game_score(tricks_df: pd.DataFrame, team: str) -> float:
@@ -181,6 +193,26 @@ def compute_avg_negative_margin(auctions_df: pd.DataFrame, tricks_df: pd.DataFra
     ).mean()
 
 
+def print_indicator(
+        name: str, value: float, percentage: bool = True,
+        nb_samples: Optional[int] = None, confidences: List[float] = []):
+    report = f'{name}: '
+    if percentage:
+        report += f'{value*100:.2f}%'
+    else:
+        report += f'{value:.2f}'
+    for confidence in confidences:
+        inf, sup = compute_confidence_intervals(
+            estimator=value, nb_samples=nb_samples, required_confidence_level=confidence
+        )
+        if percentage:
+            report += f'\n\t{100*confidence}% confidence interval: [{100*inf:.2f}%, {100*sup:.2f}%]'
+        else:
+            report += f'\n\t{100*confidence}% confidence interval: [{inf:.2f}, {sup:.2f}]'
+
+    print(report)
+
+
 if __name__ == '__main__':
     agent_A = "RANDOM"
     agent_B = "RANDOM"
@@ -190,21 +222,31 @@ if __name__ == '__main__':
     tricks_df = pd.read_csv(os.path.join(path_to_dir, 'tricks_data.csv'), sep=';', header='infer')
     auctions_df = pd.read_csv(os.path.join(path_to_dir, 'auctions_data.csv'), sep=';', header='infer')
 
-    pc_games_won = compute_pc_games_won(tricks_df=tricks_df, team=team)
-    print(f'pc_games_won: {pc_games_won}')
-    pc_rounds_won = compute_pc_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    print(f'pc_rounds_won: {pc_rounds_won}')
-    pc_tricks_won = compute_pc_tricks_won(tricks_df=tricks_df, team=team)
-    print(f'pc_tricks_won: {pc_tricks_won}')
-    pc_contracted_rounds = compute_pc_contracted_rounds(auctions_df=auctions_df, team=team)
-    print(f'pc_contracted_rounds: {pc_contracted_rounds}')
-    pc_contracted_rounds_won = compute_pc_contracted_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    print(f'pc_contracted_rounds_won: {pc_contracted_rounds_won}')
+    # Compute indicators
+    pc_games_won, nb_games = compute_pc_games_won(tricks_df=tricks_df, team=team)
+    pc_rounds_won, nb_rounds = compute_pc_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
+    pc_tricks_won, nb_tricks = compute_pc_tricks_won(tricks_df=tricks_df, team=team)
+    pc_contracted_rounds, nb_rounds = compute_pc_contracted_rounds(auctions_df=auctions_df, team=team)
+    pc_contracted_rounds_won, nb_contracted_rounds = compute_pc_contracted_rounds_won(
+        tricks_df=tricks_df, auctions_df=auctions_df, team=team)
     avg_game_score = compute_avg_game_score(tricks_df=tricks_df, team=team)
-    print(f'avg_game_score: {avg_game_score}')
     avg_contract = compute_avg_contract(auctions_df=auctions_df, team=team)
-    print(f'avg_contract: {avg_contract}')
     avg_positive_margin = compute_avg_positive_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    print(f'avg_positive_margin: {avg_positive_margin}')
     avg_negative_margin = compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
-    print(f'avg_negative_margin: {avg_negative_margin}')
+
+    # Print reports
+    print_indicator(
+        name='Games won', value=pc_games_won, percentage=True, nb_samples=nb_games, confidences=[0.95, 0.99])
+    print_indicator(
+        name='Rounds won', value=pc_rounds_won, percentage=True, nb_samples=nb_rounds, confidences=[0.95, 0.99])
+    print_indicator(
+        name='Tricks won', value=pc_tricks_won, percentage=True, nb_samples=nb_tricks, confidences=[0.95, 0.99])
+    print_indicator(
+        name='Contracted rounds', value=pc_contracted_rounds, percentage=True, nb_samples=nb_rounds, confidences=[0.95, 0.99])
+    print_indicator(
+        name='Contracted rounds won', value=pc_contracted_rounds_won,
+        percentage=True, nb_samples=nb_contracted_rounds, confidences=[0.95, 0.99])
+    print_indicator(name='Average game score', value=avg_game_score, percentage=False)
+    print_indicator(name='Average contract', value=avg_contract, percentage=False)
+    print_indicator(name='Average positive margin', value=avg_positive_margin, percentage=False)
+    print_indicator(name='Average negative margin', value=avg_negative_margin, percentage=False)
