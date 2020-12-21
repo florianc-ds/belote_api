@@ -232,13 +232,7 @@ def print_indicator(
     print(report)
 
 
-if __name__ == '__main__':
-    agent_A = "RANDOM"
-    agent_B = "RANDOM"
-    team = 'east/west'
-
-    auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
-
+def generate_report(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: str, detailed=True):
     # Compute indicators
     pc_games_won, nb_games = compute_pc_games_won(tricks_df=tricks_df, team=team)
     pc_rounds_won, nb_rounds = compute_pc_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
@@ -251,19 +245,32 @@ if __name__ == '__main__':
     avg_positive_margin = compute_avg_positive_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
     avg_negative_margin = compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
 
+    confidences = [0.95, 0.99] if detailed else []
+
     # Print reports
+    print(f'\t>> Analysis based on {nb_games} games <<')
     print_indicator(
-        name='Games won', value=pc_games_won, percentage=True, nb_samples=nb_games, confidences=[0.95, 0.99])
+        name='Games won', value=pc_games_won, percentage=True, nb_samples=nb_games, confidences=confidences)
     print_indicator(
-        name='Rounds won', value=pc_rounds_won, percentage=True, nb_samples=nb_rounds, confidences=[0.95, 0.99])
+        name='Rounds won', value=pc_rounds_won, percentage=True, nb_samples=nb_rounds, confidences=confidences)
     print_indicator(
-        name='Tricks won', value=pc_tricks_won, percentage=True, nb_samples=nb_tricks, confidences=[0.95, 0.99])
+        name='Tricks won', value=pc_tricks_won, percentage=True, nb_samples=nb_tricks, confidences=confidences)
     print_indicator(
-        name='Contracted rounds', value=pc_contracted_rounds, percentage=True, nb_samples=nb_rounds, confidences=[0.95, 0.99])
+        name='Contracted rounds', value=pc_contracted_rounds, percentage=True, nb_samples=nb_rounds,
+        confidences=confidences)
     print_indicator(
         name='Contracted rounds won', value=pc_contracted_rounds_won,
-        percentage=True, nb_samples=nb_contracted_rounds, confidences=[0.95, 0.99])
+        percentage=True, nb_samples=nb_contracted_rounds, confidences=confidences)
     print_indicator(name='Average game score', value=avg_game_score, percentage=False)
     print_indicator(name='Average contract', value=avg_contract, percentage=False)
     print_indicator(name='Average positive margin', value=avg_positive_margin, percentage=False)
     print_indicator(name='Average negative margin', value=avg_negative_margin, percentage=False)
+
+
+if __name__ == '__main__':
+    agent_A = "RANDOM"
+    agent_B = "RANDOM"
+    team = 'east/west'
+
+    auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
+    generate_report(tricks_df=tricks_df, auctions_df=auctions_df, team=team, detailed=True)
