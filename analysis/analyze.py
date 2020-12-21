@@ -22,6 +22,25 @@ from typing import Tuple, Optional, List
 import pandas as pd
 
 PLAYER_TO_TEAM = {'east': 'east/west', 'west': 'east/west', 'north': 'north/south', 'south': 'north/south'}
+DATA_PATH = "./data"
+
+
+# STEP 0: A-B
+# STEP 1: A-B & B-A
+# STEP 2: A-A & A-A
+def prepare_datasets(ew_agent: str, ns_agent: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    tricks_df = pd.read_csv(
+        os.path.join(DATA_PATH, f'{ew_agent}-vs-{ns_agent}', 'tricks_data.csv'),
+        sep=';',
+        header='infer'
+    )
+    auctions_df = pd.read_csv(
+        os.path.join(DATA_PATH, f'{ew_agent}-vs-{ns_agent}', 'auctions_data.csv'),
+        sep=';',
+        header='infer'
+    )
+
+    return auctions_df, tricks_df
 
 
 def compute_confidence_intervals(
@@ -218,9 +237,7 @@ if __name__ == '__main__':
     agent_B = "RANDOM"
     team = 'east/west'
 
-    path_to_dir = f'./data/{agent_A}-vs-{agent_B}'
-    tricks_df = pd.read_csv(os.path.join(path_to_dir, 'tricks_data.csv'), sep=';', header='infer')
-    auctions_df = pd.read_csv(os.path.join(path_to_dir, 'auctions_data.csv'), sep=';', header='infer')
+    auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
 
     # Compute indicators
     pc_games_won, nb_games = compute_pc_games_won(tricks_df=tricks_df, team=team)
