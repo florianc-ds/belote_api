@@ -35,6 +35,14 @@ TEAM_COLUMNS = {
 }
 MIRROR_PLAYER = {'west': 'south', 'south': 'east', 'east': 'north', 'north': 'west'}
 MIRROR_TEAM = {'east/west': 'north/south', 'north/south': 'east/west'}
+MIRROR_TRICKS_COLUMNS = {
+    'east/west_points': 'north/south_points',
+    'north/south_points': 'east/west_points',
+    'east/west_round_score': 'north/south_round_score',
+    'north/south_round_score': 'east/west_round_score',
+    'east/west_score': 'north/south_score',
+    'north/south_score': 'east/west_score',
+}
 
 
 # STEP 0: A-B
@@ -53,28 +61,26 @@ def prepare_datasets(ew_agent: str, ns_agent: str) -> Tuple[pd.DataFrame, pd.Dat
         auctions_df = pd.read_csv(os.path.join(ew_ns_dir_path, 'auctions_data.csv'), sep=';', header='infer')
 
     # mirror format (B vs A)
-    if (ew_agent != ns_agent) and os.path.exists(ns_ew_dir_path):
+    if os.path.exists(ns_ew_dir_path):
+        # open mirror dataframes
         mirror_tricks_df = pd.read_csv(os.path.join(ns_ew_dir_path, 'tricks_data.csv'), sep=';', header='infer')
+        mirror_auctions_df = pd.read_csv(os.path.join(ns_ew_dir_path, 'auctions_data.csv'), sep=';', header='infer')
+        # A = B
+        if ew_agent == ns_agent:
+            mirror_tricks_df['experiment_id'] = mirror_tricks_df['experiment_id'] + '_mirror'
+            mirror_auctions_df['experiment_id'] = mirror_auctions_df['experiment_id'] + '_mirror'
+        # mirror information
         for col in PLAYER_COLUMNS['tricks']:
             mirror_tricks_df[col] = mirror_tricks_df[col].apply(lambda p: MIRROR_PLAYER.get(p))
         for col in TEAM_COLUMNS['tricks']:
             mirror_tricks_df[col] = mirror_tricks_df[col].apply(lambda t: MIRROR_TEAM.get(t))
-        mirror_tricks_df = mirror_tricks_df.rename(
-            columns={
-                'east/west_points': 'north/south_points',
-                'north/south_points': 'east/west_points',
-                'east/west_round_score': 'north/south_round_score',
-                'north/south_round_score': 'east/west_round_score',
-                'east/west_score': 'north/south_score',
-                'north/south_score': 'east/west_score',
-            }
-        )
-        tricks_df = pd.concat([tricks_df, mirror_tricks_df])
-        mirror_auctions_df = pd.read_csv(os.path.join(ns_ew_dir_path, 'auctions_data.csv'), sep=';', header='infer')
+        mirror_tricks_df = mirror_tricks_df.rename(columns=MIRROR_TRICKS_COLUMNS)
         for col in PLAYER_COLUMNS['auctions']:
             mirror_auctions_df[col] = mirror_auctions_df[col].apply(lambda p: MIRROR_PLAYER.get(p))
         for col in TEAM_COLUMNS['auctions']:
             mirror_auctions_df[col] = mirror_auctions_df[col].apply(lambda t: MIRROR_TEAM.get(t))
+        # reconcile dataframes
+        tricks_df = pd.concat([tricks_df, mirror_tricks_df])
         auctions_df = pd.concat([auctions_df, mirror_auctions_df])
 
     return auctions_df, tricks_df
