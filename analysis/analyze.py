@@ -85,7 +85,9 @@ def compute_confidence_intervals(
     """cf https://en.wikipedia.org/wiki/Checking_whether_a_coin_is_fair"""
     z_value = NormalDist().inv_cdf((1 + required_confidence_level) / 2.)
     maximum_error = z_value / (2 * math.sqrt(nb_samples))
-    return estimator - maximum_error, estimator + maximum_error
+    inf_threshold = max(0., estimator - maximum_error)
+    sup_threshold = min(1., estimator + maximum_error)
+    return inf_threshold, sup_threshold
 
 
 def compute_pc_games_won(tricks_df: pd.DataFrame, team: str) -> Tuple[float, int]:
