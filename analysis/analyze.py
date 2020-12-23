@@ -19,7 +19,11 @@ import os
 from statistics import NormalDist
 from typing import Tuple, Optional, List
 
+import numpy as np
+import matplotlib.pyplot as plt
 import pandas as pd
+
+from analysis.matplotlib_wrapper import heatmap, annotate_heatmap
 
 PLAYER_TO_TEAM = {'east': 'east/west', 'west': 'east/west', 'north': 'north/south', 'south': 'north/south'}
 DATA_PATH = "./data"
@@ -312,10 +316,108 @@ def generate_report(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: st
     print_indicator(name='Average negative margin', value=avg_negative_margin, percentage=False)
 
 
-if __name__ == '__main__':
-    agent_A = "RANDOM"
-    agent_B = "RANDOM"
-    team = 'east/west'
+def generate_heatmaps(agents: List[str], path: str, min_games=1000):
+    # generate data
+    team = "east/west"
+    pc_games_won = []
+    pc_rounds_won = []
+    pc_tricks_won = []
+    pc_contracted_rounds = []
+    pc_contracted_rounds_won = []
+    avg_game_score = []
+    avg_contract = []
+    avg_positive_margin = []
+    avg_negative_margin = []
+    for agent_A in agents:
+        pc_games_won_line = []
+        pc_rounds_won_line = []
+        pc_tricks_won_line = []
+        pc_contracted_rounds_line = []
+        pc_contracted_rounds_won_line = []
+        avg_game_score_line = []
+        avg_contract_line = []
+        avg_positive_margin_line = []
+        avg_negative_margin_line = []
+        for agent_B in agents:
+            print(f"{agent_A} vs. {agent_B}")
+            auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
+            pc_games_won_A_B, nb_games_A_B = compute_pc_games_won(tricks_df=tricks_df, team=team)
+            if nb_games_A_B < min_games:
+                print(f"WARNING: not enough games between {agent_A} & {agent_B} ({nb_games_A_B} < {min_games})")
+                return None
+            pc_games_won_line.append(100 * pc_games_won_A_B)
+            pc_rounds_won_line.append(
+                100 * compute_pc_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)[0]
+            )
+            pc_tricks_won_line.append(100 * compute_pc_tricks_won(tricks_df=tricks_df, team=team)[0])
+            pc_contracted_rounds_line.append(100 * compute_pc_contracted_rounds(auctions_df=auctions_df, team=team)[0])
+            pc_contracted_rounds_won_line.append(
+                100 * compute_pc_contracted_rounds_won(tricks_df=tricks_df, auctions_df=auctions_df, team=team)[0]
+            )
+            avg_game_score_line.append(compute_avg_game_score(tricks_df=tricks_df, team=team))
+            avg_contract_line.append(compute_avg_contract(auctions_df=auctions_df, team=team))
+            avg_positive_margin_line.append(
+                compute_avg_positive_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
+            )
+            avg_negative_margin_line.append(
+                compute_avg_negative_margin(tricks_df=tricks_df, auctions_df=auctions_df, team=team)
+            )
+        pc_games_won.append(pc_games_won_line)
+        pc_rounds_won.append(pc_rounds_won_line)
+        pc_tricks_won.append(pc_tricks_won_line)
+        pc_contracted_rounds.append(pc_contracted_rounds_line)
+        pc_contracted_rounds_won.append(pc_contracted_rounds_won_line)
+        avg_game_score.append(avg_game_score_line)
+        avg_contract.append(avg_contract_line)
+        avg_positive_margin.append(avg_positive_margin_line)
+        avg_negative_margin.append(avg_negative_margin_line)
 
-    auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
-    generate_report(tricks_df=tricks_df, auctions_df=auctions_df, team=team, detailed=True)
+    # generate graphs
+    fig, ((ax, ax2, ax3), (ax4, ax5, ax6), (ax7, ax8, ax9)) = plt.subplots(3, 3, figsize=(11, 9))
+    im, _ = heatmap(
+        np.array(pc_games_won), agents, agents, ax=ax, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% games won"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    im, _ = heatmap(
+        np.array(pc_rounds_won), agents, agents, ax=ax2, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% rounds won"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    im, _ = heatmap(
+        np.array(pc_tricks_won), agents, agents, ax=ax3, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% tricks won"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    im, _ = heatmap(
+        np.array(pc_contracted_rounds), agents, agents, ax=ax4, cmap="winter", cbarlabel="% contracted rounds"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["white", "black"], size=10)
+    im, _ = heatmap(
+        np.array(pc_contracted_rounds_won), agents, agents, ax=ax5, cmap="RdYlGn", vmin=0, vmax=100,
+        cbarlabel="% contracted rounds won"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    im, _ = heatmap(np.array(avg_game_score), agents, agents, ax=ax6, cmap="Greens", cbarlabel="average game score")
+    annotate_heatmap(im, valfmt="{x:.0f}", size=10)
+    im, _ = heatmap(np.array(avg_contract), agents, agents, ax=ax7, cmap="BuGn", cbarlabel="average contract")
+    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+    im, _ = heatmap(
+        np.array(avg_positive_margin), agents, agents, ax=ax8, cmap="Reds", cbarlabel="average positive margin"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+    im, _ = heatmap(
+        np.array(avg_negative_margin), agents, agents, ax=ax9, cmap="Reds", cbarlabel="average negative margin"
+    )
+    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+
+    # display graphs
+    plt.tight_layout()
+    plt.show()
+
+
+if __name__ == '__main__':
+    # agent_A = "RANDOM"
+    # agent_B = "RANDOM"
+    # team = 'east/west'
+    #
+    # auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
+    # generate_report(tricks_df=tricks_df, auctions_df=auctions_df, team=team, detailed=True)
+    generate_heatmaps(agents=["RANDOM", "HIGHEST_CARD", "EXPERT"], path="")
