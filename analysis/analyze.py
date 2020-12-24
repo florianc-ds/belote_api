@@ -16,6 +16,7 @@
 #           average negative margin (diff between contract and score when lost) for x
 import math
 import os
+from datetime import datetime
 from statistics import NormalDist
 from typing import Tuple, Optional, List
 
@@ -27,6 +28,7 @@ from analysis.matplotlib_wrapper import heatmap, annotate_heatmap
 
 PLAYER_TO_TEAM = {'east': 'east/west', 'west': 'east/west', 'north': 'north/south', 'south': 'north/south'}
 DATA_PATH = "./data"
+HEATMAPS_PATH = "./heatmaps"
 
 # mirror constants
 PLAYER_COLUMNS = {
@@ -316,7 +318,7 @@ def generate_report(tricks_df: pd.DataFrame, auctions_df: pd.DataFrame, team: st
     print_indicator(name='Average negative margin', value=avg_negative_margin, percentage=False)
 
 
-def generate_heatmaps(agents: List[str], path: str, min_games=1000):
+def generate_heatmaps(agents: List[str], dir_path: str, min_games=1000):
     # generate data
     team = "east/west"
     pc_games_won = []
@@ -408,8 +410,10 @@ def generate_heatmaps(agents: List[str], path: str, min_games=1000):
     )
     annotate_heatmap(im, valfmt="{x:.1f}", size=10)
 
-    # display graphs
+    # save and display graphs
     plt.tight_layout()
+    path = os.path.join(dir_path, f"{len(agents)}_agents_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
+    plt.savefig(path)
     plt.show()
 
 
@@ -420,4 +424,4 @@ if __name__ == '__main__':
     #
     # auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
     # generate_report(tricks_df=tricks_df, auctions_df=auctions_df, team=team, detailed=True)
-    generate_heatmaps(agents=["RANDOM", "HIGHEST_CARD", "EXPERT"], path="")
+    generate_heatmaps(agents=["RANDOM", "HIGHEST_CARD", "EXPERT"], dir_path=HEATMAPS_PATH)
