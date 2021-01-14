@@ -423,4 +423,7 @@ if __name__ == '__main__':
     #
     # auctions_df, tricks_df = prepare_datasets(ew_agent=agent_A, ns_agent=agent_B)
     # generate_report(tricks_df=tricks_df, auctions_df=auctions_df, team=team, detailed=True)
-    generate_heatmaps(agents=["RANDOM", "HIGHEST_CARD", "EXPERT"], dir_path=HEATMAPS_PATH)
+    generate_heatmaps(
+        agents=["RANDOM", "HIGHEST_CARD", "HIGHEST_CARD_W_EXP_BET", "EXPERT_W_HC_BET", "EXPERT"],
+        dir_path=HEATMAPS_PATH
+    )
