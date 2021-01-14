@@ -379,39 +379,38 @@ def generate_heatmaps(agents: List[str], dir_path: str, min_games=1000):
     im, _ = heatmap(
         np.array(pc_games_won), agents, agents, ax=ax, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% games won"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}", textcolors=["black", "black"])
     im, _ = heatmap(
         np.array(pc_rounds_won), agents, agents, ax=ax2, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% rounds won"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}", textcolors=["black", "black"])
     im, _ = heatmap(
         np.array(pc_tricks_won), agents, agents, ax=ax3, cmap="RdYlGn", vmin=0, vmax=100, cbarlabel="% tricks won"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}", textcolors=["black", "black"])
     im, _ = heatmap(
         np.array(pc_contracted_rounds), agents, agents, ax=ax4, cmap="winter", cbarlabel="% contracted rounds"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["white", "black"], size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}", textcolors=["white", "black"])
     im, _ = heatmap(
         np.array(pc_contracted_rounds_won), agents, agents, ax=ax5, cmap="RdYlGn", vmin=0, vmax=100,
         cbarlabel="% contracted rounds won"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", textcolors=["black", "black"], size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}", textcolors=["black", "black"])
     im, _ = heatmap(np.array(avg_game_score), agents, agents, ax=ax6, cmap="Greens", cbarlabel="average game score")
-    annotate_heatmap(im, valfmt="{x:.0f}", size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.0f}")
     im, _ = heatmap(np.array(avg_contract), agents, agents, ax=ax7, cmap="BuGn", cbarlabel="average contract")
-    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}")
     im, _ = heatmap(
         np.array(avg_positive_margin), agents, agents, ax=ax8, cmap="Reds", cbarlabel="average positive margin"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}")
     im, _ = heatmap(
         np.array(avg_negative_margin), agents, agents, ax=ax9, cmap="Reds", cbarlabel="average negative margin"
     )
-    annotate_heatmap(im, valfmt="{x:.1f}", size=10)
+    annotate_heatmap(im, len(agents), valfmt="{x:.1f}")
 
     # save and display graphs
-    plt.tight_layout()
     path = os.path.join(dir_path, f"{len(agents)}_agents_{datetime.now().strftime('%Y%m%d_%H%M%S')}.png")
     plt.savefig(path)
     plt.show()

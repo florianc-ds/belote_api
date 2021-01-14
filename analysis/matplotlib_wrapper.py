@@ -1,3 +1,5 @@
+import string
+
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
@@ -41,16 +43,33 @@ def heatmap(data, row_labels, col_labels, ax=None,
     ax.set_xticks(np.arange(data.shape[1]))
     ax.set_yticks(np.arange(data.shape[0]))
     # ... and label them with the respective list entries.
-    ax.set_xticklabels(col_labels)
-    ax.set_yticklabels(row_labels)
+    default_labels = list(string.ascii_uppercase)
+    ax.set_xticklabels(default_labels[:len(col_labels)])
+    ax.set_yticklabels(default_labels[:len(row_labels)])
+    # Create and display text box with legend defining real labels
+    labels_description = ""
+    legend_max_line = 12
+    for ind, label in enumerate(col_labels):
+        labels_description += f"{default_labels[ind]}: "
+        labels_description += "\n  ".join(
+            [
+                label[i * legend_max_line: (i + 1) * legend_max_line]
+                for i in range(1 + (len(label) - 1) // legend_max_line)
+            ]
+        )
+        labels_description += "\n\n"
+    labels_description = labels_description[:-2]
+    plt.gcf().text(0.01, 0.5, labels_description, fontsize=10, horizontalalignment="left", verticalalignment="center")
+    plt.subplots_adjust(left=0.15)
 
     # Let the horizontal axes labeling appear on top.
     ax.tick_params(top=True, bottom=False,
                    labeltop=True, labelbottom=False)
 
-    # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
-             rotation_mode="anchor")
+    # Set tick labels size
+    ticklabel_size = round(3 / len(row_labels) * 8)
+    plt.setp(ax.get_yticklabels(), fontsize=ticklabel_size)
+    plt.setp(ax.get_xticklabels(), fontsize=ticklabel_size)
 
     # Turn spines off and create white grid.
     for edge, spine in ax.spines.items():
@@ -64,7 +83,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 
-def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
+def annotate_heatmap(im, nb_lines, data=None, valfmt="{x:.2f}",
                      textcolors=["black", "white"],
                      threshold=None, **textkw):
     """
@@ -74,6 +93,8 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     ----------
     im
         The AxesImage to be labeled.
+    nb_lines
+        Number of lines (and columns) in the heatmap.
     data
         Data used to annotate.  If None, the image's data is used.  Optional.
     valfmt
@@ -106,6 +127,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     kw = dict(horizontalalignment="center",
               verticalalignment="center")
     kw.update(textkw)
+    kw.update({"size": round(3 / nb_lines * 12)})
 
     # Get the formatter in case a string is supplied
     if isinstance(valfmt, str):
