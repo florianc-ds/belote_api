@@ -33,9 +33,9 @@ def get_agent_bet_or_pass(
 ) -> Tuple[str, Optional[str], Optional[int]]:
     if agent == 'RANDOM':
         return bet_or_pass_random_strategy(players_bids=players_bids)
-    elif agent == 'HIGHEST_CARD':
+    elif agent in ['HIGHEST_CARD', 'EXPERT_W_HC_BET']:
         return bet_or_pass_highest_card_strategy(player_cards=player_cards, players_bids=players_bids)
-    elif agent == 'EXPERT':
+    elif agent in ['EXPERT', 'HIGHEST_CARD_W_EXP_BET']:
         return bet_or_pass_expert_strategy(player=player, player_cards=player_cards, players_bids=players_bids)
 
 
@@ -46,11 +46,11 @@ def get_agent_play(
 ) -> str:
     if agent == 'RANDOM':
         return play_random_strategy(player_cards=player_cards, cards_playability=cards_playability)
-    elif agent == 'HIGHEST_CARD':
+    elif agent in ['HIGHEST_CARD', 'HIGHEST_CARD_W_EXP_BET']:
         return play_highest_card_strategy(
             player_cards=player_cards, cards_playability=cards_playability, trump_color=trump_color
         )
-    elif agent == 'EXPERT':
+    elif agent in ['EXPERT', 'EXPERT_W_HC_BET']:
         return play_expert_strategy(
             player=player, contract_team=contract_team, player_cards=player_cards, cards_playability=cards_playability,
             round_cards=trick_cards, trump_color=trump_color, round_color=trick_color, round=trick_id,
