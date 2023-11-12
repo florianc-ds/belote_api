@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List, Tuple
 
-from reinforcement.models import Player, Card
+from helpers.structures import Player, Card
 
 
 class State(object):

@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import pytest
 
-from reinforcement.models import Game, Player, OK_CODE, NEXT_PLAYER, Bid, VALIDATION_ERROR_CODE, State, Card, Team
+from helpers.structures import Game, Player, OK_CODE, NEXT_PLAYER, Bid, VALIDATION_ERROR_CODE, State, Card, Team
 
 
 def partially_compare_dict(d1, d2, excluded_keys):
@@ -220,7 +220,7 @@ def test_round_invalid_card_index(caplog):
         f"but instead played {Card('8', 'c').describe()}"
     ),
 ])
-@patch('reinforcement.models.Game.deal')
+@patch('helpers.structures.Game.deal')
 def test_round_wrong_card(deal_mock, hands, trump, log, caplog):
     """
         Game@Round + wrong card (cf Round.card_is_playable for all possibilities) (ERROR + log)
@@ -281,7 +281,7 @@ def test_round_valid_card():
                                                               'round.trick_cards.cards', 'round.trick_cards.leader'])
 
 
-@patch('reinforcement.models.Game.deal')
+@patch('helpers.structures.Game.deal')
 def test_round_full(deal_mock, caplog):
     """
         Game@Round + 1 FULL ROUND (including belote) (OK check at each update + check for score)

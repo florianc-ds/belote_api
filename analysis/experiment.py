@@ -10,7 +10,7 @@ from expert.play.strategy import play_expert_strategy
 from helpers.common_helpers import extract_color, extract_value
 from highest_card_agent import bet_or_pass_highest_card_strategy, play_highest_card_strategy
 from random_agent import bet_or_pass_random_strategy, play_random_strategy
-from reinforcement.models import Game, Player, NEXT_PLAYER, PLAYER_TO_TEAM, derive_leader, Card
+from helpers.structures import Game, Player, NEXT_PLAYER, PLAYER_TO_TEAM, derive_leader, Card
 
 CONFIG_COLUMNS = ['experiment_id', 'nb_games', 'west_agent', 'south_agent', 'east_agent', 'north_agent']
 AUCTIONS_COLUMNS = [
